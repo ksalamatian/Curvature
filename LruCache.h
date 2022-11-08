@@ -765,6 +765,7 @@ clear() {
         next = node->m_next;
         delete node;
         node = next;
+        m_size--;
     }
     m_head.m_next = &m_tail;
     m_tail.m_prev = &m_head;
@@ -940,9 +941,13 @@ template <class TKey, class TValue, class THash>
 typename ThreadSafeScalableCache<TKey, TValue, THash>::Shard&
 ThreadSafeScalableCache<TKey, TValue, THash>::
 getShard(const TKey& key) {
-    THash hashObj;
-    constexpr int shift = std::numeric_limits<size_t>::digits - 16;
-    size_t h = (hashObj.hash(key) >> shift) % m_numShards;
+//    THash hashObj;
+//    constexpr int shift = std::numeric_limits<size_t>::digits - 16;
+//    long hashh=hashObj.hash(key);
+//    size_t h = (hashObj.hash(key) >> shift) % m_numShards;
+//    h= (hashh >> shift) % m_numShards;
+//    std::cout<<h<<std::endl;
+    size_t h=key % m_numShards;
     return *m_shards.at(h);
 }
 

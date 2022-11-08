@@ -880,7 +880,7 @@ namespace lemon {
              c += Number(it->second) * Number(_cost[it->first]);
              return c;*/
 
-            for (int i=0; i<_flow.size(); i++)
+            for (unsigned int i=0; i<_flow.size(); i++)
                 c += _flow[i] * Number(_cost[i]);
             return c;
 
@@ -1426,7 +1426,7 @@ namespace lemon {
         template <typename PivotRuleImpl>
         ProblemType start() {
             PivotRuleImpl pivot(*this);
-            double prevCost=-1;
+//            double prevCost=-1;
 
             // Perform heuristic initial pivots
             if (!initialPivots()) return UNBOUNDED;
