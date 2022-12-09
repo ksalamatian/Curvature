@@ -1567,6 +1567,7 @@ void calcCurvature(double alpha, Vertex v, vector<vector<double>> &MatDist, set<
 }
 
 bool updateDistances(Graph_t &g){
+bool updateDistances(Graph_t &g){
 
     auto es = edges(g);
     double delta=0.215;
@@ -1813,7 +1814,7 @@ int main(int argc, char **argv)  {
 //        num_core=1;
         int offset=0;
         int k=0;
-        string logFilename=path+"/logFile."+to_string(index)+".log", logFilename1=path+"/dest."+to_string(index)+".log";
+        string logFilename=path+"/processed/logFile."+to_string(index)+".log", logFilename1=path+"/processed/dest."+to_string(index)+".log";
         logFile.open(logFilename.c_str(), ofstream::out);
         logFile1.open(logFilename1.c_str(), ofstream::out);
 //    num_core=1;
@@ -1834,7 +1835,7 @@ int main(int argc, char **argv)  {
             g=ginter;
         }
         ofstream outFile;
-        string outFilename=path+"/processed."+to_string(index+1)+".graphml";
+        string outFilename=path+"/processed/processed."+to_string(index+1)+".graphml";
         outFile.open(outFilename.c_str(), ofstream::out);
 //        for(boost::tie(v,vend) = vertices(*g); v != vend; ++v) {
 //            cout<<(*g)[*v].name<<endl;
