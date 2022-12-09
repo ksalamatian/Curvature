@@ -109,7 +109,7 @@ struct Edge_info_BGP {
 
 
 bool POTENTIAL=true;
-double EPS= 1e-3;
+double EPS= 1e-1;
 int QUANTA=60;
 ofstream logFile, logFile1;
 boost::dynamic_properties dp;
@@ -863,6 +863,23 @@ public:
         void operator()(VisNode *node) { node->minDist = d;}
     };
 
+    bool settle_distance(Vertex src) {
+        auto itt=indexNodeByV.find(src);
+        if (itt != indexNodeByV.end()) {
+            settled[src] = *(*itt);
+            delete *itt;
+            itt = indexNodeByV.erase(itt);
+            if (!is_fullySettled()) {
+                minDist=(*indexNodeByD.begin())->distance;
+            } else {
+                minDist=std::numeric_limits<double>::infinity();
+            }
+            return true;
+        }
+        return false;
+    }
+
+
     set<Vertex> settle_distances(double nextDist) {// nextDist is the smallest distance in the queue
         //check if any distance can be settled
         set<Vertex> newSettled;
@@ -1100,7 +1117,7 @@ struct myComp {
 
 
 //#define EPS 0.0
-#define ALPHA 0.0
+#define ALPHA 0.5
 Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int offset, vector<Vertex> &sources, vector<Vertex> &dests, Graph_t &g){
     // minimum cost upto
     // goal state from starting
@@ -1116,6 +1133,7 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
     set<Vertex> visited;
     set<Vertex> settledNodes;
     set<long> sourceVisited;
+    vector<int> srcCount(sources.size(),0);
 
     GraphNodeArray graphNodeArray(num_vertices(g),sources);
     priority_queue<GraphNode*, vector<GraphNode*>, myComp > *costQueue, *bakCostQueue, *swap;
@@ -1127,7 +1145,6 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
     int destsCount=0;
     bool finish=false;
     set<Vertex> ddests(dests.begin(), dests.end());
-    vector<int> srcCount(sources.size(), 0);
     Vertex v;
     GraphNode *graphNode;
     for(int i=0;i<sources.size();i++){
@@ -1160,8 +1177,6 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
                     graphNodeArray.checkSet(p->v,p->source,p->dist);
                     graphNodeArray.settle(p->v, p->source);
                     if (ddests.count(p->v)>0) {
-                        if (p->source==2)
-                            int KKKK=0;
                         srcCount[p->source]++;
                         if (srcCount[p->source]>= dests.size()) {
                             bakCostQueue=new priority_queue<GraphNode*, vector<GraphNode*>, myComp >();
@@ -1280,6 +1295,10 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
     return perf;
 }
 
+
+
+
+
 Perf multisource_uniform_cost_search_seq(vector<vector<double>> *ddists, int offset, vector<Vertex> &sources, vector<Vertex> &dests, Graph_t &g){
     // minimum cost upto
     // goal state from starting
@@ -1291,6 +1310,9 @@ Perf multisource_uniform_cost_search_seq(vector<vector<double>> *ddists, int off
     Perf perf;
     perf.sourceSize=sources.size();
     perf.destSize=dests.size();
+    map<Vertex,int> srcCount;
+    for (Vertex src:sources)
+        srcCount[src]=0;
     long hit=0, checked=0;
     set<Vertex> visited;
     // create a priority heap
@@ -1398,9 +1420,44 @@ Perf multisource_uniform_cost_search_seq(vector<vector<double>> *ddists, int off
                     nextDist = std::numeric_limits<double>::infinity();
                 }
                 settled = p->settle_distances(nextDist);
-                if (settled.size() == 0)
-                    int KKKK = 0;
-                numSettled += settled.size();
+                if (ddests.count(p->v)>0) {
+                    set<Vertex> finishedSrc;
+                    for (Vertex v: settled) {
+                        srcCount[v]++;
+                        if (srcCount[v] >= dests.size()) {
+                            finishedSrc.insert(v);
+                        }
+                    }
+                    if (finishedSrc.size() > 0) {
+                         for (auto it = indexByV.begin(); it != indexByV.end(); it++) {
+                            VisNode *pp = *it;
+                             if (pp != p) {
+                                 for (Vertex v: finishedSrc) {
+                                     pp->settle_distance(v);
+                                 }
+                                 if (pp->is_fullySettled()) {
+                                     if (ddests.erase(pp->v) > 0) { //pp is a destination
+                                         destsCount++;
+                                         if (pp->v == t) {
+                                             targetFinished = true; //while (indexByV.size()!=0)
+                                         }
+                                         auto range = equal_range(dests.begin(), dests.end(), pp->v);
+                                         int indexj = range.first - dests.begin();
+                                         for (auto e: pp->settled) {
+                                             auto range1 = equal_range(sources.begin(), sources.end(), e.first);
+                                             int indexi = range1.first - sources.begin();
+                                             (*ddists)[offset + indexi][indexj] = e.second.distance;
+                                         }
+                                     }
+                                     indexByV.erase(pp->v);
+                                     visited.insert(pp->v);
+                                     visNodeFact.yield(pp);
+                                 }
+                             }//check if it has not been already settled
+                        }
+                    }
+                    numSettled += settled.size();
+                }
             }
             if (p->is_fullySettled()) {
                 if (ddests.erase(p->v) > 0) { //p is a destination
@@ -1506,14 +1563,13 @@ void calcCurvature(double alpha, Vertex v, vector<vector<double>> &MatDist, set<
             g[e].distance=EPS/2;
         }
         numProcessedEdge++;
-
     }
 }
 
 bool updateDistances(Graph_t &g){
 
     auto es = edges(g);
-    double delta=0.25;
+    double delta=0.215;
     double sumWeights=0.0;
     int numEdgesUnfiltered=0;
     bool surgery=false;
@@ -1562,13 +1618,11 @@ bool updateDistances(Graph_t &g){
         if (g[*eit].active){
             double ddd=g[*eit].distance;
             Vertex src=source(*eit,g), dst=target(*eit,g);
+            g[*eit].distance =g[*eit].distance*rescaling;
             if ((g[src].name=="Lyon") && (g[dst].name=="Chambéry")){
                 int  KKKK=0 ;
                 cout<<"curv:"<<g[*eit].curv<<" dist:"<<g[*eit].distance<<endl;
             }
-            g[*eit].distance =g[*eit].distance*rescaling;
-            if (g[*eit].distance <0)
-                int KKKKK=0;
             if (g[*eit].distance>maxdist) {
                 maxdist=g[*eit].distance;
                 maxEdge=*eit;
@@ -1595,8 +1649,8 @@ bool updateDistances(Graph_t &g){
 void process(int threadIndex, Graph_t *g) {
     Task *task;
     long totalTime1=0, totalTime2=0;
-    while (tasksToDo.size()>0) {
-        tasksToDo.try_take(task);
+    while (tasksToDo.try_take(task)== BlockingCollectionStatus::Ok) {
+//        tasksToDo.try_take(task);
         auto t1 = high_resolution_clock::now(), t2=t1,t3=t1;
         duration<double, std::micro> ms_double1, ms_double2;
         Vertex s = task->v;
@@ -1615,7 +1669,7 @@ void process(int threadIndex, Graph_t *g) {
                 if (ssize < QUANTA) {
                     perf1 = multisource_uniform_cost_search_seq1(MatDist1, 0, sources, dests, *g);
                     t2 = high_resolution_clock::now();
-                    perf2 = multisource_uniform_cost_search_seq(MatDist2, 0, sources, dests, *g);
+//                    perf2 = multisource_uniform_cost_search_seq(MatDist2, 0, sources, dests, *g);
 //check for InF
                     for (int i=0;i<ssize;i++){
                         for (int j=0;j<dsize;j++) {
@@ -1623,9 +1677,9 @@ void process(int threadIndex, Graph_t *g) {
 //                                multisource_uniform_cost_search_seq(MatDist2, 0, sources, dests, *g);
                                 int KKKK=0;
                             }
-                            if ((*MatDist1)[i][j] != (*MatDist2)[i][j])
-                                cout << "NOT EQUAL  " << i << "," <<j << ","<<(*MatDist1)[i][j]<< ","<<(*MatDist2)[i][j]
-                                <<","<<(*MatDist1)[i][j]-(*MatDist2)[i][j]<<endl;
+//                            if ((*MatDist1)[i][j] != (*MatDist2)[i][j])
+//                                cout << "NOT EQUAL  " << i << "," <<j << ","<<(*MatDist1)[i][j]<< ","<<(*MatDist2)[i][j]
+//                                <<","<<(*MatDist1)[i][j]-(*MatDist2)[i][j]<<endl;
                          }
                     }
 
@@ -1639,7 +1693,7 @@ void process(int threadIndex, Graph_t *g) {
 //                    }
 //                    if ((*MatDist1)[0][0]==std::numeric_limits<double>::infinity())
 //                        int KKKK=0;
-                    calcCurvature(ALPHA, fullTask->v, *MatDist2, edges, sources, dests,*g);
+                    calcCurvature(ALPHA, fullTask->v, *MatDist1, edges, sources, dests,*g);
                     delete MatDist1;
                     delete MatDist2;
                     numProcessedVertex++;
@@ -1762,7 +1816,7 @@ int main(int argc, char **argv)  {
         string logFilename=path+"/logFile."+to_string(index)+".log", logFilename1=path+"/dest."+to_string(index)+".log";
         logFile.open(logFilename.c_str(), ofstream::out);
         logFile1.open(logFilename1.c_str(), ofstream::out);
-    num_core=1;
+//    num_core=1;
         vector<thread> threads(num_core);
         for (int i=0;i<num_core;i++){
             threads[i]=std::thread(process,i,g);
