@@ -34,9 +34,13 @@ using std::chrono::milliseconds;
 
 struct Vertex_info_road;
 struct Edge_info_road;
+struct Vertex_Regular;
+struct Edge_Regular;
 struct Graph_info;
 //typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::undirectedS, Vertex_info, Edge_info > Graph_t;
-typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::undirectedS, Vertex_info_road, Edge_info_road, Graph_info > Graph_t;
+//typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::undirectedS, Vertex_info_road, Edge_info_road, Graph_info > Graph_t;
+typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::undirectedS, Vertex_Regular, Edge_Regular, Graph_info > Graph_t;
+
 typedef boost::graph_traits < Graph_t >::vertex_iterator VertexIterator;
 typedef boost::graph_traits < Graph_t >::edge_iterator EdgeIterator;
 typedef boost::graph_traits < Graph_t >::adjacency_iterator AdjacencyIterator;
@@ -44,6 +48,20 @@ typedef boost::graph_traits < Graph_t >::vertex_descriptor Vertex;
 typedef boost::graph_traits < Graph_t >::edge_descriptor Edge;
 typedef boost::property_map < Graph_t, boost::vertex_index_t >::type IndexMap;
 typedef unsigned int uint;
+
+
+struct Vertex_Regular {
+    bool active=true;
+};
+
+struct Edge_Regular {
+    double dist=1.0;
+    float edist=0.0;
+    double distance=1.0;
+    double ot=1.0;
+    double curv=1.0;
+    bool active=true;
+};
 
 struct Vertex_info_road {
     float X=0;
@@ -135,7 +153,7 @@ void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
     dp.property("pathCount", get(&Edge_info::pathcount, designG));
     dp.property("prefCount", get(&Edge_info::prefcount, designG));*/
 
-    dp.property("label", get(&Vertex_info_road::label, designG));
+/*    dp.property("label", get(&Vertex_info_road::label, designG));
     dp.property("X", get(&Vertex_info_road::X, designG));
     dp.property("Y", get(&Vertex_info_road::Y, designG));
     dp.property("meta", get(&Vertex_info_road::name, designG));
@@ -163,8 +181,17 @@ void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
     associative_property_map<map<double, double>> avgCurv_map(attribute_double2double1);
     associative_property_map<map<double, double>> stdCurv_map(attribute_double2double2);
     dp.property("avgCurv", avgCurv_map);
-    dp.property("stdCurv",stdCurv_map);
+    dp.property("stdCurv",stdCurv_map);*/
 
+    dp.property("dist", get(&Edge_Regular::dist, designG));
+    dp.property("ot", get(&Edge_Regular::ot, designG));
+    dp.property("curv", get(&Edge_Regular::curv, designG));
+    dp.property("edist",get(&Edge_Regular::edist, designG));
+    map<double, double> attribute_double2double1,attribute_double2double2;
+    associative_property_map<map<double, double>> avgCurv_map(attribute_double2double1);
+    associative_property_map<map<double, double>> stdCurv_map(attribute_double2double2);
+    dp.property("avgCurv", avgCurv_map);
+    dp.property("stdCurv",stdCurv_map);
 
 
     inFile.open(fileName, ifstream::in);
@@ -408,8 +435,8 @@ void generateTasks(Graph_t& g, TaskPriorityQueue &tasksToDo){
         for(auto p:degreeSorted){
 //            for (int i=r.begin(); i<r.end(); ++i) {
             Vertex src=p.first;
-            if (g[src].name=="Chaumont")
-                int KKKK=0;
+//            if (g[src].name=="Chaumont")
+//                int KKKK=0;
             sourcesSet.insert(src);
             for ( auto ve = boost::out_edges(src, g ); ve.first != ve.second; ++ve.first) {
                 bool found = true;
@@ -1023,7 +1050,7 @@ struct myComp {
 
 
 //#define EPS 0.0
-#define ALPHA 0.0
+#define ALPHA 0.1
 Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int offset, vector<Vertex> &sources, vector<Vertex> &dests, Graph_t &g){
     // minimum cost upto
     // goal state from starting
@@ -1447,12 +1474,12 @@ void calcCurvature(double alpha, Vertex v, vector<vector<double>> &MatDist, set<
             distributionB[destIndex]=alpha;
 
             wd = compute_EMD(distributionA, distributionB, vertDist);
-            if ((g[src].name=="Chaumont") && (g[neighbor].name=="Mulhouse")){
-               int KKK=0;
-            }
-            if ((g[neighbor].name=="Chaumont") && (g[src].name=="Mulhouse")){
-                int KKK=0;
-            }
+//            if ((g[src].name=="Chaumont") && (g[neighbor].name=="Mulhouse")){
+//               int KKK=0;
+//           }
+//            if ((g[neighbor].name=="Chaumont") && (g[src].name=="Mulhouse")){
+//                int KKK=0;
+//            }
 
 
 //            cout<<src<<":"<<wd<<":"<<neighbor<<endl;
@@ -1492,9 +1519,9 @@ void calcStats(Graph_t &g, int componentNum, vector<int> &components){
     for (auto eit = es.first; eit != es.second; ++eit) {
         double ddd=g[*eit].distance;
         Vertex src=source(*eit,g), dst=target(*eit,g);
-        if ((g[src].name=="Lyon") && (g[dst].name=="Chambéry")){
-            cout<<"curv:"<<g[*eit].curv<<" dist:"<<g[*eit].distance<<endl;
-        }
+//        if ((g[src].name=="Lyon") && (g[dst].name=="Chambéry")){
+//           cout<<"curv:"<<g[*eit].curv<<" dist:"<<g[*eit].distance<<endl;
+//        }
        if (g[*eit].distance>maxdist) {
             maxdist=g[*eit].distance;
             maxEdge=*eit;
@@ -1509,13 +1536,13 @@ void calcStats(Graph_t &g, int componentNum, vector<int> &components){
         sum2Curv += g[*eit].curv*g[*eit].curv;
         componentSize[comp]++;
         sum2CurvperComponent[comp]=sum2CurvperComponent[comp]+g[*eit].curv*g[*eit].curv;
-        logFile1<<g[source(*eit,g)].name<<","<<g[target(*eit,g)].name<<","<<source(*eit,g)<<","<<target(*eit,g)<<","<<
-            g[*eit].distance<<","<<g[*eit].curv<<","<<g[*eit].ot<<endl;
+//        logFile1<<g[source(*eit,g)].name<<","<<g[target(*eit,g)].name<<","<<source(*eit,g)<<","<<target(*eit,g)<<","<<
+//            g[*eit].distance<<","<<g[*eit].curv<<","<<g[*eit].ot<<endl;
     }
     g[graph_bundle].avgCurv=sumCurv/num_edges(g);
     g[graph_bundle].stdCurv=sqrt(sum2Curv/num_edges(g)-g[graph_bundle].avgCurv*g[graph_bundle].avgCurv);
-    cout <<"maxdist:"<<maxdist<<",mindist:"<<mindist<<", maxEdge "<<g[source(maxEdge,g)].name<<":"<<g[target(maxEdge,g)].name
-         <<" curv "<<g[maxEdge].curv<<endl;
+//    cout <<"maxdist:"<<maxdist<<",mindist:"<<mindist<<", maxEdge "<<g[source(maxEdge,g)].name<<":"<<g[target(maxEdge,g)].name
+//         <<" curv "<<g[maxEdge].curv<<endl;
     cout<<"avgCurv="<<g[graph_bundle].avgCurv<<", stdCurv="<<g[graph_bundle].stdCurv<<endl;
     for (int j=0;j<componentNum;j++){
         if (componentSize[j]>0){
@@ -1528,7 +1555,7 @@ void calcStats(Graph_t &g, int componentNum, vector<int> &components){
 
 bool updateDistances(Graph_t &g, double &oldrescaling){
     auto es = edges(g);
-    double delta=0.3;
+    double delta=0.1;
     double sumWeights=0.0;
     int numEdgesUnfiltered=0;
     bool surgery=false;
@@ -1540,7 +1567,7 @@ bool updateDistances(Graph_t &g, double &oldrescaling){
             surgery=true;
             Vertex src=source(*eit,g), dst=target(*eit,g);
 //            cout<<"Surgery Type 1: "<<src<<":"<<dst<<","<<g[src].name<<":"<<g[dst].name<<", Curvature:"<<g[*eit].curv<<endl;
-            g[src].name=g[src].name+","+g[dst].name;
+//            g[src].name=g[src].name+","+g[dst].name;
             g[*eit].active=false;
             g[dst].active=false;
             for (auto ve = boost::out_edges(dst, g); ve.first != ve.second; ++ve.first) {
@@ -1552,9 +1579,10 @@ bool updateDistances(Graph_t &g, double &oldrescaling){
                             g[ed.first].distance=g[*ve.first].distance;
                         }
                     } else {
-                        add_edge(src, ddst, {g[*ve.first].dist, g[*ve.first].distance, g[*ve.first].weight, g[*ve.first].ot,
-                                             g[*ve.first].curv, g[*ve.first].edgeLabel, g[*ve.first].delta,
+                        add_edge(src, ddst, {g[*ve.first].dist, g[*ve.first].edist, g[*ve.first].distance, g[*ve.first].ot,
+                                             g[*ve.first].curv,
                                              g[*ve.first].active}, g);
+
                         g[*ve.first].active = false;
                     }
                     if (g[*ve.first].distance<0)
@@ -1765,7 +1793,7 @@ int        num_core=1;
         calcStats(*g, numComponent, component);
         boost::dynamic_properties dpout;
 
-        dpout.property("label", get(&Vertex_info_road::label, *g));
+/*        dpout.property("label", get(&Vertex_info_road::label, *g));
         dpout.property("X", get(&Vertex_info_road::X, *g));
         dpout.property("Y", get(&Vertex_info_road::Y, *g));
         dpout.property("meta", get(&Vertex_info_road::name, *g));
@@ -1783,13 +1811,13 @@ int        num_core=1;
         dpout.property("Closeness Centrality", get(&Vertex_info_road::closnesscentrality, *g));
         dpout.property("Harmonic Closeness Centrality", get(&Vertex_info_road::harmonicclosnesscentrality, *g));
         dpout.property("Betweenness Centrality", get(&Vertex_info_road::betweenesscentrality, *g));
+*/
 
+        dpout.property("dist", get(&Edge_Regular::dist, *g));
+        dpout.property("ot", get(&Edge_Regular::ot, *g));
+        dpout.property("curv", get(&Edge_Regular::curv, *g));
+        dpout.property("edist",get(&Edge_Regular::edist, *g));
 
-        dpout.property("dist", get(&Edge_info_road::dist, *g));
-        dpout.property("weight", get(&Edge_info_road::weight, *g));
-        dpout.property("distance", get(&Edge_info_road::distance, *g));
-        dpout.property("ot", get(&Edge_info_road::ot, *g));
-        dpout.property("curv", get(&Edge_info_road::curv, *g));
 
         map<double, double> attribute_double2double1,attribute_double2double2;
         associative_property_map<map<double, double>> avgCurv_map(attribute_double2double1);
