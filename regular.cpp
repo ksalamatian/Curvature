@@ -52,6 +52,9 @@ typedef unsigned int uint;
 
 struct Vertex_Regular {
     bool active=true;
+    double x=0.0;
+    double y=0.0;
+    double z=0.0;
 };
 
 struct Edge_Regular {
@@ -187,6 +190,9 @@ void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
     dp.property("ot", get(&Edge_Regular::ot, designG));
     dp.property("curv", get(&Edge_Regular::curv, designG));
     dp.property("edist",get(&Edge_Regular::edist, designG));
+    dp.property("x",get(&Vertex_Regular::x, designG));
+    dp.property("y",get(&Vertex_Regular::y, designG));
+    dp.property("z",get(&Vertex_Regular::z, designG));
     map<double, double> attribute_double2double1,attribute_double2double2;
     associative_property_map<map<double, double>> avgCurv_map(attribute_double2double1);
     associative_property_map<map<double, double>> stdCurv_map(attribute_double2double2);
@@ -1746,7 +1752,7 @@ int main(int argc, char **argv)  {
 //    string inFilename = "/Users/ksalamatian/graphdumps1554598943.1554599003.graphml";
     string pfilename=path+"/"+filename;
     readGraphMLFile(*gin,pfilename );
-    int numIteration=2000;
+    int numIteration=50;
 //    string inFilename="/data/Curvature/processed.0.gml";
 
 //    readGraphMLFile(gin, inFilename);
@@ -1769,8 +1775,8 @@ int main(int argc, char **argv)  {
         //    DistanceCache distanceCache(100000000,8);
         numProcessedVertex=0;
         numProcessedEdge=0;
-//        int num_core=std::thread::hardware_concurrency();
-int        num_core=1;
+        int num_core=std::thread::hardware_concurrency();
+//int        num_core=1;
         int offset=0;
         int k=0;
         string logFilename=path+"/processed/logFile."+to_string(index)+".log", logFilename1=path+"/processed/dest."+to_string(index)+".log";
@@ -1791,6 +1797,15 @@ int        num_core=1;
 //            cout<<(*g)[*v].name<<endl;
 //        }
         calcStats(*g, numComponent, component);
+        if (updateDistances(*g,oldRescaling)){
+            Predicate predicate{g};
+            ginter = new Graph_t();
+            Filtered_Graph_t fg(*g, predicate, predicate);
+            copy_graph(fg,*ginter);
+            g->clear();
+            delete g;
+            g=ginter;
+        }
         boost::dynamic_properties dpout;
 
 /*        dpout.property("label", get(&Vertex_info_road::label, *g));
@@ -1813,7 +1828,7 @@ int        num_core=1;
         dpout.property("Betweenness Centrality", get(&Vertex_info_road::betweenesscentrality, *g));
 */
 
-        dpout.property("dist", get(&Edge_Regular::dist, *g));
+        dpout.property("dist", get(&Edge_Regular::distance, *g));
         dpout.property("ot", get(&Edge_Regular::ot, *g));
         dpout.property("curv", get(&Edge_Regular::curv, *g));
         dpout.property("edist",get(&Edge_Regular::edist, *g));
@@ -1828,15 +1843,6 @@ int        num_core=1;
         write_graphml(outFile, *g, dpout, true);
 //        logFile.close();
         logFile1.close();
-        if (updateDistances(*g,oldRescaling)){
-            Predicate predicate{g};
-            ginter = new Graph_t();
-            Filtered_Graph_t fg(*g, predicate, predicate);
-            copy_graph(fg,*ginter);
-            g->clear();
-            delete g;
-            g=ginter;
-        }
     }
     return 0;
 }

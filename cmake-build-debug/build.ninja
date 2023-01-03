@@ -1,0 +1,254 @@
+## This file contains all the build statements describing the
+# compilation DAG.
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# 
+# Which is the root file.
+# =============================================================================
+
+# =============================================================================
+# Project: Curvature
+# Configurations: Debug
+# =============================================================================
+
+#############################################
+# Minimal version of Ninja required by this file
+
+ninja_required_version = 1.5
+
+
+#############################################
+# Set configuration variable for custom commands.
+
+CONFIGURATION = Debug
+# =============================================================================
+# Include auxiliary files.
+
+
+#############################################
+# Include rules file.
+
+include CMakeFiles/rules.ninja
+
+# =============================================================================
+
+#############################################
+# Logical path to working directory; prefix for absolute paths.
+
+cmake_ninja_workdir = /Users/ksalamatian/CLionProjects/NewCurvature/cmake-build-debug/
+# =============================================================================
+# Object build statements for EXECUTABLE target Curvature
+
+
+#############################################
+# Order-only phony target for Curvature
+
+build cmake_object_order_depends_target_Curvature: phony || CMakeFiles/Curvature.dir
+
+build CMakeFiles/Curvature.dir/main.cpp.o: CXX_COMPILER__Curvature_Debug /Users/ksalamatian/CLionProjects/NewCurvature/main.cpp || cmake_object_order_depends_target_Curvature
+  DEFINES = -DBOOST_GRAPH_DYN_LINK -DBOOST_GRAPH_NO_LIB -DBOOST_IOSTREAMS_DYN_LINK -DBOOST_IOSTREAMS_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB
+  DEP_FILE = CMakeFiles/Curvature.dir/main.cpp.o.d
+  FLAGS = -Wall -Wextra -pthread -g -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=13.0 -fcolor-diagnostics -std=gnu++14
+  INCLUDES = -I/usr/include/tbb -isystem /opt/homebrew/include
+  OBJECT_DIR = CMakeFiles/Curvature.dir
+  OBJECT_FILE_DIR = CMakeFiles/Curvature.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target Curvature
+
+
+#############################################
+# Link the executable Curvature
+
+build Curvature: CXX_EXECUTABLE_LINKER__Curvature_Debug CMakeFiles/Curvature.dir/main.cpp.o | /opt/homebrew/lib/libboost_graph-mt.dylib /opt/homebrew/lib/libboost_iostreams-mt.dylib /opt/homebrew/lib/libboost_regex-mt.dylib
+  FLAGS = -Wall -Wextra -pthread -g -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=13.0
+  LINK_LIBRARIES = -Wl,-rpath,/opt/homebrew/Cellar/tbb/2021.5.0_2/lib  /opt/homebrew/lib/libboost_graph-mt.dylib  /opt/homebrew/lib/libboost_iostreams-mt.dylib  -ltbb  /opt/homebrew/lib/libboost_regex-mt.dylib
+  LINK_PATH = -L/opt/homebrew/Cellar/tbb/2021.5.0_2/lib
+  OBJECT_DIR = CMakeFiles/Curvature.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = Curvature
+  TARGET_PDB = Curvature.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target correctFile
+
+
+#############################################
+# Order-only phony target for correctFile
+
+build cmake_object_order_depends_target_correctFile: phony || CMakeFiles/correctFile.dir
+
+build CMakeFiles/correctFile.dir/correctFile.cpp.o: CXX_COMPILER__correctFile_Debug /Users/ksalamatian/CLionProjects/NewCurvature/correctFile.cpp || cmake_object_order_depends_target_correctFile
+  DEFINES = -DBOOST_GRAPH_DYN_LINK -DBOOST_GRAPH_NO_LIB -DBOOST_IOSTREAMS_DYN_LINK -DBOOST_IOSTREAMS_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB
+  DEP_FILE = CMakeFiles/correctFile.dir/correctFile.cpp.o.d
+  FLAGS = -Wall -Wextra -pthread -g -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=13.0 -fcolor-diagnostics -std=gnu++14
+  INCLUDES = -I/usr/include/tbb -isystem /opt/homebrew/include
+  OBJECT_DIR = CMakeFiles/correctFile.dir
+  OBJECT_FILE_DIR = CMakeFiles/correctFile.dir
+
+build CMakeFiles/correctFile.dir/test.cpp.o: CXX_COMPILER__correctFile_Debug /Users/ksalamatian/CLionProjects/NewCurvature/test.cpp || cmake_object_order_depends_target_correctFile
+  DEFINES = -DBOOST_GRAPH_DYN_LINK -DBOOST_GRAPH_NO_LIB -DBOOST_IOSTREAMS_DYN_LINK -DBOOST_IOSTREAMS_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB
+  DEP_FILE = CMakeFiles/correctFile.dir/test.cpp.o.d
+  FLAGS = -Wall -Wextra -pthread -g -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=13.0 -fcolor-diagnostics -std=gnu++14
+  INCLUDES = -I/usr/include/tbb -isystem /opt/homebrew/include
+  OBJECT_DIR = CMakeFiles/correctFile.dir
+  OBJECT_FILE_DIR = CMakeFiles/correctFile.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target correctFile
+
+
+#############################################
+# Link the executable correctFile
+
+build correctFile: CXX_EXECUTABLE_LINKER__correctFile_Debug CMakeFiles/correctFile.dir/correctFile.cpp.o CMakeFiles/correctFile.dir/test.cpp.o | /opt/homebrew/lib/libboost_graph-mt.dylib /opt/homebrew/lib/libboost_iostreams-mt.dylib /opt/homebrew/lib/libboost_regex-mt.dylib
+  FLAGS = -Wall -Wextra -pthread -g -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=13.0
+  LINK_LIBRARIES = -Wl,-rpath,/opt/homebrew/Cellar/tbb/2021.5.0_2/lib  /opt/homebrew/lib/libboost_graph-mt.dylib  /opt/homebrew/lib/libboost_iostreams-mt.dylib  /opt/homebrew/lib/libboost_regex-mt.dylib
+  LINK_PATH = -L/opt/homebrew/Cellar/tbb/2021.5.0_2/lib
+  OBJECT_DIR = CMakeFiles/correctFile.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = correctFile
+  TARGET_PDB = correctFile.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target test
+
+
+#############################################
+# Order-only phony target for test
+
+build cmake_object_order_depends_target_test: phony || CMakeFiles/test.dir
+
+build CMakeFiles/test.dir/test.cpp.o: CXX_COMPILER__test_Debug /Users/ksalamatian/CLionProjects/NewCurvature/test.cpp || cmake_object_order_depends_target_test
+  DEP_FILE = CMakeFiles/test.dir/test.cpp.o.d
+  FLAGS = -Wall -Wextra -pthread -g -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=13.0 -fcolor-diagnostics -std=gnu++14
+  INCLUDES = -I/opt/homebrew/include -I/usr/include/tbb
+  OBJECT_DIR = CMakeFiles/test.dir
+  OBJECT_FILE_DIR = CMakeFiles/test.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target test
+
+
+#############################################
+# Link the executable test
+
+build test: CXX_EXECUTABLE_LINKER__test_Debug CMakeFiles/test.dir/test.cpp.o
+  FLAGS = -Wall -Wextra -pthread -g -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=13.0
+  LINK_PATH = -L/opt/homebrew/Cellar/tbb/2021.5.0_2/lib
+  OBJECT_DIR = CMakeFiles/test.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = test
+  TARGET_PDB = test.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target regular
+
+
+#############################################
+# Order-only phony target for regular
+
+build cmake_object_order_depends_target_regular: phony || CMakeFiles/regular.dir
+
+build CMakeFiles/regular.dir/regular.cpp.o: CXX_COMPILER__regular_Debug /Users/ksalamatian/CLionProjects/NewCurvature/regular.cpp || cmake_object_order_depends_target_regular
+  DEFINES = -DBOOST_GRAPH_DYN_LINK -DBOOST_GRAPH_NO_LIB -DBOOST_IOSTREAMS_DYN_LINK -DBOOST_IOSTREAMS_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB
+  DEP_FILE = CMakeFiles/regular.dir/regular.cpp.o.d
+  FLAGS = -Wall -Wextra -pthread -g -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=13.0 -fcolor-diagnostics -std=gnu++14
+  INCLUDES = -I/usr/include/tbb -isystem /opt/homebrew/include
+  OBJECT_DIR = CMakeFiles/regular.dir
+  OBJECT_FILE_DIR = CMakeFiles/regular.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target regular
+
+
+#############################################
+# Link the executable regular
+
+build regular: CXX_EXECUTABLE_LINKER__regular_Debug CMakeFiles/regular.dir/regular.cpp.o | /opt/homebrew/lib/libboost_graph-mt.dylib /opt/homebrew/lib/libboost_iostreams-mt.dylib /opt/homebrew/lib/libboost_regex-mt.dylib
+  FLAGS = -Wall -Wextra -pthread -g -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=13.0
+  LINK_LIBRARIES = -Wl,-rpath,/opt/homebrew/Cellar/tbb/2021.5.0_2/lib  /opt/homebrew/lib/libboost_graph-mt.dylib  /opt/homebrew/lib/libboost_iostreams-mt.dylib  -ltbb  /opt/homebrew/lib/libboost_regex-mt.dylib
+  LINK_PATH = -L/opt/homebrew/Cellar/tbb/2021.5.0_2/lib
+  OBJECT_DIR = CMakeFiles/regular.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = regular
+  TARGET_PDB = regular.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/ksalamatian/CLionProjects/NewCurvature/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build edit_cache: phony CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/ksalamatian/CLionProjects/NewCurvature/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/ksalamatian/CLionProjects/NewCurvature -B/Users/ksalamatian/CLionProjects/NewCurvature/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build rebuild_cache: phony CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Target aliases.
+
+# =============================================================================
+# Folder targets.
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/ksalamatian/CLionProjects/NewCurvature/cmake-build-debug
+
+build all: phony Curvature correctFile test regular
+
+# =============================================================================
+# Built-in targets
+
+
+#############################################
+# Re-run CMake if any of its inputs changed.
+
+build build.ninja: RERUN_CMAKE | /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindBoost.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindPackageMessage.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/UnixPaths.cmake /Users/ksalamatian/CLionProjects/NewCurvature/CMakeLists.txt /opt/homebrew/lib/cmake/Boost-1.80.0/BoostConfig.cmake /opt/homebrew/lib/cmake/Boost-1.80.0/BoostConfigVersion.cmake /opt/homebrew/lib/cmake/BoostDetectToolset-1.80.0.cmake /opt/homebrew/lib/cmake/boost_graph-1.80.0/boost_graph-config-version.cmake /opt/homebrew/lib/cmake/boost_graph-1.80.0/boost_graph-config.cmake /opt/homebrew/lib/cmake/boost_graph-1.80.0/libboost_graph-variant-mt-shared.cmake /opt/homebrew/lib/cmake/boost_graph-1.80.0/libboost_graph-variant-mt-static.cmake /opt/homebrew/lib/cmake/boost_graph-1.80.0/libboost_graph-variant-shared.cmake /opt/homebrew/lib/cmake/boost_graph-1.80.0/libboost_graph-variant-static.cmake /opt/homebrew/lib/cmake/boost_headers-1.80.0/boost_headers-config-version.cmake /opt/homebrew/lib/cmake/boost_headers-1.80.0/boost_headers-config.cmake /opt/homebrew/lib/cmake/boost_iostreams-1.80.0/boost_iostreams-config-version.cmake /opt/homebrew/lib/cmake/boost_iostreams-1.80.0/boost_iostreams-config.cmake /opt/homebrew/lib/cmake/boost_iostreams-1.80.0/libboost_iostreams-variant-mt-shared.cmake /opt/homebrew/lib/cmake/boost_iostreams-1.80.0/libboost_iostreams-variant-mt-static.cmake /opt/homebrew/lib/cmake/boost_iostreams-1.80.0/libboost_iostreams-variant-shared.cmake /opt/homebrew/lib/cmake/boost_iostreams-1.80.0/libboost_iostreams-variant-static.cmake /opt/homebrew/lib/cmake/boost_regex-1.80.0/boost_regex-config-version.cmake /opt/homebrew/lib/cmake/boost_regex-1.80.0/boost_regex-config.cmake /opt/homebrew/lib/cmake/boost_regex-1.80.0/libboost_regex-variant-mt-shared.cmake /opt/homebrew/lib/cmake/boost_regex-1.80.0/libboost_regex-variant-mt-static.cmake /opt/homebrew/lib/cmake/boost_regex-1.80.0/libboost_regex-variant-shared.cmake /opt/homebrew/lib/cmake/boost_regex-1.80.0/libboost_regex-variant-static.cmake CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake
+  pool = console
+
+
+#############################################
+# A missing CMake input file is not an error.
+
+build /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindBoost.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindPackageMessage.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/UnixPaths.cmake /Users/ksalamatian/CLionProjects/NewCurvature/CMakeLists.txt /opt/homebrew/lib/cmake/Boost-1.80.0/BoostConfig.cmake /opt/homebrew/lib/cmake/Boost-1.80.0/BoostConfigVersion.cmake /opt/homebrew/lib/cmake/BoostDetectToolset-1.80.0.cmake /opt/homebrew/lib/cmake/boost_graph-1.80.0/boost_graph-config-version.cmake /opt/homebrew/lib/cmake/boost_graph-1.80.0/boost_graph-config.cmake /opt/homebrew/lib/cmake/boost_graph-1.80.0/libboost_graph-variant-mt-shared.cmake /opt/homebrew/lib/cmake/boost_graph-1.80.0/libboost_graph-variant-mt-static.cmake /opt/homebrew/lib/cmake/boost_graph-1.80.0/libboost_graph-variant-shared.cmake /opt/homebrew/lib/cmake/boost_graph-1.80.0/libboost_graph-variant-static.cmake /opt/homebrew/lib/cmake/boost_headers-1.80.0/boost_headers-config-version.cmake /opt/homebrew/lib/cmake/boost_headers-1.80.0/boost_headers-config.cmake /opt/homebrew/lib/cmake/boost_iostreams-1.80.0/boost_iostreams-config-version.cmake /opt/homebrew/lib/cmake/boost_iostreams-1.80.0/boost_iostreams-config.cmake /opt/homebrew/lib/cmake/boost_iostreams-1.80.0/libboost_iostreams-variant-mt-shared.cmake /opt/homebrew/lib/cmake/boost_iostreams-1.80.0/libboost_iostreams-variant-mt-static.cmake /opt/homebrew/lib/cmake/boost_iostreams-1.80.0/libboost_iostreams-variant-shared.cmake /opt/homebrew/lib/cmake/boost_iostreams-1.80.0/libboost_iostreams-variant-static.cmake /opt/homebrew/lib/cmake/boost_regex-1.80.0/boost_regex-config-version.cmake /opt/homebrew/lib/cmake/boost_regex-1.80.0/boost_regex-config.cmake /opt/homebrew/lib/cmake/boost_regex-1.80.0/libboost_regex-variant-mt-shared.cmake /opt/homebrew/lib/cmake/boost_regex-1.80.0/libboost_regex-variant-mt-static.cmake /opt/homebrew/lib/cmake/boost_regex-1.80.0/libboost_regex-variant-shared.cmake /opt/homebrew/lib/cmake/boost_regex-1.80.0/libboost_regex-variant-static.cmake CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake: phony
+
+
+#############################################
+# Clean all the built files.
+
+build clean: CLEAN
+
+
+#############################################
+# Print all primary targets available.
+
+build help: HELP
+
+
+#############################################
+# Make the all target the default.
+
+default all

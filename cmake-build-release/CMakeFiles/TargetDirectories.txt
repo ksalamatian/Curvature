@@ -1,0 +1,5 @@
+/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/CMakeFiles/rebuild_cache.dir
+/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/CMakeFiles/edit_cache.dir
+/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/CMakeFiles/test.dir
+/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/CMakeFiles/correctFile.dir
+/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/CMakeFiles/Curvature.dir

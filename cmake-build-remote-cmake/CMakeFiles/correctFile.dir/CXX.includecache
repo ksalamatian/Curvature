@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/kave/tmp/tmp.0HGoF3We2e/correctFile.cpp
+stdio.h
+-
+iostream
+-
+utility
+-
+thread
+-
+boost/graph/adjacency_list.hpp
+-
+boost/graph/graph_utility.hpp
+-
+boost/graph/graphml.hpp
+-
+

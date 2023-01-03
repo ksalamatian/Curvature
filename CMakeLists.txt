@@ -23,9 +23,13 @@ include_directories(/usr/include/tbb/)
 
 add_executable(Curvature main.cpp)
 #add_executable(flot flot.cpp)
-add_executable(correctFile correctFile.cpp)
-add_executable(test test1.cpp)
+add_executable(correctFile correctFile.cpp test.cpp)
+add_executable(test test.cpp)
+add_executable(regular regular.cpp)
+
 #TARGET_LINK_LIBRARIES(flot ${Boost_LIBRARIES} tbb)
 TARGET_LINK_LIBRARIES(Curvature ${Boost_LIBRARIES} tbb)
 TARGET_LINK_LIBRARIES(correctFile ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(test tbb )
+TARGET_LINK_LIBRARIES(regular ${Boost_LIBRARIES} tbb)
+
+#TARGET_LINK_LIBRARIES(test tbb )

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Curvature"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\opt\;CMake Files\..\..\..\..\opt\homebrew\;CMake Files\..\..\..\..\opt\homebrew\lib\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Boost-1.76.0\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_headers-1.76.0\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_graph-1.76.0\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_regex-1.76.0\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_iostreams-1.76.0\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="test">
+				<Option output="/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/test" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/opt/homebrew/include"/>
+					<Add directory="/usr/include/tbb"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 test"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="test/fast">
+				<Option output="/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/test" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/opt/homebrew/include"/>
+					<Add directory="/usr/include/tbb"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 test/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="correctFile">
+				<Option output="/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/correctFile" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_ALL_NO_LIB"/>
+					<Add option="-DBOOST_GRAPH_DYN_LINK"/>
+					<Add option="-DBOOST_REGEX_DYN_LINK"/>
+					<Add option="-DBOOST_IOSTREAMS_DYN_LINK"/>
+					<Add directory="/usr/include/tbb"/>
+					<Add directory="/opt/homebrew/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 correctFile"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="correctFile/fast">
+				<Option output="/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/correctFile" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_ALL_NO_LIB"/>
+					<Add option="-DBOOST_GRAPH_DYN_LINK"/>
+					<Add option="-DBOOST_REGEX_DYN_LINK"/>
+					<Add option="-DBOOST_IOSTREAMS_DYN_LINK"/>
+					<Add directory="/usr/include/tbb"/>
+					<Add directory="/opt/homebrew/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 correctFile/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Curvature">
+				<Option output="/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Curvature" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_ALL_NO_LIB"/>
+					<Add option="-DBOOST_GRAPH_DYN_LINK"/>
+					<Add option="-DBOOST_REGEX_DYN_LINK"/>
+					<Add option="-DBOOST_IOSTREAMS_DYN_LINK"/>
+					<Add directory="/usr/include/tbb"/>
+					<Add directory="/opt/homebrew/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 Curvature"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Curvature/fast">
+				<Option output="/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Curvature" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_ALL_NO_LIB"/>
+					<Add option="-DBOOST_GRAPH_DYN_LINK"/>
+					<Add option="-DBOOST_REGEX_DYN_LINK"/>
+					<Add option="-DBOOST_IOSTREAMS_DYN_LINK"/>
+					<Add directory="/usr/include/tbb"/>
+					<Add directory="/opt/homebrew/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 Curvature/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/ksalamatian/CLionProjects/Curvature/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/correctFile.cpp">
+			<Option target="correctFile"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/main.cpp">
+			<Option target="Curvature"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/test.cpp">
+			<Option target="test"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/BoostDetectToolset-1.76.0.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/Boost-1.76.0/BoostConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Boost-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/Boost-1.76.0/BoostConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Boost-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_headers-1.76.0/boost_headers-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_headers-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_headers-1.76.0/boost_headers-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_headers-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_graph-1.76.0/boost_graph-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_graph-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_graph-1.76.0/boost_graph-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_graph-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_graph-1.76.0/libboost_graph-variant-mt-shared.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_graph-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_graph-1.76.0/libboost_graph-variant-mt-static.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_graph-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_graph-1.76.0/libboost_graph-variant-shared.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_graph-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_graph-1.76.0/libboost_graph-variant-static.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_graph-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_regex-1.76.0/boost_regex-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_regex-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_regex-1.76.0/boost_regex-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_regex-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_regex-1.76.0/libboost_regex-variant-mt-shared.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_regex-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_regex-1.76.0/libboost_regex-variant-mt-static.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_regex-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_regex-1.76.0/libboost_regex-variant-shared.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_regex-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_regex-1.76.0/libboost_regex-variant-static.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_regex-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_iostreams-1.76.0/boost_iostreams-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_iostreams-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_iostreams-1.76.0/boost_iostreams-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_iostreams-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_iostreams-1.76.0/libboost_iostreams-variant-mt-shared.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_iostreams-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_iostreams-1.76.0/libboost_iostreams-variant-mt-static.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_iostreams-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_iostreams-1.76.0/libboost_iostreams-variant-shared.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_iostreams-1.76.0\"/>
+		</Unit>
+		<Unit filename="/Users/ksalamatian/CLionProjects/Curvature/../../../../opt/homebrew/lib/cmake/boost_iostreams-1.76.0/libboost_iostreams-variant-static.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\boost_iostreams-1.76.0\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

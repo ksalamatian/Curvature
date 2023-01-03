@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
-  <key id="key1" for="edge" attr.name="curv" attr.type="double" />
-  <key id="key2" for="edge" attr.name="dist" attr.type="double" />
-  <key id="key3" for="edge" attr.name="edist" attr.type="double" />
-  <key id="key4" for="edge" attr.name="ot" attr.type="double" />
-  <graph id="G" edgedefault="undirected" parse.nodeids="canonical" parse.edgeids="canonical" parse.order="nodesfirst">
-  </graph>
-</graphml>

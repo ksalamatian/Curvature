@@ -1,0 +1,1 @@
+/usr/bin/g++  -O3 -Wall -Wextra -pthread -g -g   CMakeFiles/correctFile.dir/correctFile.cpp.o  -o correctFile   -L/usr/libx86_64-linux-gnu  -Wl,-rpath,/usr/libx86_64-linux-gnu /usr/lib/x86_64-linux-gnu/libboost_graph.so /usr/lib/x86_64-linux-gnu/libboost_iostreams.so /usr/lib/x86_64-linux-gnu/libboost_regex.so 
