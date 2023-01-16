@@ -12,21 +12,40 @@ def twoNeighborhood(G,n,k):
     if n in neighborhood:
         neighborhood.remove(n)
     return list(neighborhood)
-N=1791
-G=nx.read_graphml("/Users/ksalamatian/CLionProjects/NewCurvature/processed/processed.50.graphml")
+G=nx.read_graphml("/Users/ksalamatian/CLionProjects/NewCurvature/processed/processed.49.graphml")
+N=nx.number_of_nodes(G)
+print("Num Vertices:",N)
+print("Num Edges:", nx.number_of_edges(G))
 edist=[]
 rdist=[]
-L=nx.laplacian_matrix(G).todense()
-B=np.eye(N)-1.0/N*np.ones(N)
-H=1.0/2*B*L*B
-Lambda,U= np.linalg.eig(H)
-DD=np.diag(np.sqrt(abs(Lambda)))*U
-nodesList=list(G.nodes)
-for u,v in G.edges():
-    indexU=nodesList.index(u)
-    indexV=nodesList.index(v)
-    G[u][v]["edist"]=np.linalg.norm(DD[:,indexU]-DD[:,indexV])
-nodesList=list(G.nodes)
+for u,v in G.edges:
+    edist.append(G[u][v]["edist"])
+    rdist.append(G[u][v]["dist"])
+
+avgEdist=np.mean(edist)
+stdEdist=np.std(edist/avgEdist)
+avgRdist=np.mean(rdist)
+stdRdist=np.std(rdist/avgRdist)
+edist=np.array(edist)/avgEdist
+rdist=np.array(rdist)
+ratio=np.divide(edist,rdist)
+A=nx.adjacency_matrix(G)
+AEdist=1/avgEdist*nx.adj_matrix(G,weight='edist')
+ARdist=nx.adj_matrix(G,weight="dist")
+#L=nx.laplacian_matrix(G)
+#B=np.eye(N)-1.0/N*np.ones(N)
+#H=-1.0/2*B*L*B
+#Lambda,U= np.linalg.eig(H)
+#DD=np.diag(np.sqrt(abs(Lambda)))*U
+#nodesList=list(G.nodes)
+A2=A*A
+A2Edist=AEdist*AEdist
+A2Rdist=ARdist*ARdist
+#print(np.mean(A2Edist))
+#print(np.std(A2Edist))
+#print(np.mean(A2Rdist))
+#print(np.std(A2Rdist))
+
 dist1=[]
 dist2=[]
 dist3=[]

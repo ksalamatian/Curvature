@@ -956,7 +956,7 @@ public:
         GraphNode *elem;
         while (!graphNodeQueue.empty()){
             graphNodeQueue.try_pop(elem);
-            delete elem;
+            delete elem ;
         }
     }
 
@@ -1054,6 +1054,52 @@ struct myComp {
     }
 };
 
+bool triangle_checker(Graph_t &g,int type){
+    map<Vertex, set<Vertex>> A;
+    bool status=true;
+    int numTriangle=0;
+    VertexIterator  v, vend;
+    for (tie(v, vend) = vertices(g); v != vend; v++){
+        A[*v].empty();
+    }
+    AdjacencyIterator vAdj, vAdjEnd;
+    set<Vertex> intersect;
+    for (tie(v, vend) = vertices(g); v != vend; v++){
+        for (tie(vAdj, vAdjEnd) = adjacent_vertices(*v, g); vAdj != vAdjEnd; vAdj++) {
+            intersect.empty();
+            if (*v < *vAdj){
+                set_intersection(A[*v].begin(), A[*v].end(), A[*vAdj].begin(), A[*vAdj].end(),
+                                 inserter(intersect, intersect.begin()));
+                for (Vertex vv: intersect) {
+                    numTriangle ++;
+                    auto pp = edge(*v, vv, g);
+                    auto pp1 = edge(vv, *vAdj, g);
+                    auto pp2 = edge(*v, *vAdj, g);
+                    if ((pp.second) && (pp1.second) && (pp2.second)) {
+                        if (type == 0) {
+                            if ((g[pp.first].distance + g[pp1.first].distance < g[pp2.first].distance) ||
+                                (g[pp1.first].distance + g[pp2.first].distance < g[pp.first].distance) ||
+                                (g[pp.first].distance + g[pp2.first].distance < g[pp1.first].distance)) {
+                                cout << "Violation" << *v << "," << *vAdj << "," << vv << endl;
+                                status=false;
+                            }
+                        } else {
+                            if ((g[pp.first].edist + g[pp1.first].edist < g[pp2.first].edist) ||
+                                (g[pp1.first].edist + g[pp2.first].edist < g[pp.first].edist) ||
+                                (g[pp.first].edist + g[pp2.first].edist < g[pp1.first].edist)) {
+                                cout << "Violation" << *v << "," << *vAdj << "," << vv << endl;
+                                status=false;
+                            }
+                        }
+                    }
+                }
+                A[*vAdj].insert(*v);
+            }
+        }
+    }
+    cout<<"Num Triangle:"<<numTriangle<<endl;
+    return status;
+}
 
 //#define EPS 0.0
 #define ALPHA 0.1
@@ -1546,7 +1592,7 @@ void calcStats(Graph_t &g, int componentNum, vector<int> &components){
 //            g[*eit].distance<<","<<g[*eit].curv<<","<<g[*eit].ot<<endl;
     }
     g[graph_bundle].avgCurv=sumCurv/num_edges(g);
-    g[graph_bundle].stdCurv=sqrt(sum2Curv/num_edges(g)-g[graph_bundle].avgCurv*g[graph_bundle].avgCurv);
+    g[graph_bundle].stdCurv=sqrt(sum2Curv/(num_edges(g)-1)-g[graph_bundle].avgCurv*g[graph_bundle].avgCurv);
 //    cout <<"maxdist:"<<maxdist<<",mindist:"<<mindist<<", maxEdge "<<g[source(maxEdge,g)].name<<":"<<g[target(maxEdge,g)].name
 //         <<" curv "<<g[maxEdge].curv<<endl;
     cout<<"avgCurv="<<g[graph_bundle].avgCurv<<", stdCurv="<<g[graph_bundle].stdCurv<<endl;
@@ -1760,6 +1806,9 @@ int main(int argc, char **argv)  {
 
     k_core2(*gin,*g, 2);
     double oldRescaling=1.0;
+    if (! triangle_checker(*g,1)){
+        cout<<"Triangular Inequality fail on input"<<endl;
+    }
 
     for(int index=iterationIndex;index<iterationIndex+numIteration;index++){
         vector<int> component(num_vertices(*g));
@@ -1806,7 +1855,10 @@ int main(int argc, char **argv)  {
             delete g;
             g=ginter;
         }
-        boost::dynamic_properties dpout;
+        if (! triangle_checker(*g,0)){
+            cout<<"Triangular Inequality fail on iteration "<<index<<endl;
+        }
+        dynamic_properties dpout;
 
 /*        dpout.property("label", get(&Vertex_info_road::label, *g));
         dpout.property("X", get(&Vertex_info_road::X, *g));
@@ -1832,6 +1884,10 @@ int main(int argc, char **argv)  {
         dpout.property("ot", get(&Edge_Regular::ot, *g));
         dpout.property("curv", get(&Edge_Regular::curv, *g));
         dpout.property("edist",get(&Edge_Regular::edist, *g));
+        dpout.property("x",get(&Vertex_Regular::x, *g));
+        dpout.property("y",get(&Vertex_Regular::y, *g));
+        dpout.property("z",get(&Vertex_Regular::z, *g));
+
 
 
         map<double, double> attribute_double2double1,attribute_double2double2;

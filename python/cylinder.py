@@ -4,7 +4,7 @@ from sklearn.neighbors import NearestNeighbors
 import networkx as nx
 import numpy as np
 points=[]
-N=2000
+N=3000
 D=6
 for i in range(0,N):
     phi=2*math.pi*random.random()
@@ -24,13 +24,13 @@ Lambda,U= np.linalg.eig(H)
 DD=np.diag(np.sqrt(abs(Lambda)))*U
 for u in G.nodes():
     G.nodes[u]["x"] = points[u][0]
-    G.nodes[u]["y"] = points[u][0]
-    G.nodes[u]["z"] = points[u][0]
+    G.nodes[u]["y"] = points[u][1]
+    G.nodes[u]["z"] = points[u][2]
 for u,v,d in G.edges(data=True):
     G[u][v]["dist"]=1.0
     G[u][v]["ot"] = 0.0
     G[u][v]["curv"] = 0.0
     G[u][v]["edist"]=np.linalg.norm(DD[:,u]-DD[:,v])
     d.pop("weight", None)
-print(G.edges(data=True))
-nx.write_graphml(G,"regular_"+str(D)+"_"+str(N)+".graphml")
+#print(G.edges(data=True))
+nx.write_graphml(G,"../cylinder_"+str(D)+"_"+str(N)+".graphml")

@@ -97,6 +97,14 @@ build CMakeFiles/correctFile.dir/test.cpp.o: CXX_COMPILER__correctFile_Debug /Us
   OBJECT_DIR = CMakeFiles/correctFile.dir
   OBJECT_FILE_DIR = CMakeFiles/correctFile.dir
 
+build CMakeFiles/correctFile.dir/curvature.cpp.o: CXX_COMPILER__correctFile_Debug /Users/ksalamatian/CLionProjects/NewCurvature/curvature.cpp || cmake_object_order_depends_target_correctFile
+  DEFINES = -DBOOST_GRAPH_DYN_LINK -DBOOST_GRAPH_NO_LIB -DBOOST_IOSTREAMS_DYN_LINK -DBOOST_IOSTREAMS_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB
+  DEP_FILE = CMakeFiles/correctFile.dir/curvature.cpp.o.d
+  FLAGS = -Wall -Wextra -pthread -g -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=13.0 -fcolor-diagnostics -std=gnu++14
+  INCLUDES = -I/usr/include/tbb -isystem /opt/homebrew/include
+  OBJECT_DIR = CMakeFiles/correctFile.dir
+  OBJECT_FILE_DIR = CMakeFiles/correctFile.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target correctFile
@@ -105,7 +113,7 @@ build CMakeFiles/correctFile.dir/test.cpp.o: CXX_COMPILER__correctFile_Debug /Us
 #############################################
 # Link the executable correctFile
 
-build correctFile: CXX_EXECUTABLE_LINKER__correctFile_Debug CMakeFiles/correctFile.dir/correctFile.cpp.o CMakeFiles/correctFile.dir/test.cpp.o | /opt/homebrew/lib/libboost_graph-mt.dylib /opt/homebrew/lib/libboost_iostreams-mt.dylib /opt/homebrew/lib/libboost_regex-mt.dylib
+build correctFile: CXX_EXECUTABLE_LINKER__correctFile_Debug CMakeFiles/correctFile.dir/correctFile.cpp.o CMakeFiles/correctFile.dir/test.cpp.o CMakeFiles/correctFile.dir/curvature.cpp.o | /opt/homebrew/lib/libboost_graph-mt.dylib /opt/homebrew/lib/libboost_iostreams-mt.dylib /opt/homebrew/lib/libboost_regex-mt.dylib
   FLAGS = -Wall -Wextra -pthread -g -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=13.0
   LINK_LIBRARIES = -Wl,-rpath,/opt/homebrew/Cellar/tbb/2021.5.0_2/lib  /opt/homebrew/lib/libboost_graph-mt.dylib  /opt/homebrew/lib/libboost_iostreams-mt.dylib  /opt/homebrew/lib/libboost_regex-mt.dylib
   LINK_PATH = -L/opt/homebrew/Cellar/tbb/2021.5.0_2/lib
@@ -183,6 +191,41 @@ build regular: CXX_EXECUTABLE_LINKER__regular_Debug CMakeFiles/regular.dir/regul
   TARGET_FILE = regular
   TARGET_PDB = regular.dbg
 
+# =============================================================================
+# Object build statements for EXECUTABLE target singleCurvature
+
+
+#############################################
+# Order-only phony target for singleCurvature
+
+build cmake_object_order_depends_target_singleCurvature: phony || CMakeFiles/singleCurvature.dir
+
+build CMakeFiles/singleCurvature.dir/curvature.cpp.o: CXX_COMPILER__singleCurvature_Debug /Users/ksalamatian/CLionProjects/NewCurvature/curvature.cpp || cmake_object_order_depends_target_singleCurvature
+  DEFINES = -DBOOST_GRAPH_DYN_LINK -DBOOST_GRAPH_NO_LIB -DBOOST_IOSTREAMS_DYN_LINK -DBOOST_IOSTREAMS_NO_LIB -DBOOST_REGEX_DYN_LINK -DBOOST_REGEX_NO_LIB
+  DEP_FILE = CMakeFiles/singleCurvature.dir/curvature.cpp.o.d
+  FLAGS = -Wall -Wextra -pthread -g -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=13.0 -fcolor-diagnostics -std=gnu++14
+  INCLUDES = -I/usr/include/tbb -isystem /opt/homebrew/include
+  OBJECT_DIR = CMakeFiles/singleCurvature.dir
+  OBJECT_FILE_DIR = CMakeFiles/singleCurvature.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target singleCurvature
+
+
+#############################################
+# Link the executable singleCurvature
+
+build singleCurvature: CXX_EXECUTABLE_LINKER__singleCurvature_Debug CMakeFiles/singleCurvature.dir/curvature.cpp.o | /opt/homebrew/lib/libboost_graph-mt.dylib /opt/homebrew/lib/libboost_iostreams-mt.dylib /opt/homebrew/lib/libboost_regex-mt.dylib
+  FLAGS = -Wall -Wextra -pthread -g -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=13.0
+  LINK_LIBRARIES = -Wl,-rpath,/opt/homebrew/Cellar/tbb/2021.5.0_2/lib  /opt/homebrew/lib/libboost_graph-mt.dylib  /opt/homebrew/lib/libboost_iostreams-mt.dylib  -ltbb  /opt/homebrew/lib/libboost_regex-mt.dylib
+  LINK_PATH = -L/opt/homebrew/Cellar/tbb/2021.5.0_2/lib
+  OBJECT_DIR = CMakeFiles/singleCurvature.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = singleCurvature
+  TARGET_PDB = singleCurvature.dbg
+
 
 #############################################
 # Utility command for edit_cache
@@ -217,7 +260,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 #############################################
 # Folder: /Users/ksalamatian/CLionProjects/NewCurvature/cmake-build-debug
 
-build all: phony Curvature correctFile test regular
+build all: phony Curvature correctFile test regular singleCurvature
 
 # =============================================================================
 # Built-in targets
