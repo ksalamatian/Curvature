@@ -58,7 +58,7 @@ struct Vertex_Regular {
 };
 
 struct Edge_Regular {
-    double dist=1.0;
+    float dist=1.0;
     float edist=0.0;
     double distance=1.0;
     double ot=1.0;
@@ -127,7 +127,7 @@ struct Edge_info_BGP {
 };
 
 
-double EPS= 1e-1;
+double EPS= 1e-4;
 int QUANTA=60;
 ofstream logFile, logFile1;
 boost::dynamic_properties dp;
@@ -187,6 +187,7 @@ void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
     dp.property("stdCurv",stdCurv_map);*/
 
     dp.property("dist", get(&Edge_Regular::dist, designG));
+    dp.property("distance", get(&Edge_Regular::distance, designG));
     dp.property("ot", get(&Edge_Regular::ot, designG));
     dp.property("curv", get(&Edge_Regular::curv, designG));
     dp.property("edist",get(&Edge_Regular::edist, designG));

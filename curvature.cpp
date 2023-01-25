@@ -50,7 +50,7 @@ typedef unsigned int uint;
 struct Vertex_Regular {
     bool active=true;
     double x=0.0;
-    double y=0.0;
+   double y=0.0;
     double z=0.0;
 };
 
