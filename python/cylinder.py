@@ -29,7 +29,7 @@ for u in G.nodes():
     G.nodes[u]["y"] = X[u][1]
     G.nodes[u]["z"] = X[u][2]
 for u,v,d in G.edges(data=True):
-    G[u][v]["distance"]=np.linalg.norm(np.array(X[u]) - np.array(X[v]))
+    #G[u][v]["distance"]=np.linalg.norm(np.array(X[u]) - np.array(X[v]))
     G[u][v]["ot"] = 0.0
     G[u][v]["curv"] = 0.0
     G[u][v]["edist"]=np.linalg.norm(DD[:,u]-DD[:,v])

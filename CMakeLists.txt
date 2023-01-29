@@ -11,14 +11,14 @@ endif()
 #set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 FIND_PACKAGE( Boost COMPONENTS graph iostreams)
-#set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra -pthread -g")
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -pthread -g")
+set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra -pthread -g")
+#set(CMAKE_CXX_FLAGS "-Wall -Wextra -pthread -g")
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 #LINK_DIRECTORIES(/opt/homebrew/Cellar/boost/1.75.0_2/lib)
-link_directories(/opt/homebrew/Cellar/tbb/2021.5.0_2/lib)
+#link_directories(/opt/homebrew/Cellar/tbb/2021.5.0_2/lib)
 
-include_directories(/usr/include/tbb/)
+#include_directories(/usr/include/tbb/)
 #link_directories(/usr/libx86_64-linux-gnu/)
 
 add_executable(Curvature main.cpp)

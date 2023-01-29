@@ -53,6 +53,7 @@ rescale=len(fulldist)/np.sum((fulldist))
 fulldist=fulldist*rescale
 #zdist=zdist*rescale
 #circdist=circdist*rescale
+circdist[np.where(circdist==0.0)]=1e-6
 ratio0 = zdist/circdist
 data=np.stack((ratio0, circdist, zdist,fulldist, rdist,edist/np.mean(edist)))
 ratio1 = rdist/circdist
