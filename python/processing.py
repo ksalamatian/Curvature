@@ -13,7 +13,9 @@ def twoNeighborhood(G,n,k):
         neighborhood.remove(n)
     return list(neighborhood)
 #G=nx.read_graphml("/Users/ksalamatian/CLionProjects/NewCurvature/processed/processed.50.graphml")
-G=nx.read_graphml("/Users/ksalamatian/processed.48.graphml")
+#G=nx.read_graphml("/Users/ksalamatian/CLionProjects/NewCurvature/processed/processed.3.graphml")
+G=nx.read_graphml("/Users/ksalamatian/processed.50.graphml")
+
 N=nx.number_of_nodes(G)
 print("Num Vertices:",N)
 print("Num Edges:", nx.number_of_edges(G))

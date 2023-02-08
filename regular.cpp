@@ -52,6 +52,7 @@ typedef unsigned int uint;
 
 struct Vertex_Regular {
     bool active=true;
+    long block;
     double x=0.0;
     double y=0.0;
     double z=0.0;
@@ -64,6 +65,7 @@ struct Edge_Regular {
     double ot=1.0;
     double curv=1.0;
     bool active=true;
+    bool surgery=false;
 };
 
 struct Vertex_info_road {
@@ -98,6 +100,7 @@ struct Edge_info_road {
 struct Graph_info {
     double avgCurv=0.0;
     double stdCurv=0.0;
+    string name;
 };
 
 struct Vertex_info_BGP {
@@ -194,11 +197,15 @@ void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
     dp.property("x",get(&Vertex_Regular::x, designG));
     dp.property("y",get(&Vertex_Regular::y, designG));
     dp.property("z",get(&Vertex_Regular::z, designG));
+    dp.property("block",get(&Vertex_Regular::block, designG));
     map<double, double> attribute_double2double1,attribute_double2double2;
+    map<string,string> nameAttribute;
     associative_property_map<map<double, double>> avgCurv_map(attribute_double2double1);
     associative_property_map<map<double, double>> stdCurv_map(attribute_double2double2);
+    associative_property_map<map<string,string>> name(nameAttribute);
     dp.property("avgCurv", avgCurv_map);
     dp.property("stdCurv",stdCurv_map);
+    dp.property("name",name);
 
 
     inFile.open(fileName, ifstream::in);
@@ -446,26 +453,28 @@ void generateTasks(Graph_t& g, TaskPriorityQueue &tasksToDo){
 //                int KKKK=0;
             sourcesSet.insert(src);
             for ( auto ve = boost::out_edges(src, g ); ve.first != ve.second; ++ve.first) {
-                bool found = true;
-                Vertex dest = target(*ve.first, g);
-                destsSet.insert(dest);
-                sourcesSet.insert(dest);
-                long key = (src << 32) + dest;
-                if (edgeSet.insert(key).second) {
-                    found = false;
-                }
-                key = (dest << 32) + src;
-                if (edgeSet.insert(key).second) {
-                    found = false;
-                }
-                if (!found) {
-                    // the edge have not been processed
-                    tie(nfirst, nend) = adjacent_vertices(dest, g);
-                    destsSet.insert(nfirst, nend);
-                    edgesToProcess.insert(*ve.first);
-                    added++;
-                } else {
-                    removed++;
+                if (!g[*ve.first].surgery){
+                    bool found = true;
+                    Vertex dest = target(*ve.first, g);
+                    destsSet.insert(dest);
+                    sourcesSet.insert(dest);
+                    long key = (src << 32) + dest;
+                    if (edgeSet.insert(key).second) {
+                        found = false;
+                    }
+                    key = (dest << 32) + src;
+                    if (edgeSet.insert(key).second) {
+                        found = false;
+                    }
+                    if (!found) {
+                        // the edge have not been processed
+                        tie(nfirst, nend) = adjacent_vertices(dest, g);
+                        destsSet.insert(nfirst, nend);
+                        edgesToProcess.insert(*ve.first);
+                        added++;
+                    } else {
+                        removed++;
+                    }
                 }
             }
             vector<Vertex> sources(sourcesSet.begin(),sourcesSet.end()), dests(destsSet.begin(),destsSet.end());
@@ -963,7 +972,7 @@ public:
 
     GraphNode *get(Vertex v, uint source, double dist){
         GraphNode *elem;
-        if ((v==163) && (source==2))
+        if (dist<0)
             int KKKK=0;
         int len= graphNodeQueue.unsafe_size();
         if (!graphNodeQueue.try_pop(elem)){
@@ -1103,7 +1112,7 @@ bool triangle_checker(Graph_t &g,int type){
 }
 
 //#define EPS 0.0
-#define ALPHA 0.1
+#define ALPHA 0.0
 Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int offset, vector<Vertex> &sources, vector<Vertex> &dests, Graph_t &g){
     // minimum cost upto
     // goal state from starting
@@ -1146,7 +1155,7 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
     double currDist, toDist, newDist, oldDist;
     Vertex neighbor;
     for(Vertex t:dests){
-        if (ddests.count(t)>0){
+        if (ddests.count(t)>0){// t is a destination that has not been yet reached for all source
             bool targetFinished=false;
             GraphNode *previous=NULL;
             // while the queue is not empty
@@ -1156,6 +1165,8 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
                 // get the top element of the
                 // priority heap
                 GraphNode *p=costQueue->top();
+                if (p->v==2069)
+                    int KKKK=0;
                 costQueue->pop();
                 //settle pop values
                 if (!graphNodeArray.isSettled(p->v, p->source)){
@@ -1566,7 +1577,7 @@ void calcStats(Graph_t &g, int componentNum, vector<int> &components){
     double maxdist=-1.0, mindist=999999.0;
     vector<double> sumCurvperComponent(componentNum,0.0), sum2CurvperComponent(componentNum,0.0);
     vector<int> componentSize(componentNum,0);
-    double sumCurv=0.0, sum2Curv=0.0;
+    double sumCurv=0.0, sum2Curv=0.0,sumDist=0.0, sum2Dist=0.0;
     Edge maxEdge,minEdge;
     auto es = edges(g);
     for (auto eit = es.first; eit != es.second; ++eit) {
@@ -1583,10 +1594,13 @@ void calcStats(Graph_t &g, int componentNum, vector<int> &components){
             mindist=g[*eit].distance;
         }
         sumCurv += g[*eit].curv;
+        sumDist +=g[*eit].distance;
         int node=source(*eit,g);
         int comp=components[node];
         sumCurvperComponent[comp]=sumCurvperComponent[comp]+g[*eit].curv;
         sum2Curv += g[*eit].curv*g[*eit].curv;
+        sum2Dist += g[*eit].distance*g[*eit].distance;
+
         componentSize[comp]++;
         sum2CurvperComponent[comp]=sum2CurvperComponent[comp]+g[*eit].curv*g[*eit].curv;
 //        logFile1<<g[source(*eit,g)].name<<","<<g[target(*eit,g)].name<<","<<source(*eit,g)<<","<<target(*eit,g)<<","<<
@@ -1597,6 +1611,8 @@ void calcStats(Graph_t &g, int componentNum, vector<int> &components){
 //    cout <<"maxdist:"<<maxdist<<",mindist:"<<mindist<<", maxEdge "<<g[source(maxEdge,g)].name<<":"<<g[target(maxEdge,g)].name
 //         <<" curv "<<g[maxEdge].curv<<endl;
     cout<<"avgCurv="<<g[graph_bundle].avgCurv<<", stdCurv="<<g[graph_bundle].stdCurv<<endl;
+    cout<<"avgDist="<<sumDist/num_edges(g)<<", stdDist="<<sqrt(sum2Dist/(num_edges(g)-1)-sumDist*sumDist/(num_edges(g)*
+                                                                                                         num_edges(g)))<<endl;
     for (int j=0;j<componentNum;j++){
         if (componentSize[j]>0){
             cout<<"Size:"<<componentSize[j]<<" ,avgCurv["<<j<<"]="<<sumCurvperComponent[j]*1.0/componentSize[j]<<", stdCurv["<<j<<"]="<<
@@ -1608,18 +1624,24 @@ void calcStats(Graph_t &g, int componentNum, vector<int> &components){
 
 bool updateDistances(Graph_t &g, double &oldrescaling){
     auto es = edges(g);
-    double delta=0.1;
+    double delta=0.35;
     double sumWeights=0.0;
     int numEdgesUnfiltered=0;
     bool surgery=false;
     for (auto eit = es.first; eit != es.second; ++eit) {
 //        double curv=1-g[*eit].ot/g[*eit].distance;
         double ddd=g[*eit].distance;
-        g[*eit].distance -=2*g[*eit].curv*delta/oldrescaling;
-        if (g[*eit].distance<EPS){ //we need a surgery of type 1
+        g[*eit].distance =max(EPS, g[*eit].distance-2*g[*eit].curv*delta/oldrescaling);
+        if (g[*eit].distance<=EPS){ //we need a surgery of type 1
             surgery=true;
+            g[*eit].surgery=true;
+            g[*eit].distance=EPS;
             Vertex src=source(*eit,g), dst=target(*eit,g);
+            cout<<"Surgery Type 1: "<<src<<":"<<dst<<", Curvature:"<<g[*eit].curv<<endl;
+
+/*
 //            cout<<"Surgery Type 1: "<<src<<":"<<dst<<","<<g[src].name<<":"<<g[dst].name<<", Curvature:"<<g[*eit].curv<<endl;
+
 //            g[src].name=g[src].name+","+g[dst].name;
             g[*eit].active=false;
             g[dst].active=false;
@@ -1641,11 +1663,12 @@ bool updateDistances(Graph_t &g, double &oldrescaling){
                     if (g[*ve.first].distance<0)
                         int KKKK=0;
                 }
-            }
-        } else {
+            }*/
+
+        } //else {
             sumWeights +=g[*eit].distance;
             numEdgesUnfiltered++;
-        }
+//        }
     }
     int numV=num_vertices(g);
     int numE= num_edges(g);
@@ -1697,6 +1720,7 @@ void process(int threadIndex, Graph_t *g) {
                             if (isinf((*MatDist1)[i][j])) {
 //                                multisource_uniform_cost_search_seq(MatDist2, 0, sources, dests, *g);
                                 int KKKK=0;
+                                perf1 = multisource_uniform_cost_search_seq1(MatDist1, 0, sources, dests, *g);
                             }
 //                            if ((*MatDist1)[i][j] != (*MatDist2)[i][j])
 //                                cout << "NOT EQUAL  " << i << "," <<j << ","<<(*MatDist1)[i][j]<< ","<<(*MatDist2)[i][j]
@@ -1885,6 +1909,7 @@ int main(int argc, char **argv)  {
         dpout.property("ot", get(&Edge_Regular::ot, *g));
         dpout.property("curv", get(&Edge_Regular::curv, *g));
         dpout.property("edist",get(&Edge_Regular::edist, *g));
+        dpout.property("block",  get(&Vertex_Regular::block, *g));
         dpout.property("x",get(&Vertex_Regular::x, *g));
         dpout.property("y",get(&Vertex_Regular::y, *g));
         dpout.property("z",get(&Vertex_Regular::z, *g));

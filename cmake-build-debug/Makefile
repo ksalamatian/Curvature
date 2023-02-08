@@ -65,10 +65,10 @@ RM = /usr/local/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kave/tmp/tmp.tV16tJC8mX
+CMAKE_SOURCE_DIR = /home/kave/tmp/tmp.exkyJ2kg16
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug
+CMAKE_BINARY_DIR = /home/kave/tmp/tmp.exkyJ2kg16/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -97,9 +97,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/CMakeFiles /home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kave/tmp/tmp.exkyJ2kg16/cmake-build-debug/CMakeFiles /home/kave/tmp/tmp.exkyJ2kg16/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kave/tmp/tmp.exkyJ2kg16/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -166,6 +166,32 @@ correctFile/fast:
 	$(MAKE) -f CMakeFiles/correctFile.dir/build.make CMakeFiles/correctFile.dir/build
 .PHONY : correctFile/fast
 
+#=============================================================================
+# Target rules for targets named singleCurvature
+
+# Build rule for target.
+singleCurvature: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 singleCurvature
+.PHONY : singleCurvature
+
+# fast build rule for target.
+singleCurvature/fast:
+	$(MAKE) -f CMakeFiles/singleCurvature.dir/build.make CMakeFiles/singleCurvature.dir/build
+.PHONY : singleCurvature/fast
+
+#=============================================================================
+# Target rules for targets named regular
+
+# Build rule for target.
+regular: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 regular
+.PHONY : regular
+
+# fast build rule for target.
+regular/fast:
+	$(MAKE) -f CMakeFiles/regular.dir/build.make CMakeFiles/regular.dir/build
+.PHONY : regular/fast
+
 correctFile.o: correctFile.cpp.o
 
 .PHONY : correctFile.o
@@ -192,6 +218,36 @@ correctFile.s: correctFile.cpp.s
 correctFile.cpp.s:
 	$(MAKE) -f CMakeFiles/correctFile.dir/build.make CMakeFiles/correctFile.dir/correctFile.cpp.s
 .PHONY : correctFile.cpp.s
+
+curvature.o: curvature.cpp.o
+
+.PHONY : curvature.o
+
+# target to build an object file
+curvature.cpp.o:
+	$(MAKE) -f CMakeFiles/correctFile.dir/build.make CMakeFiles/correctFile.dir/curvature.cpp.o
+	$(MAKE) -f CMakeFiles/singleCurvature.dir/build.make CMakeFiles/singleCurvature.dir/curvature.cpp.o
+.PHONY : curvature.cpp.o
+
+curvature.i: curvature.cpp.i
+
+.PHONY : curvature.i
+
+# target to preprocess a source file
+curvature.cpp.i:
+	$(MAKE) -f CMakeFiles/correctFile.dir/build.make CMakeFiles/correctFile.dir/curvature.cpp.i
+	$(MAKE) -f CMakeFiles/singleCurvature.dir/build.make CMakeFiles/singleCurvature.dir/curvature.cpp.i
+.PHONY : curvature.cpp.i
+
+curvature.s: curvature.cpp.s
+
+.PHONY : curvature.s
+
+# target to generate assembly for a file
+curvature.cpp.s:
+	$(MAKE) -f CMakeFiles/correctFile.dir/build.make CMakeFiles/correctFile.dir/curvature.cpp.s
+	$(MAKE) -f CMakeFiles/singleCurvature.dir/build.make CMakeFiles/singleCurvature.dir/curvature.cpp.s
+.PHONY : curvature.cpp.s
 
 main.o: main.cpp.o
 
@@ -220,32 +276,62 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/Curvature.dir/build.make CMakeFiles/Curvature.dir/main.cpp.s
 .PHONY : main.cpp.s
 
-test1.o: test1.cpp.o
+regular.o: regular.cpp.o
 
-.PHONY : test1.o
+.PHONY : regular.o
 
 # target to build an object file
-test1.cpp.o:
-	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/test1.cpp.o
-.PHONY : test1.cpp.o
+regular.cpp.o:
+	$(MAKE) -f CMakeFiles/regular.dir/build.make CMakeFiles/regular.dir/regular.cpp.o
+.PHONY : regular.cpp.o
 
-test1.i: test1.cpp.i
+regular.i: regular.cpp.i
 
-.PHONY : test1.i
+.PHONY : regular.i
 
 # target to preprocess a source file
-test1.cpp.i:
-	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/test1.cpp.i
-.PHONY : test1.cpp.i
+regular.cpp.i:
+	$(MAKE) -f CMakeFiles/regular.dir/build.make CMakeFiles/regular.dir/regular.cpp.i
+.PHONY : regular.cpp.i
 
-test1.s: test1.cpp.s
+regular.s: regular.cpp.s
 
-.PHONY : test1.s
+.PHONY : regular.s
 
 # target to generate assembly for a file
-test1.cpp.s:
-	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/test1.cpp.s
-.PHONY : test1.cpp.s
+regular.cpp.s:
+	$(MAKE) -f CMakeFiles/regular.dir/build.make CMakeFiles/regular.dir/regular.cpp.s
+.PHONY : regular.cpp.s
+
+test.o: test.cpp.o
+
+.PHONY : test.o
+
+# target to build an object file
+test.cpp.o:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/test.cpp.o
+	$(MAKE) -f CMakeFiles/correctFile.dir/build.make CMakeFiles/correctFile.dir/test.cpp.o
+.PHONY : test.cpp.o
+
+test.i: test.cpp.i
+
+.PHONY : test.i
+
+# target to preprocess a source file
+test.cpp.i:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/test.cpp.i
+	$(MAKE) -f CMakeFiles/correctFile.dir/build.make CMakeFiles/correctFile.dir/test.cpp.i
+.PHONY : test.cpp.i
+
+test.s: test.cpp.s
+
+.PHONY : test.s
+
+# target to generate assembly for a file
+test.cpp.s:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/test.cpp.s
+	$(MAKE) -f CMakeFiles/correctFile.dir/build.make CMakeFiles/correctFile.dir/test.cpp.s
+.PHONY : test.cpp.s
 
 # Help Target
 help:
@@ -257,16 +343,24 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... Curvature"
 	@echo "... correctFile"
+	@echo "... regular"
+	@echo "... singleCurvature"
 	@echo "... test"
 	@echo "... correctFile.o"
 	@echo "... correctFile.i"
 	@echo "... correctFile.s"
+	@echo "... curvature.o"
+	@echo "... curvature.i"
+	@echo "... curvature.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... test1.o"
-	@echo "... test1.i"
-	@echo "... test1.s"
+	@echo "... regular.o"
+	@echo "... regular.i"
+	@echo "... regular.s"
+	@echo "... test.o"
+	@echo "... test.i"
+	@echo "... test.s"
 .PHONY : help
 
 

@@ -56,7 +56,7 @@ struct Vertex_Regular {
 
 struct Edge_Regular {
     double dist=1.0;
-    float edist=0.0;
+    double edist=0.0;
     double distance=1.0;
     double ot=1.0;
     double curv=1.0;
