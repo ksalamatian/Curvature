@@ -1507,7 +1507,7 @@ void calcCurvature(double alpha, Vertex v, vector<vector<double>> &MatDist, set<
         localDests.insert(neighbor);
         for (; nB.first != nB.second; localDests.insert(*nB.first++));
         int cntD=0, destIndex=0;
-        if ((src==693) && (neighbor==692) ){
+        if ((src==1) && (neighbor==2073) ){
             int  KKKK=0 ;
         }
         for(Vertex dest:localDests){
@@ -1536,7 +1536,7 @@ void calcCurvature(double alpha, Vertex v, vector<vector<double>> &MatDist, set<
 
             distributionA[index]=alpha;
             distributionB[destIndex]=alpha;
-
+            double dxy=vertDist[index][destIndex]; //Min dist between src and dest when triangular inequality not valid
             wd = compute_EMD(distributionA, distributionB, vertDist);
 //            if ((g[src].name=="Chaumont") && (g[neighbor].name=="Mulhouse")){
 //               int KKK=0;
@@ -1555,7 +1555,7 @@ void calcCurvature(double alpha, Vertex v, vector<vector<double>> &MatDist, set<
                 if (g[e].distance<EPS){
                     g[e].curv=g[graph_bundle].avgCurv;
                 } else {
-                    g[e].curv=1-wd/g[e].distance;
+                    g[e].curv=1-wd/dxy;
                     if (g[e].curv<-3){
                         int KKKK=0;
                     }
@@ -1631,7 +1631,7 @@ bool updateDistances(Graph_t &g, double &oldrescaling){
     for (auto eit = es.first; eit != es.second; ++eit) {
 //        double curv=1-g[*eit].ot/g[*eit].distance;
         double ddd=g[*eit].distance;
-        g[*eit].distance =max(EPS, g[*eit].distance-2*g[*eit].curv*delta/oldrescaling);
+        g[*eit].distance =max(EPS, g[*eit].distance*(1-g[*eit].curv));
         if (g[*eit].distance<=EPS){ //we need a surgery of type 1
             surgery=true;
             g[*eit].surgery=true;

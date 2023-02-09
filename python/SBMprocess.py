@@ -1,6 +1,6 @@
 import networkx as nx
 import numpy as np
-G=nx.read_graphml("/Users/ksalamatian/CLionProjects/NewCurvature/processed/processed.16.graphml")
+G=nx.read_graphml("/Users/ksalamatian/CLionProjects/NewCurvature/processed/processed.20.graphml")
 
 N=nx.number_of_nodes(G)
 print("Num Vertices:",N)
@@ -48,6 +48,8 @@ for u,v,d in G.edges(data=True):
     rdistMat[(G.nodes[u]["block"],G.nodes[v]["block"])].append(d["dist"])
     edistMat[(G.nodes[u]["block"],G.nodes[v]["block"])].append(d["edist"])
     curvMat[(G.nodes[u]["block"],G.nodes[v]["block"])].append(d["curv"])
+    if (G.nodes[u]["block"]==0) and  (G.nodes[v]["block"]==1):
+        print("Hello")
 
 avgrdistMat=np.zeros((3,3))
 avgedistMat=np.zeros((3,3))
