@@ -1457,18 +1457,24 @@ void calcStats(Graph_t &g, int componentNum, vector<int> &components){
 
 bool updateDistances(Graph_t &g, double &oldrescaling){
     auto es = edges(g);
-    double delta=0.1;
+    double delta=0.35;
     double sumWeights=0.0;
     int numEdgesUnfiltered=0;
     bool surgery=false;
     for (auto eit = es.first; eit != es.second; ++eit) {
 //        double curv=1-g[*eit].ot/g[*eit].distance;
         double ddd=g[*eit].distance;
-        g[*eit].distance -=2*g[*eit].curv*delta/oldrescaling;
-        if (g[*eit].distance<EPS){ //we need a surgery of type 1
+        g[*eit].distance =max(EPS, g[*eit].distance*(1-g[*eit].curv));
+        if (g[*eit].distance<=EPS){ //we need a surgery of type 1
             surgery=true;
+            g[*eit].surgery=true;
+            g[*eit].distance=EPS;
             Vertex src=source(*eit,g), dst=target(*eit,g);
+            cout<<"Surgery Type 1: "<<src<<":"<<dst<<", Curvature:"<<g[*eit].curv<<endl;
+
+/*
 //            cout<<"Surgery Type 1: "<<src<<":"<<dst<<","<<g[src].name<<":"<<g[dst].name<<", Curvature:"<<g[*eit].curv<<endl;
+
 //            g[src].name=g[src].name+","+g[dst].name;
             g[*eit].active=false;
             g[dst].active=false;
@@ -1490,11 +1496,12 @@ bool updateDistances(Graph_t &g, double &oldrescaling){
                     if (g[*ve.first].distance<0)
                         int KKKK=0;
                 }
-            }
-        } else {
-            sumWeights +=g[*eit].distance;
-            numEdgesUnfiltered++;
-        }
+            }*/
+
+        } //else {
+        sumWeights +=g[*eit].distance;
+        numEdgesUnfiltered++;
+//        }
     }
     int numV=num_vertices(g);
     int numE= num_edges(g);

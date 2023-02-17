@@ -1,6 +1,6 @@
 import networkx as nx
 import numpy as np
-G=nx.read_graphml("/Users/ksalamatian/CLionProjects/NewCurvature/processed/processed.20.graphml")
+G=nx.read_graphml("/Users/ksalamatian/CLionProjects/NewCurvature/processed/processed.49.graphml")
 
 N=nx.number_of_nodes(G)
 print("Num Vertices:",N)
