@@ -31,42 +31,9 @@ using std::chrono::duration_cast;
 using std::chrono::duration;
 using std::chrono::milliseconds;
 
-struct Vertex_Regular;
-struct Edge_Regular;
-struct Graph_info;
-//typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::undirectedS, Vertex_info, Edge_info > Graph_t;
-//typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::undirectedS, Vertex_info_road, Edge_info_road, Graph_info > Graph_t;
-typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::undirectedS, Vertex_Regular, Edge_Regular, Graph_info > Graph_t;
-
-typedef boost::graph_traits < Graph_t >::vertex_iterator VertexIterator;
-typedef boost::graph_traits < Graph_t >::edge_iterator EdgeIterator;
-typedef boost::graph_traits < Graph_t >::adjacency_iterator AdjacencyIterator;
-typedef boost::graph_traits < Graph_t >::vertex_descriptor Vertex;
-typedef boost::graph_traits < Graph_t >::edge_descriptor Edge;
-typedef boost::property_map < Graph_t, boost::vertex_index_t >::type IndexMap;
 typedef unsigned int uint;
 
 
-struct Vertex_Regular {
-    bool active=true;
-    double x=0.0;
-   double y=0.0;
-    double z=0.0;
-};
-
-struct Edge_Regular {
-    double dist=1.0;
-    double edist=0.0;
-    double distance=1.0;
-    double ot=1.0;
-    double curv=1.0;
-    bool active=true;
-};
-
-struct Graph_info {
-    double avgCurv=0.0;
-    double stdCurv=0.0;
-};
 
 double EPS= 1e-1;
 int QUANTA=60;

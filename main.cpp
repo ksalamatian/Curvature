@@ -8,7 +8,6 @@
 #include <thread>
 #include "curvatureHandler.h"
 
-
 using namespace boost;
 using namespace std;
 using namespace code_machina;
@@ -18,79 +17,13 @@ using std::chrono::duration;
 using std::chrono::milliseconds;
 using std::chrono::microseconds;
 
-struct Vertex_info_road;
-struct Edge_info_road;
-struct Vertex_info_BGP;
-struct Edge_info_BGP;
-struct Graph_info;
-typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::undirectedS, Vertex_info_BGP, Edge_info_BGP, Graph_info > Graph_t;
+
+
+
+
+//typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::undirectedS, Vertex_info_BGP, Edge_info_BGP, Graph_info > Graph_t;
 //typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::undirectedS, Vertex_info_road, Edge_info_road, Graph_info > Graph_t;
 typedef unsigned int uint;
-
-
-struct Vertex_info_road {
-    float X=0;
-    float Y=0;
-    float x=0;
-    float y=0;
-    std::string name;
-    float lat=0;
-    float longi=0;
-    string label="";
-    float size=0;
-    int r=0,g=0,b=0;
-    int degree=0;
-    int cluster=0;
-    double eccentricity=0.0,closnesscentrality=0.0, harmonicclosnesscentrality=0.0, betweenesscentrality=0.0;
-    bool active=true;
-};
-
-struct Edge_info_road {
-    float dist=1.9;
-    double distance=1.0;
-    double weight=1.0;
-    double ot=0.0;
-    double curv=0.0;
-    string edgeLabel;
-    double delta=0.0;
-//    int r,g,b;
-    bool active=true;
-    bool surgery=true;
-};
-
-struct Graph_info {
-    double avgCurv=0.0;
-    double stdCurv=0.0;
-};
-
-struct Vertex_info_BGP {
-    std::string country;
-    std::string name;
-    int prefixnum;
-    int prefixall;
-    int astime;
-    int addall;
-    int addnum;
-    std::string asnumber;
-    int pathnum;
-//    double potential;
-    bool active=true;
-};
-
-struct Edge_info_BGP {
-    int weight= 1;
-    int pathcount=0;
-    int edgetime=0;
-    //int ctime;
-    long prefcount=0;
-    double distance=1.0;
-    double ot=99.0;
-    bool visited=false;
-    double curv=99.0;
-    int addCount=0;
-    bool active=true;
-    bool surgery=false;
-};
 
 
 ofstream logFile, logFile1;
@@ -123,7 +56,7 @@ void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
     dp.property("label", get(&Vertex_info_road::label, designG));
     dp.property("X", get(&Vertex_info_road::X, designG));
     dp.property("Y", get(&Vertex_info_road::Y, designG));
-    dp.property("meta", get(&Vertex_info_road::name, designG));
+    dp.property("meta", get(&Vertex_info_road::name, designG) );
     dp.property("lat", get(&Vertex_info_road::lat, designG));
     dp.property("long", get(&Vertex_info_road::longi, designG));
     dp.property("r", get(&Vertex_info_road::r, designG));
@@ -205,12 +138,8 @@ int main(int argc, char **argv)  {
 //    readGraphMLFile(gin, inFilename);
 //    VertexIterator v,vend;
 
-    K_core2<Graph_t> k_core2;
     k_core2(*gin,*g, 2);
-    GenerateTasks<Graph_t> generateTasks;
     DistanceCache distanceCache(num_vertices(*g));
-    CalcStats<Graph_t> calcStats;
-    UpdateDistances<Graph_t> updateDistances;
 
     double oldRescaling=1.0;
 
@@ -219,7 +148,7 @@ int main(int argc, char **argv)  {
         int numComponent = connected_components(*g, &component[0]);
 //        distanceCache. clear();
         cout<<"Index:"<<index<<" ";
-        generateTasks(*g,tasksToDo<Graph_t>);
+        generateTasks(*g,tasksToDo);
         DistanceCache distanceCache(num_vertices(*g));
         //    DistanceCache distanceCache(100000000,8);
         numProcessedVertex=0;
@@ -234,7 +163,6 @@ int main(int argc, char **argv)  {
 //    num_core=1;
         vector<thread> threads(num_core);
         for (int i=0;i<num_core;i++){
-            Process<Graph_t> process;
             threads[i]=std::thread(process,i,g,&distanceCache);
         }
         for (int i=0;i<num_core;i++){
@@ -248,23 +176,23 @@ int main(int argc, char **argv)  {
 //        }
         calcStats(*g, numComponent, component);
         boost::dynamic_properties dpout;
-        dpout.property("asNumber", get(&Vertex_info_BGP::asnumber, *g));
-        dpout.property("pathNum", get(&Vertex_info_BGP::pathnum, *g));
-        dpout.property("Country", get(&Vertex_info_BGP::country, *g));
-        dpout.property("Name", get(&Vertex_info_BGP::name, *g));
-        dpout.property("asTime", get(&Vertex_info_BGP::astime, *g));
-        dpout.property("prefixNum", get(&Vertex_info_BGP::prefixnum, *g));
-        dpout.property("prefixAll", get(&Vertex_info_BGP::prefixall, *g));
-        dpout.property("addAll", get(&Vertex_info_BGP::addall, *g));
-        dpout.property("addNum", get(&Vertex_info_BGP::addnum, *g));
-        dpout.property("addCount", get(&Edge_info_BGP::addCount, *g));
-        dpout.property("edgeTime", get(&Edge_info_BGP::edgetime, *g));
-        dpout.property("weight", get(&Edge_info_BGP::weight, *g));
-        dpout.property("distance", get(&Edge_info_BGP::distance, *g));
-        dpout.property("ot", get(&Edge_info_BGP::ot, *g));
-        dpout.property("curv", get(&Edge_info_BGP::curv, *g));
-        dpout.property("pathCount", get(&Edge_info_BGP::pathcount, *g));
-        dpout.property("prefCount", get(&Edge_info_BGP::prefcount, *g));
+        dpout.property("asNumber", get(&VertexType::asnumber, *g));
+        dpout.property("pathNum", get(&VertexType::pathnum, *g));
+        dpout.property("Country", get(&VertexType::country, *g));
+        dpout.property("Name", get(&VertexType::name, *g));
+        dpout.property("asTime", get(&VertexType::astime, *g));
+        dpout.property("prefixNum", get(&VertexType::prefixnum, *g));
+        dpout.property("prefixAll", get(&VertexType::prefixall, *g));
+        dpout.property("addAll", get(&VertexType::addall, *g));
+        dpout.property("addNum", get(&VertexType::addnum, *g));
+        dpout.property("addCount", get(&EdgeType::addCount, *g));
+        dpout.property("edgeTime", get(&EdgeType::edgetime, *g));
+        dpout.property("weight", get(&EdgeType::weight, *g));
+        dpout.property("distance", get(&EdgeType::distance, *g));
+        dpout.property("ot", get(&EdgeType::ot, *g));
+        dpout.property("curv", get(&EdgeType::curv, *g));
+        dpout.property("pathCount", get(&EdgeType::pathcount, *g));
+        dpout.property("prefCount", get(&EdgeType::prefcount, *g));
 
 /*        dpout.property("label", get(&Vertex_info_road::label, *g));
         dpout.property("X", get(&Vertex_info_road::X, *g));
@@ -295,14 +223,14 @@ int main(int argc, char **argv)  {
         associative_property_map<map<double, double>> stdCurv_map(attribute_double2double2);
         dpout.property("avgCurv", avgCurv_map);
         dpout.property("stdCurv",stdCurv_map);
+        Predicate predicate;
 
         write_graphml(outFile, *g, dpout, true);
 //        logFile.close();
         logFile1.close();
         if (updateDistances(*g,oldRescaling)){
-            Predicate<Graph_t> predicate{g};
             ginter = new Graph_t();
-            Filtered_Graph_t<Graph_t> fg(*g, predicate, predicate);
+            Filtered_Graph_t fg(*g, predicate, predicate);
             copy_graph(fg,*ginter);
             g->clear();
             delete g;

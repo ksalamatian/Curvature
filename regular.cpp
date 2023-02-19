@@ -15,60 +15,26 @@ using std::chrono::duration;
 using std::chrono::milliseconds;
 using std::chrono::microseconds;
 
-struct Vertex_Regular {
-    bool active=true;
-    long block;
-    double x=0.0;
-    double y=0.0;
-    double z=0.0;
-};
-
-struct Edge_Regular {
-    double dist=1.0;
-    float edist=0.0;
-    double distance=1.0;
-    double ot=1.0;
-    double curv=1.0;
-    bool active=true;
-    bool surgery=false;
-};
-
-struct Graph_info {
-    double avgCurv=0.0;
-    double stdCurv=0.0;
-    string name;
-};
-
-
-struct Graph_info;
-typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::undirectedS, Vertex_Regular, Edge_Regular, Graph_info > Graph_t;
-
-
-
-
-
-
-
 
 ofstream logFile, logFile1;
-boost::dynamic_properties dp;
 
 /*
  * Read a graphml
  */
 void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
 
+    boost::dynamic_properties dp;
     ifstream inFile;
 
-    dp.property("dist", get(&Edge_Regular::dist, designG));
-    dp.property("distance", get(&Edge_Regular::distance, designG));
-    dp.property("ot", get(&Edge_Regular::ot, designG));
-    dp.property("curv", get(&Edge_Regular::curv, designG));
-    dp.property("edist",get(&Edge_Regular::edist, designG));
-    dp.property("x",get(&Vertex_Regular::x, designG));
-    dp.property("y",get(&Vertex_Regular::y, designG));
-    dp.property("z",get(&Vertex_Regular::z, designG));
-    dp.property("block",get(&Vertex_Regular::block, designG));
+    dp.property("dist", get(&EdgeType::dist, designG));
+    dp.property("distance", get(&EdgeType::distance, designG));
+    dp.property("ot", get(&EdgeType::ot, designG));
+    dp.property("curv", get(&EdgeType::curv, designG));
+    dp.property("edist",get(&EdgeType::edist, designG));
+    dp.property("x",get(&VertexType::x, designG));
+    dp.property("y",get(&VertexType::y, designG));
+    dp.property("z",get(&VertexType::z, designG));
+    dp.property("block",get(&VertexType::block, designG));
     map<double, double> attribute_double2double1,attribute_double2double2;
     map<string,string> nameAttribute;
     associative_property_map<map<double, double>> avgCurv_map(attribute_double2double1);
@@ -105,10 +71,6 @@ public:
 
 };
 
-
-
-
-
 int main(int argc, char **argv)  {
     Graph_t *g=new Graph_t, *gin=new Graph_t, *ginter;
     string filename="graphdumps1554598943.1554599003.graphml",path="/data/Curvature/";
@@ -124,27 +86,21 @@ int main(int argc, char **argv)  {
         string command3(argv[5]);
         if (command3 =="-I")
             iterationIndex= stoi(argv[6]);
-
     }
 
 //    Graph_t gin;
 //    string inFilename = "/Users/ksalamatian/graphdumps1554598943.1554599003.graphml";
     string pfilename=path+"/"+filename;
     readGraphMLFile(*gin,pfilename );
+    Graph_t gprocess;
     int numIteration=50;
 //    string inFilename="/data/Curvature/processed.0.gml";
 
 //    readGraphMLFile(gin, inFilename);
 
-    K_core2<Graph_t> k_core2;
     k_core2(*gin,*g, 2);
     double oldRescaling=1.0;
-    Triangle_checker<Graph_t> triangle_checker;
-    GenerateTasks<Graph_t> generateTasks;
-    Process<Graph_t> process;
     DistanceCache distanceCache(num_vertices(*g));
-    CalcStats<Graph_t> calcStats;
-    UpdateDistances<Graph_t> updateDistances;
 
     if (! triangle_checker(*g,1)){
         cout<<"Triangular Inequality fail on input"<<endl;
@@ -155,7 +111,7 @@ int main(int argc, char **argv)  {
         int numComponent = connected_components(*g, &component[0]);
 //        distanceCache. clear();
         cout<<"Index:"<<index<<" ";
-        generateTasks(*g,tasksToDo<Graph_t>);
+        generateTasks(*g,tasksToDo);
         DistanceCache distanceCache(num_vertices(*g));
         numProcessedVertex=0;
         numProcessedEdge=0;
@@ -182,9 +138,9 @@ int main(int argc, char **argv)  {
 //        }
         calcStats(*g, numComponent, component);
         if (updateDistances(*g,oldRescaling)){
-            Predicate<Graph_t> predicate{g};
+            Predicate predicate{g};
             ginter = new Graph_t();
-            Filtered_Graph_t<Graph_t> fg(*g, predicate, predicate);
+            Filtered_Graph_t fg(*g, predicate, predicate);
             copy_graph(fg,*ginter);
             g->clear();
             delete g;
@@ -195,14 +151,14 @@ int main(int argc, char **argv)  {
         }
         dynamic_properties dpout;
 
-        dpout.property("dist", get(&Edge_Regular::distance, *g));
-        dpout.property("ot", get(&Edge_Regular::ot, *g));
-        dpout.property("curv", get(&Edge_Regular::curv, *g));
-        dpout.property("edist",get(&Edge_Regular::edist, *g));
-        dpout.property("block",  get(&Vertex_Regular::block, *g));
-        dpout.property("x",get(&Vertex_Regular::x, *g));
-        dpout.property("y",get(&Vertex_Regular::y, *g));
-        dpout.property("z",get(&Vertex_Regular::z, *g));
+        dpout.property("dist", get(&EdgeType::distance, *g));
+        dpout.property("ot", get(&EdgeType::ot, *g));
+        dpout.property("curv", get(&EdgeType::curv, *g));
+        dpout.property("edist",get(&EdgeType::edist, *g));
+        dpout.property("block",  get(&VertexType::block, *g));
+        dpout.property("x",get(&VertexType::x, *g));
+        dpout.property("y",get(&VertexType::y, *g));
+        dpout.property("z",get(&VertexType::z, *g));
 
 
 
