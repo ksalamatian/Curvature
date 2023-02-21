@@ -16,6 +16,8 @@
 #include <boost/multi_index/mem_fun.hpp>
 #include <atomic>
 #include <queue>
+#include <thread>
+#include <string>
 #include "BlockingCollection.h"
 #include "emd.h"
 #include "GraphSpecial.h"
@@ -31,7 +33,19 @@ using std::chrono::milliseconds;
 using std::chrono::microseconds;
 
 
-class DistanceCache;
+class DistanceCache{
+private:
+    float *distanceMat;
+    int size;
+public:
+    DistanceCache(int numVertices):size(numVertices*numVertices){
+        distanceMat=(float *)calloc(size, sizeof(float));
+    }
+    ~DistanceCache(){
+        delete distanceMat;
+    }
+
+};
 
 struct GraphType : public GraphSpecial{
 
@@ -507,6 +521,7 @@ constexpr double EPS=1e-4;
             if (isnan(wd)) {
                 g[e].ot = 9999.0;
                 g[e].curv = 9999.0;
+                cout<<"PROBLEM"<<endl;
             } else {
                 g[e].ot = wd;
                 float tmpDist=g[e].distance;
@@ -519,7 +534,6 @@ constexpr double EPS=1e-4;
             distributionA.clear();
             distributionB.clear();
         } else {
-            numProcessedEdge++;
             g[e].curv = 0.0;
             g[e].ot = 0.0;
             g[e].distance = EPS / 2;
@@ -528,10 +542,12 @@ constexpr double EPS=1e-4;
     }
 }
 
+std::atomic<long> numShortestPath;
+
 void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
     Task *task;
     long totalTime1 = 0, totalTime2 = 0;
-    int QUANTA=60;
+    int QUANTA=120;
     while (tasksToDo.try_take(task) == BlockingCollectionStatus::Ok) {
         //        tasksToDo.try_take(task);
         Vertex s = task->v;
@@ -541,6 +557,7 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
         set<Edge> edges(task->edges);
         vector<vector<double>> *MatDist1;// *MatDist2;
         //        vector<vector<double>> *MatDist;
+
         int ssize = sources.size(), dsize = dests.size();
         switch (task->type) {
             case FullProcess: {
@@ -576,6 +593,7 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
                     //                    if ((*MatDist1)[0][0]==std::numeric_limits<double>::infinity())
                     //                        int KKKK=0;
                     calcCurvature(ALPHA, fullTask->v, *MatDist1, edges, sources, dests, *g);
+                    numShortestPath +=MatDist1->size()*MatDist1[0].size();
                     delete MatDist1;
                     //                    delete MatDist2;
                     numProcessedVertex++;
@@ -599,7 +617,6 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
             }
             case PartialProcess:
                 PartialTask *partialTask = (PartialTask *) task;
-                cout << "PARTIAL TASK:" << partialTask->v << "," << *(partialTask->sharedCnt) << endl;
                 //                t2 = high_resolution_clock::now();
                 perf1 = multisource_uniform_cost_search_seq1(partialTask->dists, partialTask->offset, sources, dests,
                                                             *g,*distanceCache);
@@ -622,7 +639,7 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
         //            totalTime1 += ms_double1.count();
         //            totalTime2 += ms_double2.count();
         //            cout << s << "," << threadIndex << "," << numProcessedVertex << "," << numProcessedEdge <<","<<visNodeFact.number()
-        //                 << endl;
+        //                << endl;
         //            cout << s << "," <<totalTime1<<"," << ms_double1.count() << "," << sources.size() << "," << dests.size() <<
         //               "," << perf1.maxQueue << "," << perf1.counter << "," << perf1.cacheHitRate << endl;
         //            cout << s << "," <<totalTime2<< "," << ms_double2.count() << "," << sources.size() << "," << dests.size() <<
@@ -934,4 +951,58 @@ bool triangle_checker(Graph_t &g,int type){
     return status;
 }
 
+void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path, dynamic_properties dpout) {
+    Graph_t *ginter;
+    double oldRescaling = 1.0;
+    DistanceCache distanceCache(num_vertices(*g));
+    vector<int> component(num_vertices(*g));
+    int numComponent = connected_components(*g, &component[0]);
+    ofstream logFile;
+    ofstream outFile;
+    auto t1 = high_resolution_clock::now(), t2 = high_resolution_clock::now();
+
+    for (int index = iterationIndex; index < iterationIndex + numIteration; index++) {
+        numShortestPath = 0;
+        t1 = high_resolution_clock::now();
+        string logFilename = path + "/processed/logFile." + to_string(index + 1) + ".log";
+        logFile.open(logFilename.c_str(), ofstream::out);
+        string outFilename = path + "/processed/processed." + to_string(index + 1) + ".graphml";
+        outFile.open(outFilename.c_str(), ofstream::out);
+        cout << "Index:" << index << " ";
+        generateTasks(*g, tasksToDo);
+        numProcessedVertex = 0;
+        numProcessedEdge = 0;
+        int num_core = std::thread::hardware_concurrency();
+//int        num_core=1;
+        int offset = 0;
+        int k = 0;
+//    num_core=1;
+        vector<thread> threads(num_core);
+        for (int i = 0; i < num_core; i++) {
+            threads[i] = std::thread(process, i, g, &distanceCache);
+        }
+        for (int i = 0; i < num_core; i++) {
+            threads[i].join();
+        }
+        calcStats(*g, numComponent, component);
+        write_graphml(outFile, *g, dpout, true);
+        if (updateDistances(*g, oldRescaling)) {
+            ginter = new Graph_t();
+            Predicate predicate(g);
+            Filtered_Graph_t fg(*g, predicate, predicate);
+            copy_graph(fg, *ginter);
+            g->clear();
+            delete g;
+            g = ginter;
+        }
+    }
+    logFile.close();
+    outFile.close();
+    t2 = high_resolution_clock::now();
+    auto executionTime = duration_cast<microseconds>(t2 - t1);
+    cout << "Execution Time=" << executionTime.count() << ", avg per node="
+         << executionTime.count() * 1.0 / num_vertices(*g) << endl;
+    cout << "avg per link=" << executionTime.count() * 1.0 / num_edges(*g) << ", avg per path="
+         << executionTime.count() * 1.0 / numShortestPath << endl;
+}
 #endif //CURVATURE_CURVATUREHANDLER_H

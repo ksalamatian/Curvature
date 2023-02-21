@@ -5,7 +5,6 @@
 
 #include <iostream>
 #include <utility>
-#include <thread>
 #include "curvatureHandler.h"
 
 using namespace boost;
@@ -25,8 +24,6 @@ using std::chrono::microseconds;
 //typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::undirectedS, Vertex_info_road, Edge_info_road, Graph_info > Graph_t;
 typedef unsigned int uint;
 
-
-ofstream logFile, logFile1;
 boost::dynamic_properties dp;
 
 /*
@@ -96,19 +93,6 @@ void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
     inFile.close();
 }
 
-class DistanceCache{
-private:
-    float *distanceMat;
-    int size;
-public:
-    DistanceCache(int numVertices):size(numVertices*numVertices){
-        distanceMat=(float *)calloc(size, sizeof(float));
-    }
-    ~DistanceCache(){
-        delete distanceMat;
-    }
-
-};
 
 int main(int argc, char **argv)  {
     Graph_t *g=new Graph_t, *gin=new Graph_t, *ginter;
@@ -139,60 +123,26 @@ int main(int argc, char **argv)  {
 //    VertexIterator v,vend;
 
     k_core2(*gin,*g, 2);
-    DistanceCache distanceCache(num_vertices(*g));
 
     double oldRescaling=1.0;
-
-    for(int index=iterationIndex;index<iterationIndex+numIteration;index++){
-        vector<int> component(num_vertices(*g));
-        int numComponent = connected_components(*g, &component[0]);
-//        distanceCache. clear();
-        cout<<"Index:"<<index<<" ";
-        generateTasks(*g,tasksToDo);
-        DistanceCache distanceCache(num_vertices(*g));
-        //    DistanceCache distanceCache(100000000,8);
-        numProcessedVertex=0;
-        numProcessedEdge=0;
-        int num_core=std::thread::hardware_concurrency();
-//int        num_core=1;
-        int offset=0;
-        int k=0;
-        string logFilename=path+"/processed/logFile."+to_string(index)+".log", logFilename1=path+"/processed/dest."+to_string(index)+".log";
-        logFile.open(logFilename.c_str(), ofstream::out);
-        logFile1.open(logFilename1.c_str(), ofstream::out);
-//    num_core=1;
-        vector<thread> threads(num_core);
-        for (int i=0;i<num_core;i++){
-            threads[i]=std::thread(process,i,g,&distanceCache);
-        }
-        for (int i=0;i<num_core;i++){
-            threads[i].join();
-        }
-        ofstream outFile;
-        string outFilename=path+"/processed/processed."+to_string(index+1)+".graphml";
-        outFile.open(outFilename.c_str(), ofstream::out);
-//        for(boost::tie(v,vend) = vertices(*g); v != vend; ++v) {
-//            cout<<(*g)[*v].name<<endl;
-//        }
-        calcStats(*g, numComponent, component);
-        boost::dynamic_properties dpout;
-        dpout.property("asNumber", get(&VertexType::asnumber, *g));
-        dpout.property("pathNum", get(&VertexType::pathnum, *g));
-        dpout.property("Country", get(&VertexType::country, *g));
-        dpout.property("Name", get(&VertexType::name, *g));
-        dpout.property("asTime", get(&VertexType::astime, *g));
-        dpout.property("prefixNum", get(&VertexType::prefixnum, *g));
-        dpout.property("prefixAll", get(&VertexType::prefixall, *g));
-        dpout.property("addAll", get(&VertexType::addall, *g));
-        dpout.property("addNum", get(&VertexType::addnum, *g));
-        dpout.property("addCount", get(&EdgeType::addCount, *g));
-        dpout.property("edgeTime", get(&EdgeType::edgetime, *g));
-        dpout.property("weight", get(&EdgeType::weight, *g));
-        dpout.property("distance", get(&EdgeType::distance, *g));
-        dpout.property("ot", get(&EdgeType::ot, *g));
-        dpout.property("curv", get(&EdgeType::curv, *g));
-        dpout.property("pathCount", get(&EdgeType::pathcount, *g));
-        dpout.property("prefCount", get(&EdgeType::prefcount, *g));
+    boost::dynamic_properties dpout;
+    dpout.property("asNumber", get(&VertexType::asnumber, *g));
+    dpout.property("pathNum", get(&VertexType::pathnum, *g));
+    dpout.property("Country", get(&VertexType::country, *g));
+    dpout.property("Name", get(&VertexType::name, *g));
+    dpout.property("asTime", get(&VertexType::astime, *g));
+    dpout.property("prefixNum", get(&VertexType::prefixnum, *g));
+    dpout.property("prefixAll", get(&VertexType::prefixall, *g));
+    dpout.property("addAll", get(&VertexType::addall, *g));
+    dpout.property("addNum", get(&VertexType::addnum, *g));
+    dpout.property("addCount", get(&EdgeType::addCount, *g));
+    dpout.property("edgeTime", get(&EdgeType::edgetime, *g));
+    dpout.property("weight", get(&EdgeType::weight, *g));
+    dpout.property("distance", get(&EdgeType::distance, *g));
+    dpout.property("ot", get(&EdgeType::ot, *g));
+    dpout.property("curv", get(&EdgeType::curv, *g));
+    dpout.property("pathCount", get(&EdgeType::pathcount, *g));
+    dpout.property("prefCount", get(&EdgeType::prefcount, *g));
 
 /*        dpout.property("label", get(&Vertex_info_road::label, *g));
         dpout.property("X", get(&Vertex_info_road::X, *g));
@@ -218,24 +168,11 @@ int main(int argc, char **argv)  {
         dpout.property("ot", get(&Edge_info_road::ot, *g));
         dpout.property("curv", get(&Edge_info_road::curv, *g));*/
 
-        map<double, double> attribute_double2double1,attribute_double2double2;
-        associative_property_map<map<double, double>> avgCurv_map(attribute_double2double1);
-        associative_property_map<map<double, double>> stdCurv_map(attribute_double2double2);
-        dpout.property("avgCurv", avgCurv_map);
-        dpout.property("stdCurv",stdCurv_map);
-        Predicate predicate;
-
-        write_graphml(outFile, *g, dpout, true);
-//        logFile.close();
-        logFile1.close();
-        if (updateDistances(*g,oldRescaling)){
-            ginter = new Graph_t();
-            Filtered_Graph_t fg(*g, predicate, predicate);
-            copy_graph(fg,*ginter);
-            g->clear();
-            delete g;
-            g=ginter;
-        }
-    }
+    map<double, double> attribute_double2double1,attribute_double2double2;
+    associative_property_map<map<double, double>> avgCurv_map(attribute_double2double1);
+    associative_property_map<map<double, double>> stdCurv_map(attribute_double2double2);
+    dpout.property("avgCurv", avgCurv_map);
+    dpout.property("stdCurv",stdCurv_map);
+    ricci_flow(g,numIteration, iterationIndex,path, dpout);
     return 0;
 }
