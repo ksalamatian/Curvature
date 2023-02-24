@@ -43,7 +43,7 @@ boost::dynamic_properties dp;
 /*
  * Read a graphml
  */
-void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
+void readGraphMLFile(Graph_t& designG, std::string &fileName) {
 
     ifstream inFile;
 

@@ -223,7 +223,7 @@ public:
 
 private:
     std::queue<GraphNode*> graphNodeQueue;
-    std::atomic<long> numb{0}, yi{0};
+    long numb=0, yi=0;
 
 };
 
@@ -542,12 +542,13 @@ constexpr double EPS=1e-4;
     }
 }
 
-std::atomic<long> numShortestPath;
+std::atomic<long> numShortestPath{0};
 
 void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
     Task *task;
     long totalTime1 = 0, totalTime2 = 0;
     int QUANTA=120;
+    long numberShortestPath=0;
     while (tasksToDo.try_take(task) == BlockingCollectionStatus::Ok) {
         //        tasksToDo.try_take(task);
         Vertex s = task->v;
@@ -593,7 +594,7 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
                     //                    if ((*MatDist1)[0][0]==std::numeric_limits<double>::infinity())
                     //                        int KKKK=0;
                     calcCurvature(ALPHA, fullTask->v, *MatDist1, edges, sources, dests, *g);
-                    numShortestPath +=MatDist1->size()*MatDist1[0].size();
+                    numberShortestPath +=MatDist1->size()*MatDist1[0].size();
                     delete MatDist1;
                     //                    delete MatDist2;
                     numProcessedVertex++;
@@ -660,6 +661,7 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
             //
         }
     }
+    numShortestPath+=numberShortestPath;
 }
 
 struct vertexpaircomp {
@@ -966,7 +968,7 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path, d
         t1 = high_resolution_clock::now();
         string logFilename = path + "/processed/logFile." + to_string(index + 1) + ".log";
         logFile.open(logFilename.c_str(), ofstream::out);
-        string outFilename = path + "/processed/processed." + to_string(index + 1) + ".graphml";
+        string outFilename = path + "/processed/processed." + to_string(index+1) + ".graphml";
         outFile.open(outFilename.c_str(), ofstream::out);
         cout << "Index:" << index << " ";
         generateTasks(*g, tasksToDo);
@@ -995,14 +997,14 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path, d
             delete g;
             g = ginter;
         }
+        logFile.close();
+        outFile.close();
+        t2 = high_resolution_clock::now();
+        auto executionTime = duration_cast<microseconds>(t2 - t1);
+        cout << "Execution Time=" << executionTime.count() << ", avg per node="
+             << executionTime.count() * 1.0 / num_vertices(*g) << endl;
+        cout << "avg per link=" << executionTime.count() * 1.0 / num_edges(*g) << ", avg per path="
+             << executionTime.count() * 1.0 / numShortestPath << endl;
     }
-    logFile.close();
-    outFile.close();
-    t2 = high_resolution_clock::now();
-    auto executionTime = duration_cast<microseconds>(t2 - t1);
-    cout << "Execution Time=" << executionTime.count() << ", avg per node="
-         << executionTime.count() * 1.0 / num_vertices(*g) << endl;
-    cout << "avg per link=" << executionTime.count() * 1.0 / num_edges(*g) << ", avg per path="
-         << executionTime.count() * 1.0 / numShortestPath << endl;
 }
 #endif //CURVATURE_CURVATUREHANDLER_H
