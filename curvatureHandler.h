@@ -251,17 +251,17 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
     perf.sourceSize=sources.size();
     perf.destSize=dests.size();
     long hit=0, checked=0;
-    set<Vertex> visited;
-    set<Vertex> settledNodes;
-    set<long> sourceVisited;
-    set<uint> sourceFinished;
+    boost::unordered_set<Vertex> visited;
+    boost::unordered_set<Vertex> settledNodes;
+    boost::unordered_set<long> sourceVisited;
+    boost::unordered_set<uint> sourceFinished;
     vector<int> srcCount(sources.size(),0);
 
     GraphNodeFactory graphNodeFact;
     GraphNodeArray graphNodeArray(num_vertices(g),sources, distanceCache);
     priority_queue<GraphNode*, vector<GraphNode*>, myComp > *costQueue, *bakCostQueue, *swap;
     costQueue=new priority_queue<GraphNode*, vector<GraphNode*>, myComp >();
-    std::set<Vertex> seen;
+    boost::unordered_set<Vertex> seen;
 
     int counter=0;
     int numSettled=0;
