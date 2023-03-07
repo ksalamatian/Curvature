@@ -1,7 +1,3 @@
-//
-// Created by ksalamatian on 14/02/2023.
-//
-
 #ifndef CURVATURE_CURVATUREHANDLER_H
 #define CURVATURE_CURVATUREHANDLER_H
 #include <boost/graph/adjacency_list.hpp>
@@ -239,7 +235,7 @@ struct myComp {
 
 
 Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int offset, vector<Vertex> &sources,
-                                          vector<Vertex> &dests, Graph_t &g, DistanceCache &distanceCache){
+                                          vector<Vertex> &dests, Graph_t &g, DistanceCache &distanceCache, GraphNodeFactory graphNodeFact){
     // minimum cost upto
     // goal state from starting
     // state
@@ -257,7 +253,7 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
     boost::unordered_set<uint> sourceFinished;
     vector<int> srcCount(sources.size(),0);
 
-    GraphNodeFactory graphNodeFact;
+    //GraphNodeFactory graphNodeFact;
     GraphNodeArray graphNodeArray(num_vertices(g),sources, distanceCache);
     priority_queue<GraphNode*, vector<GraphNode*>, myComp > *costQueue, *bakCostQueue, *swap;
     costQueue=new priority_queue<GraphNode*, vector<GraphNode*>, myComp >();
@@ -500,44 +496,46 @@ constexpr double EPS=1e-4;
         }
 
         int sA = vertDist.size(), sB = vertDist[0].size();
-        if (sB > 1) {
-            double uA = (double) (1 - alpha) / (sA - 1);
-            double uB = (double) (1 - alpha) / (sB - 1);
-            distributionA.resize(sA);
-            fill_n(distributionA.begin(), sA, uA);
-            distributionB.resize(sB);
-            fill_n(distributionB.begin(), sB, uB);
-            //        vector<double> distributionA(sA, uA);
-            //        vector<double> distributionB(sB, uB);
-            auto range = equal_range(sources.begin(), sources.end(), src);
-            int index = range.first - sources.begin();
+        //if (sB > 1) {
 
-            distributionA[index] = alpha;
-            distributionB[destIndex] = alpha;
+        double uA = (double) (1 - alpha) / (sA - 1);
+        double uB = (double) (1 - alpha) / (sB - 1);
+        distributionA.resize(sA);
+        fill_n(distributionA.begin(), sA, uA);
+        distributionB.resize(sB);
+        fill_n(distributionB.begin(), sB, uB);
+        auto range = equal_range(sources.begin(), sources.end(), src);
+        int index = range.first - sources.begin();
 
-            wd = compute_EMD(distributionA, distributionB, vertDist);
+        distributionA[index] = alpha;
+        distributionB[destIndex] = alpha;
 
-            //            cout<<src<<":"<<wd<<":"<<neighbor<<endl;
-            if (isnan(wd)) {
-                g[e].ot = 9999.0;
-                g[e].curv = 9999.0;
-                cout<<"PROBLEM"<<endl;
-            } else {
-                g[e].ot = wd;
-                float tmpDist=g[e].distance;
-                if (tmpDist < EPS) {
-                    g[e].curv = g[graph_bundle].avgCurv;
-                } else {
-                    g[e].curv = 1 - wd / g[e].distance;
-                }
-            }
-            distributionA.clear();
-            distributionB.clear();
+        wd = compute_EMD(distributionA, distributionB, vertDist);
+
+
+
+
+        if (isnan(wd)) {
+            g[e].ot = 9999.0;
+            g[e].curv = 9999.0;
+            cout<<"PROBLEM"<<endl;
         } else {
-            g[e].curv = 0.0;
-            g[e].ot = 0.0;
-            g[e].distance = EPS / 2;
+            g[e].ot = wd;
+            float tmpDist=g[e].distance;
+            if (tmpDist < EPS) {
+                g[e].curv = g[graph_bundle].avgCurv;
+            } else {
+                g[e].curv = 1 - wd / g[e].distance;
+            }
         }
+        distributionB.clear();
+        distributionA.clear();
+
+       // } else {
+       //     g[e].curv = 0.0;
+       //     g[e].ot = 0.0;
+       //     g[e].distance = EPS / 2;
+       // }
         numProcessedEdge++;
     }
 }
@@ -545,6 +543,9 @@ constexpr double EPS=1e-4;
 std::atomic<long> numShortestPath{0};
 
 void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
+
+    GraphNodeFactory graphNodeFact;
+
     Task *task;
     long totalTime1 = 0, totalTime2 = 0;
     int QUANTA=120;
@@ -567,7 +568,7 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
                                                                             std::numeric_limits<double>::infinity()));
                 //                MatDist2= new vector<vector<double>>(ssize, vector<double>(dsize,std::numeric_limits<double>::infinity()));
                 if (ssize < QUANTA) {
-                    perf1 = multisource_uniform_cost_search_seq1(MatDist1, 0, sources, dests, *g, *distanceCache);
+                    perf1 = multisource_uniform_cost_search_seq1(MatDist1, 0, sources, dests, *g, *distanceCache, graphNodeFact);
                     //                    t2 = high_resolution_clock::now();
                     //                    perf2 = multisource_uniform_cost_search_seq(MatDist2, 0, sources, dests, *g);
                     //check for InF
@@ -620,7 +621,7 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
                 PartialTask *partialTask = (PartialTask *) task;
                 //                t2 = high_resolution_clock::now();
                 perf1 = multisource_uniform_cost_search_seq1(partialTask->dists, partialTask->offset, sources, dests,
-                                                            *g,*distanceCache);
+                                                            *g,*distanceCache, graphNodeFact);
                 //                t3 = high_resolution_clock::now();
                 (*(partialTask->sharedCnt))--;
                 done = true;
