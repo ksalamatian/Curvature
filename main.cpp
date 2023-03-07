@@ -86,7 +86,7 @@ void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
     }
     catch (const std::exception &exc) {
         cerr << exc.what();
-        cout << "Type: " << typeid(exc).name() << "\n";
+        cout << " Type: " << typeid(exc).name() << "\n";
     }
     cout << "Num Vertices: " << num_vertices(designG) << endl;
     cout << "Num Edges: " << num_edges(designG) << endl;

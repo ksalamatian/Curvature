@@ -291,6 +291,7 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
                 GraphNode *p=costQueue->top();
                 costQueue->pop();
                 if (sourceFinished.count(p->source)){
+                    graphNodeFact.yield(p);
                     continue;
                 }
                     //settle pop values
@@ -462,7 +463,6 @@ using TaskPriorityQueue = PriorityBlockingCollection<Task *, PriorityContainer<T
 
 TaskPriorityQueue tasksToDo;
 std::atomic<long>  numProcessedVertex{0}, numProcessedEdge{0};
-auto t1 = high_resolution_clock::now(), t2=t1,t3=t1;
 constexpr double EPS=1e-4;
 
  void calcCurvature(double alpha, Vertex v, vector<vector<double>> &MatDist, set<Edge> &edges, vector<Vertex> sources,
@@ -545,12 +545,14 @@ std::atomic<long> numShortestPath{0};
 void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
 
     GraphNodeFactory graphNodeFact;
-
     Task *task;
     long totalTime1 = 0, totalTime2 = 0;
     int QUANTA=120;
     long numberShortestPath=0;
+    auto t1=high_resolution_clock::now(), t2=t1;
     while (tasksToDo.try_take(task) == BlockingCollectionStatus::Ok) {
+        if (numProcessedVertex==0)
+            t1=high_resolution_clock::now();
         //        tasksToDo.try_take(task);
         Vertex s = task->v;
         Perf perf1, perf2;
@@ -653,6 +655,7 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
         if (numProcessedVertex % 5000 == 0) {
             t2 = high_resolution_clock::now();
             auto ms_double2 = duration_cast<microseconds>(t2 - t1);
+            t1=t2;
             cout << "numProcessedVertex=" << numProcessedVertex << ",numProcessedEdge=" << numProcessedEdge
                  << ",delay=" << ms_double2.count() << endl;
             //        ofstream preFile;
