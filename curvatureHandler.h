@@ -235,7 +235,7 @@ struct myComp {
 
 
 Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int offset, vector<Vertex> &sources,
-                                          vector<Vertex> &dests, Graph_t &g, DistanceCache &distanceCache, GraphNodeFactory graphNodeFact){
+                                          vector<Vertex> &dests, Graph_t &g, DistanceCache &distanceCache, GraphNodeFactory &graphNodeFact){
     // minimum cost upto
     // goal state from starting
     // state
