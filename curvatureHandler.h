@@ -234,7 +234,7 @@ struct myComp {
 };
 
 
-Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int offset, vector<Vertex> &sources,
+Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int offset, int QUANTA, vector<Vertex> &ssources,
                                           vector<Vertex> &dests, Graph_t &g, DistanceCache &distanceCache, GraphNodeFactory &graphNodeFact){
     // minimum cost upto
     // goal state from starting
@@ -242,6 +242,7 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
 
     // insert the starting index
     // map to store visited node
+    vector<Vertex> sources(ssources.begin()+offset,ssources.begin()+offset+QUANTA);
     set<Vertex> landMarks;
     Perf perf;
     perf.sourceSize=sources.size();
@@ -268,8 +269,6 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
     GraphNode *graphNode;
     for(int i=0;i<sources.size();i++){
         v=sources[i];
-//        graphNodeArray.checkSet(v,i,0);
-//        graphNodeArray.settle(v,i);
         graphNode = graphNodeFact.get(v,i,0.0);
         costQueue->push(graphNode);
         hit ++;
@@ -291,14 +290,18 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
                 GraphNode *p=costQueue->top();
                 costQueue->pop();
                 if (sourceFinished.count(p->source)){
+                    //check if all destination relative to the source are reached
+                    //if yes we do not need to process nodes relative to this source further
                     graphNodeFact.yield(p);
                     continue;
                 }
-                    //settle pop values
+                //settle poped values
                 if (!graphNodeArray.isSettled(p->v, p->source)){
                     p->settled=true;
                     graphNodeArray.checkSet(p->v,p->source,p->dist);
                     graphNodeArray.settle(p->v, p->source);
+                    //check if the node is one of the destination
+                    //if yes we should increase the number of reached
                     if (ddests.count(p->v)>0) {
                         srcCount[p->source]++;
                         if (srcCount[p->source]>= dests.size()) {
@@ -317,9 +320,6 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
                             auto range = equal_range(dests.begin(), dests.end(), d);
                             for (int i = 0; i < sources.size(); i++) {
                                 (*ddists)[i+offset][j] = abs(graphNodeArray.get(d, i));
-                                if ((*ddists)[i+offset][j]  == std::numeric_limits<double>::infinity()) {
-                                    int KKKK=0;
-                                }
                             }
                             ++j;
                         }
@@ -404,7 +404,8 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
 }
 
 
-enum TaskType {FullProcess, PartialProcess, PartialCurvature,SuperProcess};
+enum TaskType {FullProcess, PartialProcess, PartialOT,SuperProcess};
+
 class Task{
 public:
     TaskType type;
@@ -412,8 +413,9 @@ public:
     vector<Vertex> sources;
     vector<Vertex> dests;
     set<Edge> edges;
-    Task(TaskType type, Vertex v, vector<Vertex> &sources, vector<Vertex> &dests, set<Edge> &edges):type(type), v(v), sources(sources),
-                                                                                                    dests(dests), edges(edges){}
+    float weight;
+    Task(TaskType type, Vertex v, vector<Vertex> &sources, vector<Vertex> &dests, set<Edge> &edges, float weight):type(type), v(v), sources(sources),
+                                                                                                    dests(dests), edges(edges), weight(weight){}
     ~Task(){
         sources.clear();
         dests.clear();
@@ -423,25 +425,19 @@ public:
 
 struct TaskPaircomp {
     // Comparator function
-    int operator()(Task *l, Task *r) const
-    {
-        long  lsize=l->dests.size()*l->sources.size(), rsize=r->dests.size()*r->sources.size();
-//        long  lsize=l->sources.size(), rsize=r->sources.size();
-
-        if (lsize < rsize) {
-            return 1;
-        } else
-        if (rsize < lsize) {
-            return -1;
-        } else {
+    int operator()(Task *l, Task *r) const {
+        if (l->v == r->v)
             return 0;
+        if (l->weight < r->weight) {
+            return 1;
         }
+        return -1;
     }
 };
 
 class FullTask: public Task{
 public:
-    FullTask(Vertex v, vector<Vertex> &sources, vector<Vertex> &dests, set<Edge> &edges):Task(FullProcess,v,sources, dests, edges)
+    FullTask(Vertex v, vector<Vertex> &sources, vector<Vertex> &dests, set<Edge> &edges):Task(FullProcess,v,sources, dests, edges, (float)sources.size())
     {};
 };
 
@@ -449,19 +445,43 @@ class PartialTask: public Task{
 public:
     std::atomic<int> *sharedCnt;
     vector<vector<double>> *dists;
+    int index;
     int offset;
-    PartialTask(std::atomic<int> *shared, vector<vector<double>> *dists, int offset, Vertex v,
-                vector<Vertex> sources, vector<Vertex> dests, set<Edge> edges):
-            Task(PartialProcess,v,sources, dests,edges), dists(dists), offset(offset), sharedCnt(shared){this->type=PartialProcess;}
+    int QUANTA;
+    PartialTask(std::atomic<int> *shared, vector<vector<double>> *dists, int offset, int QUANTA, Vertex v,
+                vector<Vertex> sources, vector<Vertex> dests, set<Edge> edges, int index):
+            Task(PartialProcess,v,sources, dests,edges,(float)sources.size()), dists(dists),
+            QUANTA(QUANTA), offset(offset), sharedCnt(shared), index(index){this->type=PartialProcess;}
 };
 
+class PartialCurvature: public Task{
+public:
+    std::atomic<int> *sharedCnt;
+    vector<vector<double>> *dists;
+    int index;
+    int offset;
+    int QUANTA;
+    PartialCurvature(std::atomic<int> *shared, vector<vector<double>> *dists, int offset, int QUANTA, Vertex v,
+    vector<Vertex> sources, vector<Vertex> dests, set<Edge> edges, int index):
+    Task(PartialOT,v,sources, dests,edges, (float)sources.size()-0.1), dists(dists), offset(offset),
+    QUANTA(QUANTA), index(index), sharedCnt(shared){this->type=PartialOT;}
 
+};
+using TaskPriorityQueue = PriorityBlockingCollection<Task *, PriorityContainer<Task*, TaskPaircomp>>;
+set<Task *, TaskPaircomp> tasksToDoSet;
 
+void copyTaskQueue(set<Task *, TaskPaircomp> &intaskPriorityQueue, TaskPriorityQueue &outtaskPriorityQueue){
+    int i=0;
+    for (Task *task: intaskPriorityQueue){
+        if (i>100)
+            break;
+        outtaskPriorityQueue.try_add(task);
+        i++;
+    }
+}
 
-using TaskPriorityQueue = PriorityBlockingCollection<Task *, PriorityContainer<Task *, TaskPaircomp>>;
 //template <class Graph> using TaskPriorityQueue = PriorityBlockingCollection<Task *, PriorityContainer<Task<Graph>*, TaskPaircomp<Graph>>>;
 
-TaskPriorityQueue tasksToDo;
 std::atomic<long>  numProcessedVertex{0}, numProcessedEdge{0};
 constexpr double EPS=1e-4;
 
@@ -480,7 +500,6 @@ constexpr double EPS=1e-4;
         for (; nB.first != nB.second; localDests.insert(*nB.first++));
         vector<vector<double>> vertDist(MatDist.size(), vector<double>(localDests.size(),
                                                                        std::numeric_limits<double>::infinity()));
-
         int cntD = 0, destIndex = 0;
         for (Vertex dest: localDests) {
             auto range = equal_range(dests.begin(), dests.end(), dest);
@@ -511,10 +530,6 @@ constexpr double EPS=1e-4;
         distributionB[destIndex] = alpha;
 
         wd = compute_EMD(distributionA, distributionB, vertDist);
-
-
-
-
         if (isnan(wd)) {
             g[e].ot = 9999.0;
             g[e].curv = 9999.0;
@@ -528,6 +543,8 @@ constexpr double EPS=1e-4;
                 g[e].curv = 1 - wd / g[e].distance;
             }
         }
+        if (isinf(g[e].curv))
+            cout<<"BUG"<<endl;
         distributionB.clear();
         distributionA.clear();
 
@@ -541,19 +558,19 @@ constexpr double EPS=1e-4;
 }
 
 std::atomic<long> numShortestPath{0};
-
-void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
-
+std::atomic<float> seuil={0.02};
+auto t1=high_resolution_clock::now();
+void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache, TaskPriorityQueue *tasksToDo, long numbOfShortPaths) {
     GraphNodeFactory graphNodeFact;
     Task *task;
     long totalTime1 = 0, totalTime2 = 0;
     int QUANTA=120;
     long numberShortestPath=0;
-    auto t1=high_resolution_clock::now(), t2=t1;
-    while (tasksToDo.try_take(task) == BlockingCollectionStatus::Ok) {
-        if (numProcessedVertex==0)
-            t1=high_resolution_clock::now();
+    float perc;
+    auto t2=t1;
+    while (tasksToDo->try_take(task, std::chrono::milliseconds(1000)) == BlockingCollectionStatus::Ok) {
         //        tasksToDo.try_take(task);
+        numberShortestPath=0;
         Vertex s = task->v;
         Perf perf1, perf2;
         bool done = false;
@@ -562,7 +579,7 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
         vector<vector<double>> *MatDist1;// *MatDist2;
         //        vector<vector<double>> *MatDist;
 
-        int ssize = sources.size(), dsize = dests.size();
+        int ssize = sources.size(), dsize = dests.size(), allsize=ssize*dsize;
         switch (task->type) {
             case FullProcess: {
                 FullTask *fullTask = (FullTask *) task;
@@ -570,102 +587,100 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache) {
                                                                             std::numeric_limits<double>::infinity()));
                 //                MatDist2= new vector<vector<double>>(ssize, vector<double>(dsize,std::numeric_limits<double>::infinity()));
                 if (ssize < QUANTA) {
-                    perf1 = multisource_uniform_cost_search_seq1(MatDist1, 0, sources, dests, *g, *distanceCache, graphNodeFact);
-                    //                    t2 = high_resolution_clock::now();
-                    //                    perf2 = multisource_uniform_cost_search_seq(MatDist2, 0, sources, dests, *g);
-                    //check for InF
-                    //                    for (int i=0;i<ssize;i++){
-                    //                        for (int j=0;j<dsize;j++) {
-                    //                            if (isinf((*MatDist1)[i][j])) {
-                    //                                multisource_uniform_cost_search_seq(MatDist2, 0, sources, dests, *g);
-                    //                                int KKKK=0;
-                    //                            }
-                    //                            if ((*MatDist1)[i][j] != (*MatDist2)[i][j])
-                    //                                cout << "NOT EQUAL  " << i << "," <<j << ","<<(*MatDist1)[i][j]<< ","<<(*MatDist2)[i][j]
-                    //                                <<","<<(*MatDist1)[i][j]-(*MatDist2)[i][j]<<endl;
-                    //                        }
-                    //                   }
-
-                    //                    t3 = high_resolution_clock::now()  ;
-                    //                    t2 = high_resolution_clock::now();
-                    //                    for(int i=0; i<ssize; i++){
-                    //                        for (int j; j<dsize; j++){
-                    //                            if ((*MatDist1)[i][j]!=(*MatDist2)[i][j])
-                    //                                cout<<"NOT EQUAL "<<i<<","<<j<<endl;
-                    //                        }
-                    //                    }
-                    //                    if ((*MatDist1)[0][0]==std::numeric_limits<double>::infinity())
-                    //                        int KKKK=0;
-                    calcCurvature(ALPHA, fullTask->v, *MatDist1, edges, sources, dests, *g);
-                    numberShortestPath +=MatDist1->size()*MatDist1[0].size();
-                    delete MatDist1;
-                    //                    delete MatDist2;
-                    numProcessedVertex++;
-                    done = true;
-                } else {
+                    perf1 = multisource_uniform_cost_search_seq1(MatDist1, 0, sources.size(),sources, dests, *g, *distanceCache, graphNodeFact);
                     std::atomic<int> *sharedCnt = new std::atomic<int>();
                     *sharedCnt = 0;
+                    PartialCurvature *ptask = new PartialCurvature(sharedCnt, MatDist1, 0, edges.size(), fullTask->v, sources, dests, edges, 0);
+                    tasksToDo->try_add((Task *) ptask);
+                    //                    delete MatDist2;
+                } else {
+                    std::atomic<int>  *sharedCnt = new std::atomic<int>();
+                    *sharedCnt =0;
                     int iterNum = sources.size() / QUANTA;
                     auto begin = sources.begin();
                     for (int i = 0; i < sources.size(); i = i + QUANTA) {
-                        auto first = sources.begin() + i;
-                        auto end = sources.begin() + i + std::min((long) QUANTA, (long) sources.size() - i);
-                        vector<Vertex> partialVect(first, end);
-                        PartialTask *ptask = new PartialTask(sharedCnt, MatDist1, i, s, partialVect, dests, edges);
-                        tasksToDo.try_add((Task *) ptask);
+                        PartialTask *ptask = new PartialTask(sharedCnt, MatDist1, i,std::min(QUANTA, (int)sources.size()-i),s,
+                                                             sources, dests, edges,*sharedCnt);
+                        tasksToDo->try_add((Task *) ptask);
                         (*sharedCnt)++;
                     }
                 }
-                delete fullTask;
                 break;
             }
-            case PartialProcess:
+            case PartialProcess:{
                 PartialTask *partialTask = (PartialTask *) task;
                 //                t2 = high_resolution_clock::now();
-                perf1 = multisource_uniform_cost_search_seq1(partialTask->dists, partialTask->offset, sources, dests,
-                                                            *g,*distanceCache, graphNodeFact);
+//                cout<<"Partial Task:"<<partialTask->v<<":"<<*(partialTask->sharedCnt)<<", thread#:"<<threadIndex<<endl;
+                perf1 = multisource_uniform_cost_search_seq1(partialTask->dists, partialTask->offset, partialTask->QUANTA, sources, dests,
+                                                             *g,*distanceCache, graphNodeFact);
                 //                t3 = high_resolution_clock::now();
-                (*(partialTask->sharedCnt))--;
                 done = true;
+                (*(partialTask->sharedCnt))--;
                 if (*(partialTask->sharedCnt) == 0) {
-                    calcCurvature(ALPHA, partialTask->v, *(partialTask->dists), partialTask->edges,
-                                  partialTask->sources, partialTask->dests, *g);
-                    delete partialTask->dists;
                     delete partialTask->sharedCnt;
-                    numProcessedVertex++;
+                    std::atomic<int> *sharedCnt = new std::atomic<int>();
+                    *sharedCnt = 0;
+                    int iterNum = edges.size() / QUANTA;
+                    auto begin = edges.begin();
+                    int i=0,j=0;
+                    set<Edge> partialEdges;
+                    for (Edge e:edges){
+                        if (i==QUANTA){
+                            PartialCurvature *ptask = new PartialCurvature(sharedCnt, partialTask->dists,j ,QUANTA, s, sources, dests,
+                                                                           partialEdges,*sharedCnt);
+                            tasksToDo->try_add((Task *) ptask);
+                            (*sharedCnt)++;
+                            partialEdges.clear();
+                            i=0;
+                            j+=QUANTA;
+                        }
+                        partialEdges.insert(e);
+                        i++;
+                    }
+                    if (partialEdges.size()>0){
+                        PartialCurvature *ptask = new PartialCurvature(sharedCnt, partialTask->dists, j, partialEdges.size(), s, sources, dests,
+                                                                       partialEdges,*sharedCnt);
+                        tasksToDo->try_add((Task *) ptask);
+                        partialEdges.clear();
+                    }
                 }
                 delete partialTask;
                 break;
+            }
+            case PartialOT:{
+                PartialCurvature *partialOT = (PartialCurvature *) task;
+                //                t2 = high_resolution_clock::now();
+                calcCurvature(ALPHA,partialOT->v, *(partialOT->dists),partialOT->edges, sources,dests,*g);
+                done = true;
+                if (*(partialOT->sharedCnt) == 0) {
+                    numberShortestPath=sources.size()*dests.size();
+                    numProcessedVertex++;
+                    done = true;
+                    delete partialOT->dists;
+                    delete partialOT->sharedCnt;
+                } else {
+                    (*(partialOT->sharedCnt))--;
+                }
+                delete partialOT;
+                break;
+            }
         }
-        //        if (done){
-        //            ms_double1 = t2 - t1;
-        //            ms_double2 = t3 - t1;
-        //            totalTime1 += ms_double1.count();
-        //            totalTime2 += ms_double2.count();
-        //            cout << s << "," << threadIndex << "," << numProcessedVertex << "," << numProcessedEdge <<","<<visNodeFact.number()
-        //                << endl;
-        //            cout << s << "," <<totalTime1<<"," << ms_double1.count() << "," << sources.size() << "," << dests.size() <<
-        //               "," << perf1.maxQueue << "," << perf1.counter << "," << perf1.cacheHitRate << endl;
-        //            cout << s << "," <<totalTime2<< "," << ms_double2.count() << "," << sources.size() << "," << dests.size() <<
-        //                "," << perf2.maxQueue << "," << perf2.counter<<"," <<ms_double2.count()*1.0/(sources.size()*dests.size())<< endl;
-        //            logFile << s << "," << threadIndex << "," << numProcessedVertex << "," << numProcessedEdge << ","
-        //                    << visNodeFact.number() << "," << ms_double2.count() << "," << sources.size() << "," << dests.size() << ","
-        //                    << perf2.maxQueue << "," << perf2.counter << "," << ms_double2.count()*1.0/(sources.size()*dests.size())<<endl;
-        //        }
-        if (numProcessedVertex % 5000 == 0) {
+        numShortestPath+=numberShortestPath;
+        perc=numShortestPath*1.0/numbOfShortPaths ;
+        if (perc>seuil){
+            seuil=seuil+0.02;
             t2 = high_resolution_clock::now();
             auto ms_double2 = duration_cast<microseconds>(t2 - t1);
             t1=t2;
-            cout << "numProcessedVertex=" << numProcessedVertex << ",numProcessedEdge=" << numProcessedEdge
+            cout <<perc*100<< "%, numProcessedVertex=" << numProcessedVertex << ",numProcessedEdge=" << numProcessedEdge
                  << ",delay=" << ms_double2.count() << endl;
-            //        ofstream preFile;
-            //        preFile.open("/data/Curvature/processed" + to_string(numProcessedVertex) + ".graphml", ofstream::out);
-            //        boost::dynamic_properties dpout;
-            //        write_graphml(preFile, *g, dpout, true);
-            //
         }
     }
-    numShortestPath+=numberShortestPath;
+    t2 = high_resolution_clock::now();
+    auto ms_double2 = duration_cast<microseconds>(t2 - t1);
+    t1=t2;
+    cout <<"End thread: "<< threadIndex<<","<<perc*100<< "%, numProcessedVertex=" << numProcessedVertex << ",numProcessedEdge=" << numProcessedEdge
+         << ",delay=" << ms_double2.count() << endl;
 }
 
 struct vertexpaircomp {
@@ -679,29 +694,21 @@ struct vertexpaircomp {
     }
 };
 
-void generateTasks(Graph_t &g, TaskPriorityQueue &tasksToDo) {
+long generateTasks(Graph_t &g, set<Task *, TaskPaircomp> &tasksToDoSet) {
     set<long> edgeSet;
     std::atomic<int> removed{0}, added{0};
     AdjacencyIterator nfirst, nend;
     VertexIterator v,vend;
     set<pair<Vertex, int>, vertexpaircomp> degreeSorted;
+    long numbOfShortPaths=0;
+    int numbOfEdges=0;
     for (tie(v, vend) = vertices(g); v != vend; v++) {
-        degreeSorted.insert(make_pair(*v, degree(*v, g)));
+        degreeSorted.insert(make_pair(*v, -degree(*v, g)));
     }
-/*    int k=0, offset, num_core=std::thread::hardware_concurrency();
-int scale=sortedVertices.size()/num_core;
-for (auto elem:degreeSorted){
-    offset=(k%num_core)*scale+k/num_core;
-    sortedVertices[offset]=elem.first;
-    k++;
-}*/
-//    parallel_for(blocked_range<int>(0,sortedVertices.size(),50000),
-//                 [&](blocked_range<int> r) {
     set<Vertex> sourcesSet, destsSet;
     set<Task *, TaskPaircomp> taskSet;
     set<Edge> edgesToProcess;
     for (auto p: degreeSorted) {
-//            for (int i=r.begin(); i<r.end(); ++i) {
         Vertex src = p.first;
         sourcesSet.insert(src);
         for (auto ve = boost::out_edges(src, g); ve.first != ve.second; ++ve.first) {
@@ -719,9 +726,11 @@ for (auto elem:degreeSorted){
             }
             if (!found) {
                 // the edge have not been processed
+
                 tie(nfirst, nend) = adjacent_vertices(dest, g);
                 destsSet.insert(nfirst, nend);
                 edgesToProcess.insert(*ve.first);
+
                 added++;
             } else {
                 removed++;
@@ -729,14 +738,22 @@ for (auto elem:degreeSorted){
         }
         vector<Vertex> sources(sourcesSet.begin(), sourcesSet.end()), dests(destsSet.begin(), destsSet.end());
         if (edgesToProcess.size() > 0) {
+            numbOfEdges +=edgesToProcess.size();
+            numbOfShortPaths +=sources.size()*destsSet.size();
             FullTask *task = new FullTask(src, sources, dests, edgesToProcess);
-            tasksToDo.try_add((Task *) task);
+            tasksToDoSet.insert((Task *) task);
         }
         sourcesSet.clear();
         destsSet.clear();
         edgesToProcess.clear();
     }
+    long key = (45 << 32) + 42;
+    if (edgeSet.insert(key).second) {
+        int KKKK = 0;
+    }
 //                 });
+    cout<<"Number of tasks:"<<tasksToDoSet.size()<<" ,numbOfEdges="<<numbOfEdges<<", numbOfShortPaths="<<numbOfShortPaths<<endl;
+    return numbOfShortPaths;
 }
 
 struct Predicate {// both edge and vertex
@@ -791,14 +808,6 @@ void k_core2(Graph_t &gin, Graph_t &gout, unsigned int k){
 }
 
 
-class SuperTask: public Task{
-    typedef typename graph_traits<Graph_t>::vertex_descriptor Vertex;
-    typedef typename graph_traits<Graph_t>::edge_descriptor Edge;
-
-    vector<Task> subtasks;
-    SuperTask(vector<Task> &tasks, vector<Vertex> &superSources, vector <Vertex> &superDests, set<Edge> &superEdges):
-            Task(SuperProcess,0,superSources, superDests, superEdges), subtasks(tasks){}
-};
 
 
 void calcStats(Graph_t &g, int componentNum, vector<int> &components) {
@@ -818,6 +827,9 @@ void calcStats(Graph_t &g, int componentNum, vector<int> &components) {
         float tmpDist=g[*eit].distance;
         if (tmpDist < mindist) {
             mindist = g[*eit].distance;
+        }
+        if (isinf(g[*eit].curv)){
+            cout<<"inf edge:"<<source(*eit,g)<<":"<<target(*eit,g)<<endl;
         }
         sumCurv += g[*eit].curv;
         int node = source(*eit, g);
@@ -965,8 +977,9 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path, d
     int numComponent = connected_components(*g, &component[0]);
     ofstream logFile;
     ofstream outFile;
-    auto t1 = high_resolution_clock::now(), t2 = high_resolution_clock::now();
-
+    auto t1 = high_resolution_clock::now(), t2 = t1;
+    long numbOfShortPaths=generateTasks(*g, tasksToDoSet);
+    TaskPriorityQueue tasksToDo;
     for (int index = iterationIndex; index < iterationIndex + numIteration; index++) {
         numShortestPath = 0;
         t1 = high_resolution_clock::now();
@@ -975,7 +988,6 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path, d
         string outFilename = path + "/processed/processed." + to_string(index+1) + ".graphml";
         outFile.open(outFilename.c_str(), ofstream::out);
         cout << "Index:" << index << " ";
-        generateTasks(*g, tasksToDo);
         numProcessedVertex = 0;
         numProcessedEdge = 0;
         int num_core = std::thread::hardware_concurrency();
@@ -983,9 +995,10 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path, d
         int offset = 0;
         int k = 0;
 //    num_core=1;
+        copyTaskQueue(tasksToDoSet,tasksToDo);
         vector<thread> threads(num_core);
         for (int i = 0; i < num_core; i++) {
-            threads[i] = std::thread(process, i, g, &distanceCache);
+            threads[i] = std::thread(process, i, g, &distanceCache, &tasksToDo, numbOfShortPaths);
         }
         for (int i = 0; i < num_core; i++) {
             threads[i].join();

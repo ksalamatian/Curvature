@@ -173,6 +173,6 @@ int main(int argc, char **argv)  {
     associative_property_map<map<double, double>> stdCurv_map(attribute_double2double2);
     dpout.property("avgCurv", avgCurv_map);
     dpout.property("stdCurv",stdCurv_map);
-    ricci_flow(g,numIteration, iterationIndex,path, dpout);
+    ricci_flow(g, numIteration, iterationIndex,path, dpout);
     return 0;
 }
