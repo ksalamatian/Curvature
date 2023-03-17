@@ -558,8 +558,6 @@ constexpr double EPS=1e-4;
     }
 }
 
-std::atomic<long> numShortestPath{0};
-std::atomic<float> seuil={0.02};
 auto t1=high_resolution_clock::now();
 void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache, TaskPriorityQueue *tasksToDo,
              long numbOfShortPaths, atomic<int> *runningTaskCount) {
@@ -568,11 +566,9 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache, TaskPrio
     long totalTime1 = 0, totalTime2 = 0;
     int QUANTA=120;
     long numberShortestPath=0;
-    float perc=0.0;
-    seuil=0.02;
     auto t2=t1;
     do{
-        while (tasksToDo->try_take(task,std::chrono::seconds(1000)) == BlockingCollectionStatus::Ok) {
+        while (tasksToDo->try_take(task,std::chrono::milliseconds(1000)) == BlockingCollectionStatus::Ok) {
             //        tasksToDo.try_take(task);
             numberShortestPath=0;
             Vertex s = task->v;
@@ -672,23 +668,9 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache, TaskPrio
                     break;
                 }
             }
-            numShortestPath+=numberShortestPath;
-            perc=numShortestPath*1.0/numbOfShortPaths ;
-            if (perc>seuil){
-                seuil=seuil+0.02;
-                t2 = high_resolution_clock::now();
-                auto ms_double2 = duration_cast<microseconds>(t2 - t1);
-                t1=t2;
-                cout <<perc*100<< "%, numProcessedVertex=" << numProcessedVertex << ",numProcessedEdge=" << numProcessedEdge
-                     << ",delay=" << ms_double2.count() << endl;
-            }
         }
-    } while(runningTaskCount!=0);
-    t2 = high_resolution_clock::now();
-    auto ms_double2 = duration_cast<microseconds>(t2 - t1);
-    t1=t2;
-    cout <<"End thread: "<< threadIndex<<","<<perc*100<< "%, numProcessedVertex=" << numProcessedVertex << ",numProcessedEdge=" << numProcessedEdge
-         << ",delay=" << ms_double2.count() << endl;
+        cout<<"External loop:"<<threadIndex<<","<<*runningTaskCount<<endl;
+    } while(*runningTaskCount!=0);
 }
 
 struct vertexpaircomp {
@@ -1053,12 +1035,12 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path, d
     ofstream outFile;
     atomic<int> runningTasksCount{0};
     auto t1 = high_resolution_clock::now(), t2 = t1;
+    long numOfShortestPaths;
 //    long numbOfShortPaths=generateTasks(*g, tasksToDoSet);
     for (int index = iterationIndex; index < iterationIndex + numIteration; index++) {
-        numShortestPath = 0;
         t1 = high_resolution_clock::now();
         TaskPriorityQueue tasksToDo;
-        long numbOfShortPaths=generateTasks(*g, tasksToDo);
+        numOfShortestPaths=generateTasks(*g, tasksToDo);
         string logFilename = path + "/processed/logFile." + to_string(index + 1) + ".log";
         logFile.open(logFilename.c_str(), ofstream::out);
         string outFilename = path + "/processed/processed." + to_string(index+1) + ".graphml";
@@ -1073,7 +1055,7 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path, d
 //    num_core=1;
         vector<thread> threads(num_core);
         for (int i = 0; i < num_core; i++) {
-            threads[i] = std::thread(process, i, g, &distanceCache, &tasksToDo, numbOfShortPaths, &runningTasksCount);
+            threads[i] = std::thread(process, i, g, &distanceCache, &tasksToDo, numOfShortestPaths, &runningTasksCount);
         }
         for (int i = 0; i < num_core; i++) {
             threads[i].join();
@@ -1096,7 +1078,7 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path, d
         cout << "Execution Time=" << executionTime.count() << ", avg per node="
              << executionTime.count() * 1.0 / num_vertices(*g) << endl;
         cout << "avg per link=" << executionTime.count() * 1.0 / num_edges(*g) << ", avg per path="
-             << executionTime.count() * 1.0 / numShortestPath << endl;
+             << executionTime.count() * 1.0 / numOfShortestPaths << endl;
     }
 }
 #endif //CURVATURE_CURVATUREHANDLER_H
