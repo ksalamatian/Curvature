@@ -173,6 +173,7 @@ public:
 //        distanceCache.set(sourceind,vind,);
         return true;
     }
+
     bool isFinished(uint vind){
         if (settledCount[vind]>=sources.size()){
             return true;
@@ -312,7 +313,9 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
 //                    distanceCache1.insert(sources[p->source], p->v, abs(p->dist));
                     numSettled++;
                 }
+                //check if all sources know the shortest distance to p->v
                 if (graphNodeArray.isFinished(p->v)) {
+                    //remove p->v of destination if p->v is a destination
                     ddests.erase(p->v);
                     if (ddests.empty()) {//all dests are attained
                         int j=0;
@@ -326,9 +329,10 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
                         perf.maxQueue=maxQueue;
                         perf.counter=counter;
                         perf.cacheHitRate = hit*1.0/checked;
+                        graphNodeFact.yield(p);
                         while(!costQueue->empty()){
-                            GraphNode *p=costQueue->top();
-                            graphNodeFact.yield(p);
+                            GraphNode *pp=costQueue->top();
+                            graphNodeFact.yield(pp);
                             costQueue->pop();
                         }
                         delete costQueue;
@@ -380,9 +384,6 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
                     auto range = equal_range(dests.begin(), dests.end(), d);
                     for (int i = 0; i < sources.size(); i++) {
                         (*ddists)[i+offset][j] = graphNodeArray.get(d, i);
-                        if ((*ddists)[i+offset][j]  == std::numeric_limits<double>::infinity()) {
-                            int KKKK=0;
-                        }
                     }
                     ++j;
                 }
@@ -399,6 +400,8 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
             }
         }
     }
+    if (!costQueue->empty())
+        cout<<"BUG"<<endl;
     delete costQueue;
     return perf;
 }
@@ -473,8 +476,6 @@ set<Task *, TaskPaircomp> tasksToDoSet;
 void copyTaskQueue(set<Task *, TaskPaircomp> &intaskPriorityQueue, TaskPriorityQueue &outtaskPriorityQueue){
     int i=0;
     for (Task *task: intaskPriorityQueue){
-        if (i>100)
-            break;
         outtaskPriorityQueue.try_add(task);
         i++;
     }
@@ -560,122 +561,129 @@ constexpr double EPS=1e-4;
 std::atomic<long> numShortestPath{0};
 std::atomic<float> seuil={0.02};
 auto t1=high_resolution_clock::now();
-void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache, TaskPriorityQueue *tasksToDo, long numbOfShortPaths) {
+void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache, TaskPriorityQueue *tasksToDo,
+             long numbOfShortPaths, atomic<int> *runningTaskCount) {
     GraphNodeFactory graphNodeFact;
     Task *task;
     long totalTime1 = 0, totalTime2 = 0;
     int QUANTA=120;
     long numberShortestPath=0;
-    float perc;
+    float perc=0.0;
+    seuil=0.02;
     auto t2=t1;
-    while (tasksToDo->try_take(task, std::chrono::milliseconds(1000)) == BlockingCollectionStatus::Ok) {
-        //        tasksToDo.try_take(task);
-        numberShortestPath=0;
-        Vertex s = task->v;
-        Perf perf1, perf2;
-        bool done = false;
-        vector<Vertex> sources(task->sources), dests(task->dests);
-        set<Edge> edges(task->edges);
-        vector<vector<double>> *MatDist1;// *MatDist2;
-        //        vector<vector<double>> *MatDist;
+    do{
+        while (tasksToDo->try_take(task,std::chrono::seconds(1000)) == BlockingCollectionStatus::Ok) {
+            //        tasksToDo.try_take(task);
+            numberShortestPath=0;
+            Vertex s = task->v;
+            Perf perf1, perf2;
+            bool done = false;
+            vector<Vertex> sources(task->sources), dests(task->dests);
+            set<Edge> edges(task->edges);
+            vector<vector<double>> *MatDist1;// *MatDist2;
+            //        vector<vector<double>> *MatDist;
 
-        int ssize = sources.size(), dsize = dests.size(), allsize=ssize*dsize;
-        switch (task->type) {
-            case FullProcess: {
-                FullTask *fullTask = (FullTask *) task;
-                MatDist1 = new vector<vector<double>>(ssize, vector<double>(dsize,
-                                                                            std::numeric_limits<double>::infinity()));
-                //                MatDist2= new vector<vector<double>>(ssize, vector<double>(dsize,std::numeric_limits<double>::infinity()));
-                if (ssize < QUANTA) {
-                    perf1 = multisource_uniform_cost_search_seq1(MatDist1, 0, sources.size(),sources, dests, *g, *distanceCache, graphNodeFact);
-                    std::atomic<int> *sharedCnt = new std::atomic<int>();
-                    *sharedCnt = 0;
-                    PartialCurvature *ptask = new PartialCurvature(sharedCnt, MatDist1, 0, edges.size(), fullTask->v, sources, dests, edges, 0);
-                    tasksToDo->try_add((Task *) ptask);
-                    //                    delete MatDist2;
-                } else {
-                    std::atomic<int>  *sharedCnt = new std::atomic<int>();
-                    *sharedCnt =0;
-                    int iterNum = sources.size() / QUANTA;
-                    auto begin = sources.begin();
-                    for (int i = 0; i < sources.size(); i = i + QUANTA) {
-                        PartialTask *ptask = new PartialTask(sharedCnt, MatDist1, i,std::min(QUANTA, (int)sources.size()-i),s,
-                                                             sources, dests, edges,*sharedCnt);
+            int ssize = sources.size(), dsize = dests.size(), allsize=ssize*dsize;
+            switch (task->type) {
+                case FullProcess: {
+                    FullTask *fullTask = (FullTask *) task;
+                    (*runningTaskCount)++;
+                    MatDist1 = new vector<vector<double>>(ssize, vector<double>(dsize,
+                                                                                std::numeric_limits<double>::infinity()));
+                    //                MatDist2= new vector<vector<double>>(ssize, vector<double>(dsize,std::numeric_limits<double>::infinity()));
+                    if (ssize < QUANTA) {
+                        perf1 = multisource_uniform_cost_search_seq1(MatDist1, 0, sources.size(),sources, dests, *g, *distanceCache, graphNodeFact);
+                        std::atomic<int> *sharedCnt = new std::atomic<int>();
+                        *sharedCnt = 0;
+                        PartialCurvature *ptask = new PartialCurvature(sharedCnt, MatDist1, 0, edges.size(), fullTask->v, sources, dests, edges, 0);
                         tasksToDo->try_add((Task *) ptask);
-                        (*sharedCnt)++;
-                    }
-                }
-                break;
-            }
-            case PartialProcess:{
-                PartialTask *partialTask = (PartialTask *) task;
-                //                t2 = high_resolution_clock::now();
-//                cout<<"Partial Task:"<<partialTask->v<<":"<<*(partialTask->sharedCnt)<<", thread#:"<<threadIndex<<endl;
-                perf1 = multisource_uniform_cost_search_seq1(partialTask->dists, partialTask->offset, partialTask->QUANTA, sources, dests,
-                                                             *g,*distanceCache, graphNodeFact);
-                //                t3 = high_resolution_clock::now();
-                done = true;
-                (*(partialTask->sharedCnt))--;
-                if (*(partialTask->sharedCnt) == 0) {
-                    delete partialTask->sharedCnt;
-                    std::atomic<int> *sharedCnt = new std::atomic<int>();
-                    *sharedCnt = 0;
-                    int iterNum = edges.size() / QUANTA;
-                    auto begin = edges.begin();
-                    int i=0,j=0;
-                    set<Edge> partialEdges;
-                    for (Edge e:edges){
-                        if (i==QUANTA){
-                            PartialCurvature *ptask = new PartialCurvature(sharedCnt, partialTask->dists,j ,QUANTA, s, sources, dests,
-                                                                           partialEdges,*sharedCnt);
+                        //                    delete MatDist2;
+                    } else {
+                        std::atomic<int>  *sharedCnt = new std::atomic<int>();
+                        *sharedCnt =0;
+                        int iterNum = sources.size() / QUANTA;
+                        auto begin = sources.begin();
+                        for (int i = 0; i < sources.size(); i = i + QUANTA) {
+                            PartialTask *ptask = new PartialTask(sharedCnt, MatDist1, i,std::min(QUANTA, (int)sources.size()-i),s,
+                                                                 sources, dests, edges,*sharedCnt);
                             tasksToDo->try_add((Task *) ptask);
                             (*sharedCnt)++;
-                            partialEdges.clear();
-                            i=0;
-                            j+=QUANTA;
                         }
-                        partialEdges.insert(e);
-                        i++;
                     }
-                    if (partialEdges.size()>0){
-                        PartialCurvature *ptask = new PartialCurvature(sharedCnt, partialTask->dists, j, partialEdges.size(), s, sources, dests,
-                                                                       partialEdges,*sharedCnt);
-                        tasksToDo->try_add((Task *) ptask);
-                        partialEdges.clear();
-                    }
+                    delete fullTask;
+                    break;
                 }
-                delete partialTask;
-                break;
-            }
-            case PartialOT:{
-                PartialCurvature *partialOT = (PartialCurvature *) task;
-                //                t2 = high_resolution_clock::now();
-                calcCurvature(ALPHA,partialOT->v, *(partialOT->dists),partialOT->edges, sources,dests,*g);
-                done = true;
-                if (*(partialOT->sharedCnt) == 0) {
-                    numberShortestPath=sources.size()*dests.size();
-                    numProcessedVertex++;
+                case PartialProcess:{
+                    PartialTask *partialTask = (PartialTask *) task;
+                    //                t2 = high_resolution_clock::now();
+//                cout<<"Partial Task:"<<partialTask->v<<":"<<*(partialTask->sharedCnt)<<", thread#:"<<threadIndex<<endl;
+                    perf1 = multisource_uniform_cost_search_seq1(partialTask->dists, partialTask->offset, partialTask->QUANTA, sources, dests,
+                                                                 *g,*distanceCache, graphNodeFact);
+                    //                t3 = high_resolution_clock::now();
                     done = true;
-                    delete partialOT->dists;
-                    delete partialOT->sharedCnt;
-                } else {
-                    (*(partialOT->sharedCnt))--;
+                    (*(partialTask->sharedCnt))--;
+                    if (*(partialTask->sharedCnt) == 0) {
+                        delete partialTask->sharedCnt;
+                        std::atomic<int> *sharedCnt = new std::atomic<int>();
+                        *sharedCnt = 0;
+                        int iterNum = edges.size() / QUANTA;
+                        auto begin = edges.begin();
+                        int i=0,j=0;
+                        set<Edge> partialEdges;
+                        for (Edge e:edges){
+                            if (i==QUANTA){
+                                PartialCurvature *ptask = new PartialCurvature(sharedCnt, partialTask->dists,j ,QUANTA, s, sources, dests,
+                                                                               partialEdges,*sharedCnt);
+                                tasksToDo->try_add((Task *) ptask);
+                                (*sharedCnt)++;
+                                partialEdges.clear();
+                                i=0;
+                                j+=QUANTA;
+                            }
+                            partialEdges.insert(e);
+                            i++;
+                        }
+                        if (partialEdges.size()>0){
+                            PartialCurvature *ptask = new PartialCurvature(sharedCnt, partialTask->dists, j, partialEdges.size(), s, sources, dests,
+                                                                           partialEdges,*sharedCnt);
+                            tasksToDo->try_add((Task *) ptask);
+                            partialEdges.clear();
+                        }
+                    }
+                    delete partialTask;
+                    break;
                 }
-                delete partialOT;
-                break;
+                case PartialOT:{
+                    PartialCurvature *partialOT = (PartialCurvature *) task;
+                    //                t2 = high_resolution_clock::now();
+                    calcCurvature(ALPHA,partialOT->v, *(partialOT->dists),partialOT->edges, sources,dests,*g);
+                    done = true;
+                    if (*(partialOT->sharedCnt) == 0) {
+                        numberShortestPath=sources.size()*dests.size();
+                        numProcessedVertex++;
+                        done = true;
+                        delete partialOT->dists;
+                        delete partialOT->sharedCnt;
+                        (*runningTaskCount)--;
+                    } else {
+                        (*(partialOT->sharedCnt))--;
+                    }
+                    delete partialOT;
+                    break;
+                }
+            }
+            numShortestPath+=numberShortestPath;
+            perc=numShortestPath*1.0/numbOfShortPaths ;
+            if (perc>seuil){
+                seuil=seuil+0.02;
+                t2 = high_resolution_clock::now();
+                auto ms_double2 = duration_cast<microseconds>(t2 - t1);
+                t1=t2;
+                cout <<perc*100<< "%, numProcessedVertex=" << numProcessedVertex << ",numProcessedEdge=" << numProcessedEdge
+                     << ",delay=" << ms_double2.count() << endl;
             }
         }
-        numShortestPath+=numberShortestPath;
-        perc=numShortestPath*1.0/numbOfShortPaths ;
-        if (perc>seuil){
-            seuil=seuil+0.02;
-            t2 = high_resolution_clock::now();
-            auto ms_double2 = duration_cast<microseconds>(t2 - t1);
-            t1=t2;
-            cout <<perc*100<< "%, numProcessedVertex=" << numProcessedVertex << ",numProcessedEdge=" << numProcessedEdge
-                 << ",delay=" << ms_double2.count() << endl;
-        }
-    }
+    } while(runningTaskCount!=0);
     t2 = high_resolution_clock::now();
     auto ms_double2 = duration_cast<microseconds>(t2 - t1);
     t1=t2;
@@ -694,7 +702,7 @@ struct vertexpaircomp {
     }
 };
 
-long generateTasks(Graph_t &g, set<Task *, TaskPaircomp> &tasksToDoSet) {
+long generateTasks(Graph_t &g, TaskPriorityQueue &tasksToDo){
     set<long> edgeSet;
     std::atomic<int> removed{0}, added{0};
     AdjacencyIterator nfirst, nend;
@@ -714,27 +722,86 @@ long generateTasks(Graph_t &g, set<Task *, TaskPaircomp> &tasksToDoSet) {
         for (auto ve = boost::out_edges(src, g); ve.first != ve.second; ++ve.first) {
             bool found = true;
             Vertex dest = target(*ve.first, g);
-            destsSet.insert(dest);
-            sourcesSet.insert(dest);
-            long key = (src << 32) + dest;
-            if (edgeSet.insert(key).second) {
-                found = false;
-            }
-            key = (dest << 32) + src;
-            if (edgeSet.insert(key).second) {
-                found = false;
-            }
-            if (!found) {
-                // the edge have not been processed
+            if (src!=dest){
+                destsSet.insert(dest);
+                sourcesSet.insert(dest);
+                long key = (src << 32) + dest;
+                if (edgeSet.insert(key).second) {
+                    found = false;
+                }
+                key = (dest << 32) + src;
+                if (edgeSet.insert(key).second) {
+                    found = false;
+                }
+                if (!found) {
+                    // the edge have not been processed
+                    tie(nfirst, nend) = adjacent_vertices(dest, g);
+                    destsSet.insert(nfirst, nend);
+                    edgesToProcess.insert(*ve.first);
 
-                tie(nfirst, nend) = adjacent_vertices(dest, g);
-                destsSet.insert(nfirst, nend);
-                edgesToProcess.insert(*ve.first);
-
-                added++;
-            } else {
-                removed++;
+                    added++;
+                } else {
+                    removed++;
+                }
             }
+        }
+        vector<Vertex> sources(sourcesSet.begin(), sourcesSet.end()), dests(destsSet.begin(), destsSet.end());
+        if (edgesToProcess.size() > 0) {
+            numbOfEdges +=edgesToProcess.size();
+            numbOfShortPaths +=sources.size()*destsSet.size();
+            FullTask *task = new FullTask(src, sources, dests, edgesToProcess);
+            tasksToDo.try_add((Task *) task);
+        }
+        sourcesSet.clear();
+        destsSet.clear();
+        edgesToProcess.clear();
+    }
+    cout<<"Number of tasks:"<<tasksToDo.size()<<" ,numbOfEdges="<<numbOfEdges<<", numbOfShortPaths="<<numbOfShortPaths<<endl;
+    return numbOfShortPaths;
+}
+
+long generateTasks1(Graph_t &g, set<Task *, TaskPaircomp> &tasksToDoSet) {
+    set<long> edgeSet;
+    std::atomic<int> removed{0}, added{0};
+    AdjacencyIterator nfirst, nend;
+    VertexIterator v,vend;
+    set<pair<Vertex, int>, vertexpaircomp> degreeSorted;
+    long numbOfShortPaths=0;
+    int numbOfEdges=0;
+    for (tie(v, vend) = vertices(g); v != vend; v++) {
+        degreeSorted.insert(make_pair(*v, -degree(*v, g)));
+    }
+    set<Vertex> sourcesSet, destsSet;
+    set<Task *, TaskPaircomp> taskSet;
+    set<Edge> edgesToProcess;
+    for (auto p: degreeSorted) {
+        Vertex src = p.first;
+        sourcesSet.insert(src);
+        for (auto ve = boost::out_edges(src, g); ve.first != ve.second; ++ve.first) {
+            bool found = true;
+            Vertex dest = target(*ve.first, g);
+            if (src!=dest){
+                destsSet.insert(dest);
+                sourcesSet.insert(dest);
+                long key = (src << 32) + dest;
+                if (edgeSet.insert(key).second) {
+                    found = false;
+                }
+                key = (dest << 32) + src;
+                if (edgeSet.insert(key).second) {
+                    found = false;
+                }
+                if (!found) {
+                    // the edge have not been processed
+                    tie(nfirst, nend) = adjacent_vertices(dest, g);
+                    destsSet.insert(nfirst, nend);
+                    edgesToProcess.insert(*ve.first);
+
+                    added++;
+                } else {
+                    removed++;
+                }
+            } else {}
         }
         vector<Vertex> sources(sourcesSet.begin(), sourcesSet.end()), dests(destsSet.begin(), destsSet.end());
         if (edgesToProcess.size() > 0) {
@@ -747,11 +814,6 @@ long generateTasks(Graph_t &g, set<Task *, TaskPaircomp> &tasksToDoSet) {
         destsSet.clear();
         edgesToProcess.clear();
     }
-    long key = (45 << 32) + 42;
-    if (edgeSet.insert(key).second) {
-        int KKKK = 0;
-    }
-//                 });
     cout<<"Number of tasks:"<<tasksToDoSet.size()<<" ,numbOfEdges="<<numbOfEdges<<", numbOfShortPaths="<<numbOfShortPaths<<endl;
     return numbOfShortPaths;
 }
@@ -778,6 +840,13 @@ void k_core2(Graph_t &gin, Graph_t &gout, unsigned int k){
     set<pair<Vertex, int>, vertexpaircomp> degreeSorted;
     copy_graph(gin,*pgraph);
     bool proceed;
+    //find self-loops and remove them.
+    for(auto ve = boost::edges(*pgraph);ve.first!=ve.second;++ve.first){
+        Vertex src=source(*(ve.first),*pgraph);
+        Vertex dst=target(*(ve.first),*pgraph);
+        if (src==dst)
+            (*pgraph)[*ve.first].active=false;
+    }
     do{
         proceed=false;
         degreeSorted.clear();
@@ -803,11 +872,16 @@ void k_core2(Graph_t &gin, Graph_t &gout, unsigned int k){
         delete toDelete;
     } while(proceed);
     copy_graph(*pgraph,gout);
+    for(auto ve = boost::edges(gout);ve.first!=ve.second;++ve.first){
+        Vertex src=source(*(ve.first),*pgraph);
+        Vertex dst=target(*(ve.first),*pgraph);
+        if (src==dst)
+            gout[*ve.first].active=false;
+    }
+
     cout<<"num vertices: "<<num_vertices(gout)<<", num edges: "<<num_edges(gout)<<endl;
     delete pgraph;
 }
-
-
 
 
 void calcStats(Graph_t &g, int componentNum, vector<int> &components) {
@@ -977,12 +1051,14 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path, d
     int numComponent = connected_components(*g, &component[0]);
     ofstream logFile;
     ofstream outFile;
+    atomic<int> runningTasksCount{0};
     auto t1 = high_resolution_clock::now(), t2 = t1;
-    long numbOfShortPaths=generateTasks(*g, tasksToDoSet);
-    TaskPriorityQueue tasksToDo;
+//    long numbOfShortPaths=generateTasks(*g, tasksToDoSet);
     for (int index = iterationIndex; index < iterationIndex + numIteration; index++) {
         numShortestPath = 0;
         t1 = high_resolution_clock::now();
+        TaskPriorityQueue tasksToDo;
+        long numbOfShortPaths=generateTasks(*g, tasksToDo);
         string logFilename = path + "/processed/logFile." + to_string(index + 1) + ".log";
         logFile.open(logFilename.c_str(), ofstream::out);
         string outFilename = path + "/processed/processed." + to_string(index+1) + ".graphml";
@@ -995,10 +1071,9 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path, d
         int offset = 0;
         int k = 0;
 //    num_core=1;
-        copyTaskQueue(tasksToDoSet,tasksToDo);
         vector<thread> threads(num_core);
         for (int i = 0; i < num_core; i++) {
-            threads[i] = std::thread(process, i, g, &distanceCache, &tasksToDo, numbOfShortPaths);
+            threads[i] = std::thread(process, i, g, &distanceCache, &tasksToDo, numbOfShortPaths, &runningTasksCount);
         }
         for (int i = 0; i < num_core; i++) {
             threads[i].join();
