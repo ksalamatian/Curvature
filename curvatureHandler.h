@@ -484,7 +484,7 @@ void copyTaskQueue(set<Task *, TaskPaircomp> &intaskPriorityQueue, TaskPriorityQ
 //template <class Graph> using TaskPriorityQueue = PriorityBlockingCollection<Task *, PriorityContainer<Task<Graph>*, TaskPaircomp<Graph>>>;
 
 std::atomic<long>  numProcessedVertex{0}, numProcessedEdge{0};
-constexpr double EPS=1e-4;
+constexpr double EPS=1e-3;
 
  void calcCurvature(double alpha, Vertex v, vector<vector<double>> &MatDist, set<Edge> &edges, vector<Vertex> sources,
                     vector<Vertex> dests, Graph_t &g){
@@ -669,7 +669,6 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache, TaskPrio
                 }
             }
         }
-        cout<<"External loop:"<<threadIndex<<","<<*runningTaskCount<<endl;
     } while(*runningTaskCount!=0);
 }
 
@@ -738,7 +737,7 @@ long generateTasks(Graph_t &g, TaskPriorityQueue &tasksToDo){
         destsSet.clear();
         edgesToProcess.clear();
     }
-    cout<<"Number of tasks:"<<tasksToDo.size()<<" ,numbOfEdges="<<numbOfEdges<<", numbOfShortPaths="<<numbOfShortPaths<<endl;
+    cout<<"Number of tasks:"<<tasksToDo.size()<<" ,numVertices="<<num_vertices(g)<<" ,numbOfEdges="<<numbOfEdges<<", numbOfShortPaths="<<numbOfShortPaths<<endl;
     return numbOfShortPaths;
 }
 
@@ -872,35 +871,32 @@ void calcStats(Graph_t &g, int componentNum, vector<int> &components) {
     vector<double> sumCurvperComponent(componentNum, 0.0), sum2CurvperComponent(componentNum, 0.0);
     vector<int> componentSize(componentNum, 0);
     double sumCurv = 0.0, sum2Curv = 0.0;
+    double sumDist =0.0, sum2Dist = 0.0;
     Edge maxEdge, minEdge;
     auto es = edges(g);
     for (auto eit = es.first; eit != es.second; ++eit) {
         Vertex src = source(*eit, g), dst = target(*eit, g);
-        if (g[*eit].distance > maxdist) {
-            maxdist = g[*eit].distance;
+        float tmpDist=g[*eit].distance;
+        if (tmpDist > maxdist) {
+            maxdist = tmpDist;
             maxEdge = *eit;
         }
-        float tmpDist=g[*eit].distance;
+        sumDist += tmpDist;
+        sum2Dist += tmpDist * tmpDist;
         if (tmpDist < mindist) {
-            mindist = g[*eit].distance;
+            mindist = tmpDist;
         }
-        if (isinf(g[*eit].curv)){
+        float tmpCurv=g[*eit].curv;
+        if (isinf(tmpCurv)){
             cout<<"inf edge:"<<source(*eit,g)<<":"<<target(*eit,g)<<endl;
         }
-        sumCurv += g[*eit].curv;
-        int node = source(*eit, g);
-        int comp = components[node];
+        sumCurv += tmpCurv;
+        sum2Curv += tmpCurv * tmpCurv;
+        int comp = components[src];
         sumCurvperComponent[comp] = sumCurvperComponent[comp] + g[*eit].curv;
-        sum2Curv += g[*eit].curv * g[*eit].curv;
         componentSize[comp]++;
         sum2CurvperComponent[comp] = sum2CurvperComponent[comp] + g[*eit].curv * g[*eit].curv;
-        //        logFile1<<g[source(*eit,g)].name<<","<<g[target(*eit,g)].name<<","<<source(*eit,g)<<","<<target(*eit,g)<<","<<
-        //g[*eit].distance << "," << g[*eit].curv << "," << g[*eit].ot << endl;
     }
-    g[graph_bundle].avgCurv = sumCurv / num_edges(g);
-    g[graph_bundle].stdCurv = sqrt(sum2Curv / num_edges(g) - g[graph_bundle].avgCurv * g[graph_bundle].avgCurv);
-    cout << "maxdist:" << maxdist << ",mindist:" << mindist << ", maxEdge curv " << g[maxEdge].curv << endl;
-    cout << "avgCurv=" << g[graph_bundle].avgCurv << ", stdCurv=" << g[graph_bundle].stdCurv << endl;
     for (int j = 0; j < componentNum; j++) {
         if (componentSize[j] > 0) {
             cout << "Size:" << componentSize[j] << " ,avgCurv[" << j << "]="
@@ -918,62 +914,57 @@ bool updateDistances(Graph_t &g, double &oldrescaling) {
     double sumWeights = 0.0;
     int numEdgesUnfiltered = 0;
     bool surgery = false;
+    float maxdist=0.0, mindist=99999.9, sumDist=0.0, sumCurv=0.0, sum2Dist=0.0, sum2Curv=0.0;
+    Edge maxEdge;
     for (auto eit = es.first; eit != es.second; ++eit) {
-        //        double curv=1-g[*eit].ot/g[*eit].distance;
-        double ddd = g[*eit].distance;
-        g[*eit].distance = max(EPS, g[*eit].distance * (1 - g[*eit].curv));
+        g[*eit].distance = g[*eit].distance * (1 - g[*eit].curv);
+        if (g[*eit].distance > maxdist) {
+            maxdist =g[*eit].distance;
+            maxEdge = *eit;
+        }
+        if (g[*eit].distance < mindist) {
+            mindist = g[*eit].distance;
+        }
+        sumDist += g[*eit].distance;
+        sum2Dist += g[*eit].distance * g[*eit].distance;
+        sumCurv +=g[*eit].curv;
+        sum2Curv +=g[*eit].curv*g[*eit].curv;
+    }
+    g[graph_bundle].avgDist = sumDist / num_edges(g);
+    g[graph_bundle].stdDist = sqrt(sum2Dist / num_edges(g) - g[graph_bundle].avgDist * g[graph_bundle].avgDist);
+    g[graph_bundle].rescaling= 1.0/g[graph_bundle].avgDist;
+    g[graph_bundle].rstdDist= g[graph_bundle].stdDist*g[graph_bundle].rescaling;
+    g[graph_bundle].avgCurv = sumCurv / num_edges(g) ;
+    g[graph_bundle].stdCurv = sqrt(sum2Curv / num_edges(g) - g[graph_bundle].avgCurv * g[graph_bundle].avgCurv);
+    cout << "maxdist:" << maxdist << ",mindist:" << mindist << ", maxEdge curv " << g[maxEdge].curv << endl;
+    cout << "avgCurv=" << g[graph_bundle].avgCurv << ", stdCurv=" << g[graph_bundle].stdCurv << endl;
+    cout << "avgDist=" << g[graph_bundle].avgDist << ", stdDist=" << g[graph_bundle].stdDist << endl;
+    cout << "rescaling=" << g[graph_bundle].rescaling<<", rstdDist="<<g[graph_bundle].rstdDist<<endl;
+    //Now rescaling
+    for (auto eit = es.first; eit != es.second; ++eit) {
+        g[*eit].distance= g[*eit].distance*g[graph_bundle].rescaling;
+        //Check surgery type 1
         if ((g[*eit].distance <= EPS) && (!g[*eit].surgery)) { //we need a surgery of type 1
+            Vertex src = source(*eit, g), dst = target(*eit, g);
             surgery = true;
             g[*eit].surgery = true;
             g[*eit].distance = EPS;
+            cout << "Surgery Type 1: " << src << ":" << dst << ", Curvature:" << g[*eit].curv<<endl;
+            cout<<g[src].name<<":"<<g[dst].name<<endl;
+        }
+        if ((g[*eit].distance >= 1+3*g[graph_bundle].rstdDist) && (!g[*eit].surgery)){
             Vertex src = source(*eit, g), dst = target(*eit, g);
-            cout << "Surgery Type 1: " << src << ":" << dst << ", Curvature:" << g[*eit].curv << endl;
+            cout << "Surgery Type 2: " << src << ":" << dst << ", Curvature:" << g[*eit].curv <<
+            ", Dist;"<< g[*eit].distance<<endl;
+ //           surgery=true;
+//            g[*eit].surgery=true;
+//            g[*eit].active=false;
+//            cout<<g[src].country<<":"<<g[dst].country<<","<<g[src].asnumber<<":"<<g[dst].asnumber<<endl;
+            cout<<g[src].name<<":"<<g[dst].name<<endl;
 
-            /*
-            //            cout<<"Surgery Type 1: "<<src<<":"<<dst<<","<<g[src].name<<":"<<g[dst].name<<", Curvature:"<<g[*eit].curv<<endl;
-
-            //            g[src].name=g[src].name+","+g[dst].name;
-                    g[*eit].active=false;
-                    g[dst].active=false;
-                    for (auto ve = boost::out_edges(dst, g); ve.first != ve.second; ++ve.first) {
-                        Vertex ddst = target(*ve.first, g);
-                        if (ddst!=src){
-                            auto ed=edge(src, ddst, g);
-                            if (ed.second){
-                                if (g[ed.first].distance>g[*ve.first].distance){
-                                    g[ed.first].distance=g[*ve.first].distance;
-                                }
-                            } else {
-                                add_edge(src, ddst, {g[*ve.first].dist, g[*ve.first].edist, g[*ve.first].distance, g[*ve.first].ot,
-                                                     g[*ve.first].curv,
-                                                     g[*ve.first].active}, g);
-
-                                g[*ve.first].active = false;
-                            }
-                            if (g[*ve.first].distance<0)
-                                int KKKK=0;
-                        }
-                    }*/
-
-        } //else {
-        sumWeights += g[*eit].distance;
-        numEdgesUnfiltered++;
-        //        }
+        }
     }
-    int numV = num_vertices(g);
-    int numE = num_edges(g);
-    double rescaling = numEdgesUnfiltered * 1.0 / sumWeights;
-    //    rescaling=1.0;
-    //    rescaling=numE*1.0/sumWeights;
-    oldrescaling = rescaling;
-
-    //    rescaling=1.0;
-    es = edges(g);
-    for (auto eit = es.first; eit != es.second; ++eit) {
-        double ddd = g[*eit].distance;
-        Vertex src = source(*eit, g), dst = target(*eit, g);
-        g[*eit].distance = g[*eit].distance * rescaling;
-    }
+    oldrescaling = g[graph_bundle].rescaling;
     return surgery;
 }
 
@@ -1025,7 +1016,7 @@ bool triangle_checker(Graph_t &g,int type){
     return status;
 }
 
-void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path, dynamic_properties dpout) {
+void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path) {
     Graph_t *ginter;
     double oldRescaling = 1.0;
     DistanceCache distanceCache(num_vertices(*g));
@@ -1040,10 +1031,10 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path, d
     for (int index = iterationIndex; index < iterationIndex + numIteration; index++) {
         t1 = high_resolution_clock::now();
         TaskPriorityQueue tasksToDo;
-        numOfShortestPaths=generateTasks(*g, tasksToDo);
+        numOfShortestPaths = generateTasks(*g, tasksToDo);
         string logFilename = path + "/processed/logFile." + to_string(index + 1) + ".log";
         logFile.open(logFilename.c_str(), ofstream::out);
-        string outFilename = path + "/processed/processed." + to_string(index+1) + ".graphml";
+        string outFilename = path + "/processed/processed." + to_string(index + 1) + ".graphml";
         outFile.open(outFilename.c_str(), ofstream::out);
         cout << "Index:" << index << " ";
         numProcessedVertex = 0;
@@ -1060,17 +1051,73 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path, d
         for (int i = 0; i < num_core; i++) {
             threads[i].join();
         }
-        calcStats(*g, numComponent, component);
-        write_graphml(outFile, *g, dpout, true);
+//        calcStats(*g, numComponent, component);
+        boost::dynamic_properties dpout;
         if (updateDistances(*g, oldRescaling)) {
             ginter = new Graph_t();
             Predicate predicate(g);
             Filtered_Graph_t fg(*g, predicate, predicate);
             copy_graph(fg, *ginter);
-            g->clear();
-            delete g;
-            g = ginter;
+            dpout.property("label", get(&VertexType::label, *ginter));
+            dpout.property("X", get(&VertexType::X, *ginter));
+            dpout.property("Y", get(&VertexType::Y, *ginter));
+            dpout.property("meta", get(&VertexType::name, *ginter));
+            dpout.property("lat", get(&VertexType::lat, *ginter));
+            dpout.property("long", get(&VertexType::longi, *ginter));
+            dpout.property("r", get(&VertexType::r, *ginter));
+            dpout.property("g", get(&VertexType::g, *ginter));
+            dpout.property("b", get(&VertexType::b, *ginter));
+            dpout.property("x", get(&VertexType::x, *ginter));
+            dpout.property("y", get(&VertexType::y, *ginter));
+            dpout.property("size", get(&VertexType::size, *ginter));
+            dpout.property("Degré", get(&VertexType::degree, *ginter));
+            dpout.property("Modularity Class", get(&VertexType::cluster, *ginter));
+            dpout.property("Eccentricity", get(&VertexType::eccentricity, *ginter));
+            dpout.property("Closeness Centrality", get(&VertexType::closnesscentrality, *ginter));
+            dpout.property("Harmonic Closeness Centrality", get(&VertexType::harmonicclosnesscentrality, *ginter));
+            dpout.property("Betweenness Centrality", get(&VertexType::betweenesscentrality, *ginter));
+            dpout.property("dist", get(&EdgeType::dist, *ginter));
+            dpout.property("weight", get(&EdgeType::weight, *ginter));
+            dpout.property("distance", get(&EdgeType::distance, *ginter));
+            dpout.property("ot", get(&EdgeType::ot, *ginter));
+            dpout.property("curv", get(&EdgeType::curv, *ginter));
+            write_graphml(outFile, *ginter, dpout, true);
+            (g)->clear();
+            copy_graph(*ginter, *g);
+//            g->clear();
+//            delete g;
+//            g = ginter;
+        } else {
+            dpout.property("label", get(&VertexType::label, *g));
+            dpout.property("X", get(&VertexType::X, *g));
+            dpout.property("Y", get(&VertexType::Y, *g));
+            dpout.property("meta", get(&VertexType::name, *g));
+            dpout.property("lat", get(&VertexType::lat, *g));
+            dpout.property("long", get(&VertexType::longi, *g));
+            dpout.property("r", get(&VertexType::r, *g));
+            dpout.property("g", get(&VertexType::g, *g));
+            dpout.property("b", get(&VertexType::b, *g));
+            dpout.property("x", get(&VertexType::x, *g));
+            dpout.property("y", get(&VertexType::y, *g));
+            dpout.property("size", get(&VertexType::size, *g));
+            dpout.property("Degré", get(&VertexType::degree, *g));
+            dpout.property("Modularity Class", get(&VertexType::cluster, *g));
+            dpout.property("Eccentricity", get(&VertexType::eccentricity, *g));
+            dpout.property("Closeness Centrality", get(&VertexType::closnesscentrality, *g));
+            dpout.property("Harmonic Closeness Centrality", get(&VertexType::harmonicclosnesscentrality, *g));
+            dpout.property("Betweenness Centrality", get(&VertexType::betweenesscentrality, *g));
+            dpout.property("dist", get(&EdgeType::dist, *g));
+            dpout.property("weight", get(&EdgeType::weight, *g));
+            dpout.property("distance", get(&EdgeType::distance, *g));
+            dpout.property("ot", get(&EdgeType::ot, *g));
+            dpout.property("curv", get(&EdgeType::curv, *g));
+            write_graphml(outFile, *g, dpout, true);
+
         }
+
+//        write_graphml(outFile, *g, dpout, true);
+
+
         logFile.close();
         outFile.close();
         t2 = high_resolution_clock::now();

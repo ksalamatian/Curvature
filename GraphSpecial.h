@@ -20,6 +20,15 @@ public:
 
 struct Graph_Regular{
     std::string name;
+    double sumDist=0.0;
+    double avgDist=1.0;
+    double stdDist=0.0;
+    double sumCurv=0.0;
+    double avgCurv=0.0;
+    double stdCurv=0.0;
+    double rescaling=0.0;
+    double rstdDist=0.0;
+
 };
 
 struct Vertex_info_road {
@@ -40,21 +49,27 @@ struct Vertex_info_road {
 };
 
 struct Edge_info_road {
-    float dist=1.9;
+    float dist=1.0;
     double distance=1.0;
     double weight=1.0;
     double ot=0.0;
     double curv=0.0;
     std::string edgeLabel;
     double delta=0.0;
-//    int r,g,b;
+    int r,g,b;
     bool active=true;
     bool surgery=true;
 };
 
 struct Graph_info {
+    double sumDist=0.0;
+    double avgDist=1.0;
+    double stdDist=0.0;
+    double sumCurv=0.0;
     double avgCurv=0.0;
     double stdCurv=0.0;
+    double rescaling=0.0;
+    double rstdDist=0.0;
 };
 
 struct Vertex_info_BGP {
@@ -86,8 +101,11 @@ struct Edge_info_BGP {
     bool surgery=false;
 };
 
-typedef Vertex_info_BGP VertexSpecial;
-typedef Edge_info_BGP EdgeSpecial;
+//typedef Vertex_info_BGP VertexSpecial;
+//typedef Edge_info_BGP EdgeSpecial;
+//typedef Graph_Regular GraphSpecial;
+typedef Vertex_info_road VertexSpecial;
+typedef Edge_info_road  EdgeSpecial;
 typedef Graph_Regular GraphSpecial;
 
 

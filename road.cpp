@@ -4,7 +4,6 @@
 
 
 #include <iostream>
-#include <utility>
 #include "curvatureHandler.h"
 
 using namespace boost;
@@ -32,24 +31,24 @@ boost::dynamic_properties dp;
 void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
 
     ifstream inFile;
-    dp.property("asNumber", get(&Vertex_info_BGP::asnumber, designG));
-    dp.property("pathNum", get(&Vertex_info_BGP::pathnum, designG));
-    dp.property("Country", get(&Vertex_info_BGP::country, designG));
-    dp.property("Name", get(&Vertex_info_BGP::name, designG));
-    dp.property("asTime", get(&Vertex_info_BGP::astime, designG));
-    dp.property("prefixNum", get(&Vertex_info_BGP::prefixnum, designG));
-    dp.property("prefixAll", get(&Vertex_info_BGP::prefixall, designG));
-    dp.property("addAll", get(&Vertex_info_BGP::addall, designG));
-    dp.property("addNum", get(&Vertex_info_BGP::addnum, designG));
-    dp.property("addCount", get(&Edge_info_BGP::addCount, designG));
-    dp.property("edgeTime", get(&Edge_info_BGP::edgetime, designG));
-    dp.property("weight", get(&Edge_info_BGP::weight, designG));
-    dp.property("distance", get(&Edge_info_BGP::distance, designG));
-    dp.property("ot", get(&Edge_info_BGP::ot, designG));
-    dp.property("curv", get(&Edge_info_BGP::curv, designG));
-    dp.property("pathCount", get(&Edge_info_BGP::pathcount, designG));
-    dp.property("count", get(&Edge_info_BGP::prefcount, designG));
-/*
+//dp.property("asNumber", get(&Vertex_info_BGP::asnumber, designG));
+// dp.property("pathNum", get(&Vertex_info_BGP::pathnum, designG));
+// dp.property("Country", get(&Vertex_info_BGP::country, designG));
+// dp.property("Name", get(&Vertex_info_BGP::name, designG));
+// dp.property("asTime", get(&Vertex_info_BGP::astime, designG));
+// dp.property("prefixNum", get(&Vertex_info_BGP::prefixnum, designG));
+// dp.property("prefixAll", get(&Vertex_info_BGP::prefixall, designG));
+// dp.property("addAll", get(&Vertex_info_BGP::addall, designG));
+// dp.property("addNum", get(&Vertex_info_BGP::addnum, designG));
+// dp.property("addCount", get(&Edge_info_BGP::addCount, designG));
+// dp.property("edgeTime", get(&Edge_info_BGP::edgetime, designG));
+// dp.property("weight", get(&Edge_info_BGP::weight, designG));
+// dp.property("distance", get(&Edge_info_BGP::distance, designG));
+// dp.property("ot", get(&Edge_info_BGP::ot, designG));
+// dp.property("curv", get(&Edge_info_BGP::curv, designG));
+// dp.property("pathCount", get(&Edge_info_BGP::pathcount, designG));
+// dp.property("count", get(&Edge_info_BGP::prefcount, designG));
+
     dp.property("label", get(&Vertex_info_road::label, designG));
     dp.property("X", get(&Vertex_info_road::X, designG));
     dp.property("Y", get(&Vertex_info_road::Y, designG));
@@ -73,7 +72,7 @@ void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
     dp.property("distance", get(&Edge_info_road::distance, designG));
     dp.property("ot", get(&Edge_info_road::ot, designG));
     dp.property("curv", get(&Edge_info_road::curv, designG));
-    dp.property("Edge Label", get(&Edge_info_road::edgeLabel, designG));*/
+    dp.property("Edge Label", get(&Edge_info_road::edgeLabel, designG));
     map<double, double> attribute_double2double1,attribute_double2double2;
     associative_property_map<map<double, double>> avgCurv_map(attribute_double2double1);
     associative_property_map<map<double, double>> stdCurv_map(attribute_double2double2);
@@ -112,21 +111,14 @@ int main(int argc, char **argv)  {
 
     }
 
-//    Graph_t gin;
-//    string inFilename = "/Users/ksalamatian/graphdumps1554598943.1554599003.graphml";
     string pfilename=path+"/"+filename;
     readGraphMLFile(*gin,pfilename );
-    int numIteration=2000;
-//    string inFilename="/data/Curvature/processed.0.gml";
-
-//    readGraphMLFile(gin, inFilename);
-//    VertexIterator v,vend;
-
+    int numIteration=30;
     k_core2(*gin,*g, 2);
 
     double oldRescaling=1.0;
     boost::dynamic_properties dpout;
-    dpout.property("asNumber", get(&VertexType::asnumber, *g));
+/*    dpout.property("asNumber", get(&VertexType::asnumber, *g));
     dpout.property("pathNum", get(&VertexType::pathnum, *g));
     dpout.property("Country", get(&VertexType::country, *g));
     dpout.property("Name", get(&VertexType::name, *g));
@@ -142,9 +134,9 @@ int main(int argc, char **argv)  {
     dpout.property("ot", get(&EdgeType::ot, *g));
     dpout.property("curv", get(&EdgeType::curv, *g));
     dpout.property("pathCount", get(&EdgeType::pathcount, *g));
-    dpout.property("prefCount", get(&EdgeType::prefcount, *g));
+    dpout.property("prefCount", get(&EdgeType::prefcount, *g));*/
 
-/*        dpout.property("label", get(&Vertex_info_road::label, *g));
+        dpout.property("label", get(&Vertex_info_road::label, *g));
         dpout.property("X", get(&Vertex_info_road::X, *g));
         dpout.property("Y", get(&Vertex_info_road::Y, *g));
         dpout.property("meta", get(&Vertex_info_road::name, *g));
@@ -166,7 +158,7 @@ int main(int argc, char **argv)  {
         dpout.property("weight", get(&Edge_info_road::weight, *g));
         dpout.property("distance", get(&Edge_info_road::distance, *g));
         dpout.property("ot", get(&Edge_info_road::ot, *g));
-        dpout.property("curv", get(&Edge_info_road::curv, *g));*/
+        dpout.property("curv", get(&Edge_info_road::curv, *g));
 
     map<double, double> attribute_double2double1,attribute_double2double2;
     associative_property_map<map<double, double>> avgCurv_map(attribute_double2double1);
