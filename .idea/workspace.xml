@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="Curvature" targetName="singleCurvature" />
+      <config projectName="Curvature" targetName="Curvature" />
+      <config projectName="Curvature" targetName="Road" />
+      <config projectName="Curvature" targetName="regular" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4e2297f7-7f67-4d83-ad8f-333793188c14" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeError.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/rules.ninja" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Curvature.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Curvature.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cylinder1_6_3000.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cylinder_6_3000.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphdumps1554598943.1554599003.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphdumps1554598943.1554599003.graphml.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular_0.00_3000.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular_2_1000.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular_2_3000.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular_3_1000.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular_3_10002.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular_3_10003.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular_3_1800.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular_3_2000.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular_3_2500.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular_3_3000.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular_4_1000.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular_4_3000.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular_5_1000.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular_6_1000.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular_6_2000.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/road.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/road.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roadnetwork3.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/small_0.00_3000.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/small_0.00_4000.graphml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/small_0.00_8000.graphml" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2NGyRTeWS2jM0lbWKQHQgKB2jiy" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="cidr.known.project.marker" value="true" />
+    <property name="cmake.loaded.for.project" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="CPPToolchains" />
+  </component>
+  <component name="RunManager" selected="CMake Application.Road">
+    <configuration name="Curvature" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="Curvature" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="Curvature">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Road" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-P $PROJECT_DIR$/../Graphs -F roadnetwork3.graphml -I 0" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="Road" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="Road">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="regular" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="regular" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="regular">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="singleCurvature" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="singleCurvature" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="singleCurvature">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.Curvature" />
+      <item itemvalue="CMake Application.regular" />
+      <item itemvalue="CMake Application.Road" />
+      <item itemvalue="CMake Application.singleCurvature" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4e2297f7-7f67-4d83-ad8f-333793188c14" name="Changes" comment="" />
+      <created>1679304705057</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1679304705057</updated>
+      <workItem from="1679304706717" duration="1855000" />
+      <workItem from="1679402941926" duration="2130000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
