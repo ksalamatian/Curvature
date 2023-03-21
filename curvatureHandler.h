@@ -741,63 +741,7 @@ long generateTasks(Graph_t &g, TaskPriorityQueue &tasksToDo){
     return numbOfShortPaths;
 }
 
-long generateTasks1(Graph_t &g, set<Task *, TaskPaircomp> &tasksToDoSet) {
-    set<long> edgeSet;
-    std::atomic<int> removed{0}, added{0};
-    AdjacencyIterator nfirst, nend;
-    VertexIterator v,vend;
-    set<pair<Vertex, int>, vertexpaircomp> degreeSorted;
-    long numbOfShortPaths=0;
-    int numbOfEdges=0;
-    for (tie(v, vend) = vertices(g); v != vend; v++) {
-        degreeSorted.insert(make_pair(*v, -degree(*v, g)));
-    }
-    set<Vertex> sourcesSet, destsSet;
-    set<Task *, TaskPaircomp> taskSet;
-    set<Edge> edgesToProcess;
-    for (auto p: degreeSorted) {
-        Vertex src = p.first;
-        sourcesSet.insert(src);
-        for (auto ve = boost::out_edges(src, g); ve.first != ve.second; ++ve.first) {
-            bool found = true;
-            Vertex dest = target(*ve.first, g);
-            if (src!=dest){
-                destsSet.insert(dest);
-                sourcesSet.insert(dest);
-                long key = (src << 32) + dest;
-                if (edgeSet.insert(key).second) {
-                    found = false;
-                }
-                key = (dest << 32) + src;
-                if (edgeSet.insert(key).second) {
-                    found = false;
-                }
-                if (!found) {
-                    // the edge have not been processed
-                    tie(nfirst, nend) = adjacent_vertices(dest, g);
-                    destsSet.insert(nfirst, nend);
-                    edgesToProcess.insert(*ve.first);
 
-                    added++;
-                } else {
-                    removed++;
-                }
-            } else {}
-        }
-        vector<Vertex> sources(sourcesSet.begin(), sourcesSet.end()), dests(destsSet.begin(), destsSet.end());
-        if (edgesToProcess.size() > 0) {
-            numbOfEdges +=edgesToProcess.size();
-            numbOfShortPaths +=sources.size()*destsSet.size();
-            FullTask *task = new FullTask(src, sources, dests, edgesToProcess);
-            tasksToDoSet.insert((Task *) task);
-        }
-        sourcesSet.clear();
-        destsSet.clear();
-        edgesToProcess.clear();
-    }
-    cout<<"Number of tasks:"<<tasksToDoSet.size()<<" ,numbOfEdges="<<numbOfEdges<<", numbOfShortPaths="<<numbOfShortPaths<<endl;
-    return numbOfShortPaths;
-}
 
 struct Predicate {// both edge and vertex
     typedef typename graph_traits<Graph_t>::vertex_descriptor Vertex;
