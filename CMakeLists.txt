@@ -19,19 +19,16 @@ LINK_DIRECTORIES(/opt/homebrew/Cellar/boost/1.75.0_2/lib)
 
 #link_directories(/usr/libx86_64-linux-gnu/)
 
-add_executable(Curvature main.cpp curvatureHandler.h)
+add_executable(Bgp bgp.cpp curvatureHandler.h)
 add_executable(Road road.cpp curvatureHandler.h)
-#add_executable(flot flot.cpp)
-#add_executable(correctFile correctFile.cpp test.cpp curvature.cpp curvatureHandler.h )
-#add_executable(test test.cpp)
-add_executable(regular regular.cpp curvatureHandler.h GraphSpecial.h)
-add_executable(singleCurvature curvature.cpp curvatureHandler.h GraphSpecial.h)
+
+#add_executable(regular regular.cpp curvatureHandler.h GraphSpecial.h)
+#add_executable(singleCurvature curvature.cpp curvatureHandler.h GraphSpecial.h)
 
 #TARGET_LINK_LIBRARIES(flot ${Boost_LIBRARIES} tbb)
-TARGET_LINK_LIBRARIES(Curvature ${Boost_LIBRARIES} )
+TARGET_LINK_LIBRARIES(Bgp ${Boost_LIBRARIES} )
 #TARGET_LINK_LIBRARIES(correctFile ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(regular ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(singleCurvature ${Boost_LIBRARIES})
+#TARGET_LINK_LIBRARIES(regular ${Boost_LIBRARIES})
+#TARGET_LINK_LIBRARIES(singleCurvature ${Boost_LIBRARIES})
 TARGET_LINK_LIBRARIES(Road ${Boost_LIBRARIES} )
 
-#TARGET_LINK_LIBRARIES(test tbb )

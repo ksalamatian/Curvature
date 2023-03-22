@@ -65,16 +65,6 @@ CMAKE_BINARY_DIR = /home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cm
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/home/nsaloua/Software/CLion-2021.3/clion-2021.3/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-.PHONY : edit_cache/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -84,6 +74,16 @@ rebuild_cache:
 # Special rule for the target rebuild_cache
 rebuild_cache/fast: rebuild_cache
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/home/nsaloua/Software/CLion-2021.3/clion-2021.3/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -117,19 +117,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Curvature
-
-# Build rule for target.
-Curvature: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Curvature
-.PHONY : Curvature
-
-# fast build rule for target.
-Curvature/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Curvature.dir/build.make CMakeFiles/Curvature.dir/build
-.PHONY : Curvature/fast
-
-#=============================================================================
 # Target rules for targets named Road
 
 # Build rule for target.
@@ -143,102 +130,41 @@ Road/fast:
 .PHONY : Road/fast
 
 #=============================================================================
-# Target rules for targets named regular
+# Target rules for targets named Bgp
 
 # Build rule for target.
-regular: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 regular
-.PHONY : regular
+Bgp: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Bgp
+.PHONY : Bgp
 
 # fast build rule for target.
-regular/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/regular.dir/build.make CMakeFiles/regular.dir/build
-.PHONY : regular/fast
+Bgp/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Bgp.dir/build.make CMakeFiles/Bgp.dir/build
+.PHONY : Bgp/fast
 
-#=============================================================================
-# Target rules for targets named singleCurvature
-
-# Build rule for target.
-singleCurvature: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 singleCurvature
-.PHONY : singleCurvature
-
-# fast build rule for target.
-singleCurvature/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/singleCurvature.dir/build.make CMakeFiles/singleCurvature.dir/build
-.PHONY : singleCurvature/fast
-
-curvature.o: curvature.cpp.o
-.PHONY : curvature.o
+bgp.o: bgp.cpp.o
+.PHONY : bgp.o
 
 # target to build an object file
-curvature.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/singleCurvature.dir/build.make CMakeFiles/singleCurvature.dir/curvature.cpp.o
-.PHONY : curvature.cpp.o
+bgp.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Bgp.dir/build.make CMakeFiles/Bgp.dir/bgp.cpp.o
+.PHONY : bgp.cpp.o
 
-curvature.i: curvature.cpp.i
-.PHONY : curvature.i
-
-# target to preprocess a source file
-curvature.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/singleCurvature.dir/build.make CMakeFiles/singleCurvature.dir/curvature.cpp.i
-.PHONY : curvature.cpp.i
-
-curvature.s: curvature.cpp.s
-.PHONY : curvature.s
-
-# target to generate assembly for a file
-curvature.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/singleCurvature.dir/build.make CMakeFiles/singleCurvature.dir/curvature.cpp.s
-.PHONY : curvature.cpp.s
-
-main.o: main.cpp.o
-.PHONY : main.o
-
-# target to build an object file
-main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Curvature.dir/build.make CMakeFiles/Curvature.dir/main.cpp.o
-.PHONY : main.cpp.o
-
-main.i: main.cpp.i
-.PHONY : main.i
+bgp.i: bgp.cpp.i
+.PHONY : bgp.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Curvature.dir/build.make CMakeFiles/Curvature.dir/main.cpp.i
-.PHONY : main.cpp.i
+bgp.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Bgp.dir/build.make CMakeFiles/Bgp.dir/bgp.cpp.i
+.PHONY : bgp.cpp.i
 
-main.s: main.cpp.s
-.PHONY : main.s
-
-# target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Curvature.dir/build.make CMakeFiles/Curvature.dir/main.cpp.s
-.PHONY : main.cpp.s
-
-regular.o: regular.cpp.o
-.PHONY : regular.o
-
-# target to build an object file
-regular.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/regular.dir/build.make CMakeFiles/regular.dir/regular.cpp.o
-.PHONY : regular.cpp.o
-
-regular.i: regular.cpp.i
-.PHONY : regular.i
-
-# target to preprocess a source file
-regular.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/regular.dir/build.make CMakeFiles/regular.dir/regular.cpp.i
-.PHONY : regular.cpp.i
-
-regular.s: regular.cpp.s
-.PHONY : regular.s
+bgp.s: bgp.cpp.s
+.PHONY : bgp.s
 
 # target to generate assembly for a file
-regular.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/regular.dir/build.make CMakeFiles/regular.dir/regular.cpp.s
-.PHONY : regular.cpp.s
+bgp.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Bgp.dir/build.make CMakeFiles/Bgp.dir/bgp.cpp.s
+.PHONY : bgp.cpp.s
 
 road.o: road.cpp.o
 .PHONY : road.o
@@ -272,19 +198,11 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... Curvature"
+	@echo "... Bgp"
 	@echo "... Road"
-	@echo "... regular"
-	@echo "... singleCurvature"
-	@echo "... curvature.o"
-	@echo "... curvature.i"
-	@echo "... curvature.s"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
-	@echo "... regular.o"
-	@echo "... regular.i"
-	@echo "... regular.s"
+	@echo "... bgp.o"
+	@echo "... bgp.i"
+	@echo "... bgp.s"
 	@echo "... road.o"
 	@echo "... road.i"
 	@echo "... road.s"

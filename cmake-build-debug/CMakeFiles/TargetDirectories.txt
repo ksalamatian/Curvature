@@ -1,6 +1,4 @@
-/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/CMakeFiles/Curvature.dir
 /home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/CMakeFiles/edit_cache.dir
 /home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/CMakeFiles/Road.dir
-/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/CMakeFiles/regular.dir
-/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/CMakeFiles/singleCurvature.dir
+/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/CMakeFiles/Bgp.dir

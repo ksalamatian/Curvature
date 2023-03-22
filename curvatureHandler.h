@@ -18,7 +18,6 @@
 #include "emd.h"
 #include "GraphSpecial.h"
 #define ALPHA 0.0
-
 using namespace boost;
 using namespace code_machina;
 using namespace std;
@@ -69,6 +68,9 @@ public:
 };
 
 typedef  adjacency_list <vecS, vecS, undirectedS, VertexType, EdgeType, GraphType > Graph_t;
+
+
+
 
 //typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::undirectedS, Vertex_Generic, Edge_Generic, Graph_info > Graph_t;
 typedef graph_traits<Graph_t>::vertex_descriptor Vertex;
@@ -890,7 +892,7 @@ bool updateDistances(Graph_t &g, double &oldrescaling) {
         //Check surgery type 1
         if ((g[*eit].distance <= EPS) && (!g[*eit].surgery)) { //we need a surgery of type 1
             Vertex src = source(*eit, g), dst = target(*eit, g);
-            surgery = true;
+            surgery = false;
             g[*eit].surgery = true;
             g[*eit].distance = EPS;
             cout << "Surgery Type 1: " << src << ":" << dst << ", Curvature:" << g[*eit].curv<<endl;
@@ -960,6 +962,7 @@ bool triangle_checker(Graph_t &g,int type){
     return status;
 }
 
+
 void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path) {
     Graph_t *ginter;
     double oldRescaling = 1.0;
@@ -1002,29 +1005,10 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path) {
             Predicate predicate(g);
             Filtered_Graph_t fg(*g, predicate, predicate);
             copy_graph(fg, *ginter);
-            dpout.property("label", get(&VertexType::label, *ginter));
-            dpout.property("X", get(&VertexType::X, *ginter));
-            dpout.property("Y", get(&VertexType::Y, *ginter));
-            dpout.property("meta", get(&VertexType::name, *ginter));
-            dpout.property("lat", get(&VertexType::lat, *ginter));
-            dpout.property("long", get(&VertexType::longi, *ginter));
-            dpout.property("r", get(&VertexType::r, *ginter));
-            dpout.property("g", get(&VertexType::g, *ginter));
-            dpout.property("b", get(&VertexType::b, *ginter));
-            dpout.property("x", get(&VertexType::x, *ginter));
-            dpout.property("y", get(&VertexType::y, *ginter));
-            dpout.property("size", get(&VertexType::size, *ginter));
-            dpout.property("Degré", get(&VertexType::degree, *ginter));
-            dpout.property("Modularity Class", get(&VertexType::cluster, *ginter));
-            dpout.property("Eccentricity", get(&VertexType::eccentricity, *ginter));
-            dpout.property("Closeness Centrality", get(&VertexType::closnesscentrality, *ginter));
-            dpout.property("Harmonic Closeness Centrality", get(&VertexType::harmonicclosnesscentrality, *ginter));
-            dpout.property("Betweenness Centrality", get(&VertexType::betweenesscentrality, *ginter));
-            dpout.property("dist", get(&EdgeType::dist, *ginter));
-            dpout.property("weight", get(&EdgeType::weight, *ginter));
-            dpout.property("distance", get(&EdgeType::distance, *ginter));
-            dpout.property("ot", get(&EdgeType::ot, *ginter));
-            dpout.property("curv", get(&EdgeType::curv, *ginter));
+
+
+            dpout = gettingProperties<Graph_t>(*ginter);
+
             write_graphml(outFile, *ginter, dpout, true);
             (g)->clear();
             copy_graph(*ginter, *g);
@@ -1032,29 +1016,10 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path) {
 //            delete g;
 //            g = ginter;
         } else {
-            dpout.property("label", get(&VertexType::label, *g));
-            dpout.property("X", get(&VertexType::X, *g));
-            dpout.property("Y", get(&VertexType::Y, *g));
-            dpout.property("meta", get(&VertexType::name, *g));
-            dpout.property("lat", get(&VertexType::lat, *g));
-            dpout.property("long", get(&VertexType::longi, *g));
-            dpout.property("r", get(&VertexType::r, *g));
-            dpout.property("g", get(&VertexType::g, *g));
-            dpout.property("b", get(&VertexType::b, *g));
-            dpout.property("x", get(&VertexType::x, *g));
-            dpout.property("y", get(&VertexType::y, *g));
-            dpout.property("size", get(&VertexType::size, *g));
-            dpout.property("Degré", get(&VertexType::degree, *g));
-            dpout.property("Modularity Class", get(&VertexType::cluster, *g));
-            dpout.property("Eccentricity", get(&VertexType::eccentricity, *g));
-            dpout.property("Closeness Centrality", get(&VertexType::closnesscentrality, *g));
-            dpout.property("Harmonic Closeness Centrality", get(&VertexType::harmonicclosnesscentrality, *g));
-            dpout.property("Betweenness Centrality", get(&VertexType::betweenesscentrality, *g));
-            dpout.property("dist", get(&EdgeType::dist, *g));
-            dpout.property("weight", get(&EdgeType::weight, *g));
-            dpout.property("distance", get(&EdgeType::distance, *g));
-            dpout.property("ot", get(&EdgeType::ot, *g));
-            dpout.property("curv", get(&EdgeType::curv, *g));
+
+            dpout = gettingProperties<Graph_t>(*g);
+
+
             write_graphml(outFile, *g, dpout, true);
 
         }
