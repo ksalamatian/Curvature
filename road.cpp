@@ -44,29 +44,26 @@ void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
 }
 
 int main(int argc, char **argv)  {
-    Graph_t *g=new Graph_t, *gin=new Graph_t, *ginter;
+    Graph_t *g=new Graph_t, *gin=new Graph_t;
     string filename, path;
-    int iterationIndex=0;
+    int numIteration = 0;
     if( argc > 2 ) {
         string command1(argv[1]);
         if (command1 == "-P") {
             path=string(argv[2]);
         }
         string command2(argv[3]);
-        if (command2 =="-F")
+        if (command2 =="-G")
             filename= string(argv[4]);
         string command3(argv[5]);
-        if (command3 =="-I")
-            iterationIndex= stoi(argv[6]);
+        if (command3 =="-NI")
+            numIteration = stoi(argv[6]);
 
     }
 
-    string pfilename=path+"/"+filename;
-    readGraphMLFile(*gin,pfilename );
-    int numIteration=30;
-    k_core2(*gin,*g, 2);
+    readGraphMLFile(*gin,filename );
+    k_core(*gin,*g, 2);
 
-    double oldRescaling=1.0;
-    ricci_flow(g, numIteration, iterationIndex,path);
+    ricci_flow(g, numIteration,path);
     return 0;
 }

@@ -1,8 +1,3 @@
-//
-// Created by Kave Salamatian on 20/04/2021.
-//
-
-
 #include <iostream>
 #include <utility>
 #include "curvatureHandler.h"
@@ -18,17 +13,11 @@ using std::chrono::milliseconds;
 using std::chrono::microseconds;
 
 
-
-
-
-//typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::undirectedS, Vertex_info_BGP, Edge_info_BGP, Graph_info > Graph_t;
-//typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::undirectedS, Vertex_info_road, Edge_info_road, Graph_info > Graph_t;
 typedef unsigned int uint;
 
-boost::dynamic_properties dp;
 
 /*
- * Read a graphml
+ * Read the graphml
  */
 void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
 
@@ -52,9 +41,10 @@ void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
     inFile.close();
 }
 int main(int argc, char **argv)  {
-    Graph_t *g=new Graph_t, *gin=new Graph_t, *ginter;
+
+    Graph_t *g=new Graph_t, *gin=new Graph_t;
     string filename, path;
-    int iterationIndex=0;
+    int numIteration=0;
     if( argc > 2 ) {
         string command1(argv[1]);
         if (command1 == "-P") {
@@ -64,18 +54,17 @@ int main(int argc, char **argv)  {
         if (command2 =="-F")
             filename= string(argv[4]);
         string command3(argv[5]);
-        if (command3 =="-I")
-            iterationIndex= stoi(argv[6]);
+        if (command3 =="-NI")
+            numIteration= stoi(argv[6]);
 
     }
 
-    string pfilename=path+"/"+filename;
-    readGraphMLFile(*gin,pfilename );
-    int numIteration=200;
-    k_core2(*gin,*g, 2);
+
+    readGraphMLFile(*gin,filename);
+    k_core(*gin,*g, 2);
 
     double oldRescaling=1.0;
-    ricci_flow(g, numIteration, iterationIndex,path);
+    ricci_flow(g, numIteration,path);
     return 0;
 
 }

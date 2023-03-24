@@ -40,7 +40,7 @@ struct Vertex_info_road {
     float Y=0;
     float x=0;
     float y=0;
-    std::string name;
+    std::string meta;
     float lat=0;
     float longi=0;
     std::string label="";
@@ -108,39 +108,34 @@ typedef Graph_Regular GraphSpecial;
 template <class myGraph>
 boost::dynamic_properties gettingProperties(myGraph& g) {
 
-    bool road = true;
-    bool bgp = false;
-
 
     boost::dynamic_properties dpout;
 
+    dpout.property("label", get(&Vertex_info_road::label, g));
+    dpout.property("X", get(&Vertex_info_road::X, g));
+    dpout.property("Y", get(&Vertex_info_road::Y, g));
+    dpout.property("meta", get(&Vertex_info_road::meta, g));
+    dpout.property("lat", get(&Vertex_info_road::lat, g));
+    dpout.property("long", get(&Vertex_info_road::longi, g));
+    dpout.property("r", get(&Vertex_info_road::r, g));
+    dpout.property("g", get(&Vertex_info_road::g, g));
+    dpout.property("b", get(&Vertex_info_road::b, g));
+    dpout.property("x", get(&Vertex_info_road::x, g));
+    dpout.property("y", get(&Vertex_info_road::y, g));
+    dpout.property("size", get(&Vertex_info_road::size, g));
+    dpout.property("Degré", get(&Vertex_info_road::degree, g));
+    dpout.property("Modularity Class", get(&Vertex_info_road::cluster, g));
+    dpout.property("Eccentricity", get(&Vertex_info_road::eccentricity, g));
+    dpout.property("Closeness Centrality", get(&Vertex_info_road::closnesscentrality, g));
+    dpout.property("Harmonic Closeness Centrality", get(&Vertex_info_road::harmonicclosnesscentrality, g));
+    dpout.property("Betweenness Centrality", get(&Vertex_info_road::betweenesscentrality, g));
+    dpout.property("dist", get(&Edge_info_road::dist, g));
+    dpout.property("weight", get(&Edge_info_road::weight, g));
+    dpout.property("distance", get(&Edge_info_road::distance, g));
+    dpout.property("ot", get(&Edge_info_road::ot, g));
+    dpout.property("curv", get(&Edge_info_road::curv, g));
 
-    if (road) {
-        dpout.property("label", get(&Vertex_info_road::label, g));
-        dpout.property("X", get(&Vertex_info_road::X, g));
-        dpout.property("Y", get(&Vertex_info_road::Y, g));
-        dpout.property("meta", get(&Vertex_info_road::name, g));
-        dpout.property("lat", get(&Vertex_info_road::lat, g));
-        dpout.property("long", get(&Vertex_info_road::longi, g));
-        dpout.property("r", get(&Vertex_info_road::r, g));
-        dpout.property("g", get(&Vertex_info_road::g, g));
-        dpout.property("b", get(&Vertex_info_road::b, g));
-        dpout.property("x", get(&Vertex_info_road::x, g));
-        dpout.property("y", get(&Vertex_info_road::y, g));
-        dpout.property("size", get(&Vertex_info_road::size, g));
-        dpout.property("Degré", get(&Vertex_info_road::degree, g));
-        dpout.property("Modularity Class", get(&Vertex_info_road::cluster, g));
-        dpout.property("Eccentricity", get(&Vertex_info_road::eccentricity, g));
-        dpout.property("Closeness Centrality", get(&Vertex_info_road::closnesscentrality, g));
-        dpout.property("Harmonic Closeness Centrality", get(&Vertex_info_road::harmonicclosnesscentrality, g));
-        dpout.property("Betweenness Centrality", get(&Vertex_info_road::betweenesscentrality, g));
-        dpout.property("dist", get(&Edge_info_road::dist, g));
-        dpout.property("weight", get(&Edge_info_road::weight, g));
-        dpout.property("distance", get(&Edge_info_road::distance, g));
-        dpout.property("ot", get(&Edge_info_road::ot, g));
-        dpout.property("curv", get(&Edge_info_road::curv, g));
-    }
-
+/*
     if (bgp) {
         dpout.property("asNumber", get(&Vertex_info_BGP::asNumber, g));
         dpout.property("pathNum", get(&Vertex_info_BGP::pathNum, g));
@@ -161,7 +156,7 @@ boost::dynamic_properties gettingProperties(myGraph& g) {
         dpout.property("ot", get(&Edge_info_BGP::ot, g));
         dpout.property("curv", get(&Edge_info_BGP::curv, g));
     }
-
+*/
     map<double, double> attribute_double2double1,attribute_double2double2;
     associative_property_map<map<double, double>> avgCurv_map(attribute_double2double1);
     associative_property_map<map<double, double>> stdCurv_map(attribute_double2double2);
