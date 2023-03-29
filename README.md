@@ -3,7 +3,7 @@
 
 
 
-**-P path_to_result_directory -G the_name_of_the_graph**(with the path) **-NI Number_of_Ricci_flow_iterations**
+**-P path_to_result_directory -G the_name_of_the_graph** **-NI Number_of_Ricci_flow_iterations**
 
 **(-P** /home/Curvature/Results **-G** /home/Curvature/data/graph.graphml **-NI** 30 **)**
 
