@@ -27,11 +27,53 @@
 					<DistClean command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="edit_cache">
+			<Target title="Bgp">
+				<Option output="/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Bgp" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug"/>
-				<Option type="4"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_GRAPH_DYN_LINK"/>
+					<Add option="-DBOOST_REGEX_DYN_LINK"/>
+					<Add option="-DBOOST_ALL_NO_LIB"/>
+					<Add option="-DBOOST_IOSTREAMS_DYN_LINK"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<Build command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 Bgp"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Bgp/fast">
+				<Option output="/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Bgp" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_GRAPH_DYN_LINK"/>
+					<Add option="-DBOOST_REGEX_DYN_LINK"/>
+					<Add option="-DBOOST_ALL_NO_LIB"/>
+					<Add option="-DBOOST_IOSTREAMS_DYN_LINK"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 Bgp/fast"/>
 					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -89,8 +131,8 @@
 					<DistClean command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="Bgp">
-				<Option output="/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Bgp" prefix_auto="0" extension_auto="0"/>
+			<Target title="Validation">
+				<Option output="/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Validation" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -109,14 +151,14 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 Bgp"/>
+					<Build command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 Validation"/>
 					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="Bgp/fast">
-				<Option output="/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Bgp" prefix_auto="0" extension_auto="0"/>
+			<Target title="Validation/fast">
+				<Option output="/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Validation" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -135,7 +177,17 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 Bgp/fast"/>
+					<Build command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 Validation/fast"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
 					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j16 -f &quot;/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -146,11 +198,15 @@
 			<Option target="Bgp"/>
 		</Unit>
 		<Unit filename="/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/curvatureHandler.h">
-			<Option target="Road"/>
 			<Option target="Bgp"/>
+			<Option target="Road"/>
+			<Option target="Validation"/>
 		</Unit>
 		<Unit filename="/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/road.cpp">
 			<Option target="Road"/>
+		</Unit>
+		<Unit filename="/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/validation.cpp">
+			<Option target="Validation"/>
 		</Unit>
 		<Unit filename="/home/nsaloua/Research/Topologie/Graph-Embedding/Curvature/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>

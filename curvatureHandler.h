@@ -61,8 +61,10 @@ class EdgeType:public EdgeSpecial {
 public:
     double dist=1.0;
     int weight= 1;
+    //double distance;
+    double distance2=1.0;
     double distance=1.0;
-    float edist=1.0;
+    double edist=1.0;
     double ot=std::numeric_limits<double>::infinity();
     bool visited=false;
     double curv=std::numeric_limits<double>::infinity();
@@ -932,11 +934,9 @@ bool updateDistances(Graph_t &g, double &oldrescaling) {
         //Check surgery type 1
         if ((g[*eit].distance <= EPS) && (!g[*eit].surgery)) { //we need a surgery of type 1
             Vertex src = source(*eit, g), dst = target(*eit, g);
-            cout << "Surgery Type 1: " << src<<"-"<<g[src].meta << ":" << dst<<"-" <<g[dst].meta<< ", Curvature= " << g[*eit].curv<< ", Distance:" << g[*eit].distance << endl;
-            logFile << "Surgery Type 1: " << src<<"-"<<g[src].meta << ":" << dst<<"-" <<g[dst].meta<< ", Curvature= " << g[*eit].curv<< ", Distance:" << g[*eit].distance << endl;
+         //   cout << "Surgery Type 1: " << src<<"-"<<g[src].meta << ":" << dst<<"-" <<g[dst].meta<< ", Curvature= " << g[*eit].curv<< ", Distance:" << g[*eit].distance << endl;
+         //   logFile << "Surgery Type 1: " << src<<"-"<<g[src].meta << ":" << dst<<"-" <<g[dst].meta<< ", Curvature= " << g[*eit].curv<< ", Distance:" << g[*eit].distance << endl;
 
-            //int dx = ;
-            //cout << "1-min(1/dx,1/dy)= "<< <<endl;
             surgery = false;
             g[*eit].surgery = false;
             //g[*eit].distance = EPS;
@@ -945,8 +945,8 @@ bool updateDistances(Graph_t &g, double &oldrescaling) {
         //Check surgery type 2
         if ((g[*eit].distance >= 1+3*g[graph_bundle].rstdDist) && (!g[*eit].surgery)){
             Vertex src = source(*eit, g), dst = target(*eit, g);
-            cout << "Surgery Type 2: " << src <<"-"<<g[src].meta<< ":" << dst <<"-" <<g[dst].meta<< ", Curvature:" << g[*eit].curv <<", Distance;"<< g[*eit].distance<<endl;
-            logFile << "Surgery Type 2: " << src <<"-"<<g[src].meta<< ":" << dst <<"-" <<g[dst].meta<< ", Curvature:" << g[*eit].curv <<", Distance;"<< g[*eit].distance<<endl;
+         //   cout << "Surgery Type 2: " << src <<"-"<<g[src].meta<< ":" << dst <<"-" <<g[dst].meta<< ", Curvature:" << g[*eit].curv <<", Distance;"<< g[*eit].distance<<endl;
+         //   logFile << "Surgery Type 2: " << src <<"-"<<g[src].meta<< ":" << dst <<"-" <<g[dst].meta<< ", Curvature:" << g[*eit].curv <<", Distance;"<< g[*eit].distance<<endl;
             surgery=false;
             g[*eit].surgery=false;
 //            g[*eit].active=false;
@@ -1056,7 +1056,12 @@ void ricci_flow(Graph_t *g, int numIteration, string path) {
             copy_graph(fg, *ginter);
 
 
-            dpout = gettingProperties<Graph_t>(*ginter);
+            //dpout = gettingProperties<Graph_t>(*ginter);
+
+            dpout = gettingProperties<Graph_t,VertexType,EdgeType>(*ginter);
+
+
+
 
             write_graphml(outFile, *ginter, dpout, true);
             (g)->clear();
@@ -1066,7 +1071,10 @@ void ricci_flow(Graph_t *g, int numIteration, string path) {
 //            g = ginter;
         } else {
 
-            dpout = gettingProperties<Graph_t>(*g);
+            //dpout = gettingProperties<Graph_t>(*g);
+
+            dpout = gettingProperties<Graph_t,VertexType,EdgeType>(*g);
+
 
             write_graphml(outFile, *g, dpout, true);
 

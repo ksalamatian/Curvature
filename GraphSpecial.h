@@ -95,22 +95,39 @@ struct Edge_info_BGP {
     bool surgery=false;
 };
 
+struct Vertex_info_validation {
+    double x;
+    double y;
+    double z;
+
+    //long block;
+
+};
+
+struct Edge_info_validation {
+
+
+};
+
 
 //typedef Vertex_info_BGP VertexSpecial;
 //typedef Edge_info_BGP EdgeSpecial;
-typedef Vertex_info_road VertexSpecial;
-typedef Edge_info_road  EdgeSpecial;
+
+//typedef Vertex_info_road VertexSpecial;
+//typedef Edge_info_road  EdgeSpecial;
+
+typedef Vertex_info_validation VertexSpecial;
+typedef Edge_info_validation  EdgeSpecial;
 typedef Graph_Regular GraphSpecial;
 
 
 
+template <class myGraph, class myVertex, class myEdge>boost::dynamic_properties gettingProperties(myGraph& g) {
 
-template <class myGraph>
-boost::dynamic_properties gettingProperties(myGraph& g) {
 
 
     boost::dynamic_properties dpout;
-
+/*
     dpout.property("label", get(&Vertex_info_road::label, g));
     dpout.property("X", get(&Vertex_info_road::X, g));
     dpout.property("Y", get(&Vertex_info_road::Y, g));
@@ -135,8 +152,27 @@ boost::dynamic_properties gettingProperties(myGraph& g) {
     dpout.property("ot", get(&Edge_info_road::ot, g));
     dpout.property("curv", get(&Edge_info_road::curv, g));
 
+    */
+
+
+    dpout.property("x", get(&myVertex::x, g));
+    dpout.property("y", get(&myVertex::y, g));
+    dpout.property("z", get(&myVertex::z, g));
+
+
+    //dpout.property("block", get(&myVertex::block, g));
+
+    //dpout.property("edist", get(&myEdge::distance, g));
+    //dpout.property("distance", get(&myEdge::distance2, g));
+    dpout.property("distance", get(&myEdge::distance, g));
+    dpout.property("ot", get(&myEdge::ot, g));
+    dpout.property("curv", get(&myEdge::curv, g));
+    dpout.property("edist", get(&myEdge::edist, g));
+
+
+
+
 /*
-    if (bgp) {
         dpout.property("asNumber", get(&Vertex_info_BGP::asNumber, g));
         dpout.property("pathNum", get(&Vertex_info_BGP::pathNum, g));
         dpout.property("Country", get(&Vertex_info_BGP::Country, g));
@@ -155,7 +191,7 @@ boost::dynamic_properties gettingProperties(myGraph& g) {
         dpout.property("distance", get(&Edge_info_BGP::distance, g));
         dpout.property("ot", get(&Edge_info_BGP::ot, g));
         dpout.property("curv", get(&Edge_info_BGP::curv, g));
-    }
+
 */
     map<double, double> attribute_double2double1,attribute_double2double2;
     associative_property_map<map<double, double>> avgCurv_map(attribute_double2double1);

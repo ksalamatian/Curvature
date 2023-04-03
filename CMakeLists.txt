@@ -21,6 +21,7 @@ LINK_DIRECTORIES(/opt/homebrew/Cellar/boost/1.75.0_2/lib)
 
 add_executable(Bgp bgp.cpp curvatureHandler.h)
 add_executable(Road road.cpp curvatureHandler.h)
+add_executable(Validation validation.cpp curvatureHandler.h)
 
 #add_executable(regular regular.cpp curvatureHandler.h GraphSpecial.h)
 #add_executable(singleCurvature curvature.cpp curvatureHandler.h GraphSpecial.h)
@@ -32,3 +33,4 @@ TARGET_LINK_LIBRARIES(Bgp ${Boost_LIBRARIES} )
 #TARGET_LINK_LIBRARIES(singleCurvature ${Boost_LIBRARIES})
 TARGET_LINK_LIBRARIES(Road ${Boost_LIBRARIES} )
 
+TARGET_LINK_LIBRARIES(Validation ${Boost_LIBRARIES} )
