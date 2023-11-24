@@ -126,23 +126,20 @@ int main(int argc, char **argv)  {
 
     double oldRescaling=1.0;
     boost::dynamic_properties dpout;
-    dpout.property("asNumber", get(&VertexType::asnumber, *g));
-    dpout.property("pathNum", get(&VertexType::pathnum, *g));
-    dpout.property("Country", get(&VertexType::country, *g));
-    dpout.property("Name", get(&VertexType::name, *g));
-    dpout.property("asTime", get(&VertexType::astime, *g));
-    dpout.property("prefixNum", get(&VertexType::prefixnum, *g));
-    dpout.property("prefixAll", get(&VertexType::prefixall, *g));
-    dpout.property("addAll", get(&VertexType::addall, *g));
-    dpout.property("addNum", get(&VertexType::addnum, *g));
-    dpout.property("addCount", get(&EdgeType::addCount, *g));
-    dpout.property("edgeTime", get(&EdgeType::edgetime, *g));
+    long block;
+    bool active=true;
+    double x=0.0;
+    double y=0.0;
+    double z=0.0;
+
+    dpout.property("block", get(&VertexType::block, *g));
+    dpout.property("x", get(&VertexType::x, *g));
+    dpout.property("y", get(&VertexType::y, *g));
+    dpout.property("z", get(&VertexType::z, *g));
     dpout.property("weight", get(&EdgeType::weight, *g));
     dpout.property("distance", get(&EdgeType::distance, *g));
     dpout.property("ot", get(&EdgeType::ot, *g));
     dpout.property("curv", get(&EdgeType::curv, *g));
-    dpout.property("pathCount", get(&EdgeType::pathcount, *g));
-    dpout.property("prefCount", get(&EdgeType::prefcount, *g));
 
 /*        dpout.property("label", get(&Vertex_info_road::label, *g));
         dpout.property("X", get(&Vertex_info_road::X, *g));

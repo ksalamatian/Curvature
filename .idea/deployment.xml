@@ -2,10 +2,20 @@
 <project version="4">
   <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
-      <paths name="Remote Host (31e31905-f9b2-43ce-b0d6-5565fc7602de)">
+      <paths name="Dedibox (31e31905-f9b2-43ce-b0d6-5565fc7602de)">
         <serverdata>
           <mappings>
             <mapping deploy="/tmp/tmp.exkyJ2kg16" local="$PROJECT_DIR$" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="googlecloud (03751f9c-c4fb-4e54-a4d3-5e8bf503b4a4)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/tmp.4Q7UBHjILf" local="$PROJECT_DIR$" />
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />

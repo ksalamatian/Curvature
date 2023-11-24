@@ -6,6 +6,7 @@
 #include <boost/graph/graphml.hpp>
 #include <boost/graph/filtered_graph.hpp>
 #include <boost/graph/connected_components.hpp>
+#include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/copy.hpp>
 #include <boost/multi_index/composite_key.hpp>
 #include <boost/multi_index/member.hpp>
@@ -17,8 +18,7 @@
 #include "BlockingCollection.h"
 #include "emd.h"
 #include "GraphSpecial.h"
-#define ALPHA 0.0
-
+#define ALPHA 0.98
 using namespace boost;
 using namespace code_machina;
 using namespace std;
@@ -31,14 +31,15 @@ using std::chrono::microseconds;
 
 class DistanceCache{
 private:
-    float *distanceMat;
+    float *distanceMat= nullptr;
     int size;
 public:
-    DistanceCache(int numVertices):size(numVertices*numVertices){
-        distanceMat=(float *)calloc(size, sizeof(float));
+    explicit DistanceCache(int numVertices):size(numVertices*numVertices){
+//        distanceMat=(float *)calloc(size, sizeof(float));
     }
     ~DistanceCache(){
-        delete distanceMat;
+        if (distanceMat != nullptr)
+            delete distanceMat;
     }
 
 };
@@ -82,8 +83,8 @@ typedef graph_traits<Graph_t>::edge_iterator EdgeIterator;
 
 struct Perf{
 public:
-    long maxQueue=0.0;
-    long counter = 0.0;
+    unsigned long maxQueue=0.0;
+    unsigned long counter = 0.0;
     double cacheHitRate=0.0;
     long sourceSize=0.0;
     long destSize=0.0;
@@ -122,20 +123,20 @@ public:
 
 class GraphNodeArray{
 public:
-    int graphSize;
+    unsigned long graphSize;
     vector<Vertex> &sources;
     double *nodeArray;
 //    double *minDist;
-    int *settledCount;
+    uint *settledCount;
     uint *minSource;
     DistanceCache &distanceCache;
-    GraphNodeArray(int graphSize, vector<Vertex> &sources, DistanceCache &distanceCache): graphSize(graphSize), sources(sources),
+    GraphNodeArray(unsigned long graphSize, vector<Vertex> &sources, DistanceCache &distanceCache): graphSize(graphSize), sources(sources),
                                                                                           distanceCache(distanceCache){
-        nodeArray = new (double[graphSize*(sources.size()+1)]);
-        for (int i=0;i<graphSize*(sources.size()+1); nodeArray[i++]=std::numeric_limits<double>::infinity());
+        nodeArray = new double[graphSize*(sources.size()+1)];
+        for (unsigned int i=0; graphSize * (sources.size() + 1) > i; nodeArray[i++]=std::numeric_limits<double>::infinity());
 //        minDist=&(nodeArray[graphSize*sources.size()]);
-        minSource= new (unsigned int[graphSize]);
-        settledCount=new (int[graphSize]);
+        minSource= new unsigned int[graphSize];
+        settledCount=new uint[graphSize];
         for (int i=0;i<graphSize;settledCount[i++]=0);
     };
 
@@ -145,11 +146,11 @@ public:
         delete[] settledCount;
     }
 
-    double get(uint vind, uint sourceind){
+    double get(uint vind, uint sourceind) const{
         return nodeArray[sourceind*graphSize+vind];
     };
 
-    bool checkSet(uint vind, uint sourceind, double dist){
+    bool checkSet(uint vind, uint sourceind, double dist) const {
         if (nodeArray[sourceind*graphSize+vind]>=dist){
             nodeArray[sourceind*graphSize+vind]=dist;
             return true;
@@ -157,7 +158,7 @@ public:
         return false;
     }
 
-    bool isSettled(uint vind, uint sourceind) {
+    bool isSettled(uint vind, uint sourceind) const {
         // Assume that a negative or 0 distance means that it is settled
         if (get(vind, sourceind)>0.0) {
             return false;
@@ -166,27 +167,22 @@ public:
         }
     }
 
-    bool settle(uint vind, uint sourceind) {
+    bool settle(uint vind, uint sourceind) const {
         nodeArray[sourceind*graphSize+vind]=-nodeArray[sourceind*graphSize+vind];
-
         settledCount[vind]++;
 //        distanceCache.set(sourceind,vind,);
         return true;
     }
 
-    bool isFinished(uint vind){
-        if (settledCount[vind]>=sources.size()){
-            return true;
-        } else {
-            return false;
-        }
+    bool isFinished(uint vind) const{
+        return sources.size() <= settledCount[vind];
     }
 
 };
 
 class GraphNodeFactory{
 public:
-    GraphNodeFactory(){};
+    GraphNodeFactory()= default;
     ~GraphNodeFactory(){
         GraphNode *elem;
         while (!graphNodeQueue.empty()){
@@ -214,7 +210,7 @@ public:
         yi++;
     }
 
-    long number(){
+    long number() const{
         return numb;
     }
 
@@ -234,9 +230,122 @@ struct myComp {
     }
 };
 
+Perf SSSD_search(vector<vector<double>> *ddists, int offset, int QUANTA, vector<Vertex> &ssources,
+                 vector<Vertex> &dests, Graph_t &g, DistanceCache &distanceCache, GraphNodeFactory &graphNodeFact) {
+    vector<Vertex> sources(ssources.begin() + offset, ssources.begin() + offset + QUANTA);
+    Perf perf;
+    perf.sourceSize = sources.size();
+    perf.destSize = dests.size();
+    class my_visitor : default_bfs_visitor {
+    protected:
+        Vertex dest;
+    public:
+        my_visitor(Vertex dest)
+                : dest(dest) {};
 
-Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int offset, int QUANTA, vector<Vertex> &ssources,
-                                          vector<Vertex> &dests, Graph_t &g, DistanceCache &distanceCache, GraphNodeFactory &graphNodeFact){
+        void initialize_vertex(const Vertex &s, const Graph_t &g) const {}
+
+        void discover_vertex(const Vertex &s, const Graph_t &g) const {}
+
+        void examine_vertex(const Vertex &s, const Graph_t &g) const {}
+
+        void examine_edge(const Edge &e, const Graph_t &g) const {}
+
+        void edge_relaxed(const Edge &e, const Graph_t &g) const {}
+
+        void edge_not_relaxed(const Edge &e, const Graph_t &g) const {}
+
+        void finish_vertex(const Vertex &s, const Graph_t &g) const {
+            if (dest == s)
+                throw (2);
+        }
+    };
+    int i=0,j=0;
+    for (Vertex src: sources) {
+        j=0;
+        for (Vertex dst: dests) {
+            my_visitor vis(dst);
+            std::vector<Vertex> p(num_vertices(g));
+            std::vector<double> d(num_vertices(g));
+            try{
+                dijkstra_shortest_paths(g, src, weight_map(get(&EdgeType::distance, g)).distance_map(
+                                make_iterator_property_map(d.begin(), get(vertex_index, g))).visitor(vis));
+            }
+            catch (int exception) {
+                (*ddists)[i+offset][j]=d[dst];
+            }
+            j++;
+        }
+        i++;
+    }
+}
+
+class my_visitor : default_bfs_visitor {
+protected:
+    set<Vertex> destSet;
+public:
+    my_visitor(set<Vertex> set)
+            : destSet(set) {};
+
+    void initialize_vertex(const Vertex &s, const Graph_t &g) const {}
+
+    void discover_vertex(const Vertex &s, const Graph_t &g) const {}
+
+    void examine_vertex(const Vertex &s, const Graph_t &g) const {}
+
+    void examine_edge(const Edge &e, const Graph_t &g) const {}
+
+    void edge_relaxed(const Edge &e, const Graph_t &g) const {}
+
+    void edge_not_relaxed(const Edge &e, const Graph_t &g) const {}
+
+    void finish_vertex(const Vertex &s, const Graph_t &g)  {
+        destSet.erase(s);
+        if (destSet.empty())
+            throw (2);
+    }
+};
+
+
+Perf SSMD_search(vector<vector<double>> *ddists, int offset, int QUANTA, vector<Vertex> &ssources,
+                 vector<Vertex> &dests, Graph_t &g, DistanceCache &distanceCache, GraphNodeFactory &graphNodeFact) {
+    vector<Vertex> sources(ssources.begin() + offset, ssources.begin() + offset + QUANTA);
+    Perf perf;
+    perf.sourceSize = sources.size();
+    perf.destSize = dests.size();
+    int i=0,j=0;
+    std::vector<Vertex> p(num_vertices(g));
+    std::vector<double> d(num_vertices(g));
+    set<Vertex> destsSet;
+    for( Vertex d:dests)
+        destsSet.insert(d);
+    for (Vertex src: sources) {
+        my_visitor vis(destsSet);
+        cout<<destsSet.size()<<endl;
+        fill(p.begin(),p.end(),0);
+        fill(d.begin(),d.end(),std::numeric_limits<double>::infinity());
+        try{
+            cout<<src<<endl;
+//            dijkstra_shortest_paths(g, src, weight_map(get(&EdgeType::distance, g)).distance_map(
+//                    make_iterator_property_map(d.begin(), get(vertex_index, g))).visitor(vis));
+            dijkstra_shortest_paths(g, src, weight_map(get(&EdgeType::distance, g)).distance_map(
+                    make_iterator_property_map(d.begin(), get(vertex_index, g))).visitor(vis));
+        }
+        catch (int exception) {
+            j=0;
+            for (Vertex dst:dests){
+                (*ddists)[i+offset][j]=d[dst];
+                j++;
+            }
+        }
+        i++;
+    }
+}
+
+
+
+Perf MSMD_search(vector<vector<double>> *ddists, int offset, int QUANTA, vector<Vertex> &ssources,
+                 vector<Vertex> &dests, Graph_t &g, DistanceCache &distanceCache, GraphNodeFactory &graphNodeFact){
     // minimum cost upto
     // goal state from starting
     // state
@@ -244,13 +353,10 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
     // insert the starting index
     // map to store visited node
     vector<Vertex> sources(ssources.begin()+offset,ssources.begin()+offset+QUANTA);
-    set<Vertex> landMarks;
     Perf perf;
     perf.sourceSize=sources.size();
     perf.destSize=dests.size();
     long hit=0, checked=0;
-    boost::unordered_set<Vertex> visited;
-    boost::unordered_set<Vertex> settledNodes;
     boost::unordered_set<long> sourceVisited;
     boost::unordered_set<uint> sourceFinished;
     vector<int> srcCount(sources.size(),0);
@@ -281,7 +387,7 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
     for(Vertex t:dests){
         if (ddests.count(t)>0){// t is a destination that has not been yet reached for all source
             bool targetFinished=false;
-            GraphNode *previous=NULL;
+            GraphNode *previous=nullptr;
             // while the queue is not empty
             while (!costQueue->empty()){
                 maxQueue=max(maxQueue, (long) costQueue->size());
@@ -408,6 +514,7 @@ Perf multisource_uniform_cost_search_seq1(vector<vector<double>> *ddists, int of
 
 
 enum TaskType {FullProcess, PartialProcess, PartialOT,SuperProcess};
+enum AlgoType{SSSD, SSMD, MSMD};
 
 class Task{
 public:
@@ -418,7 +525,7 @@ public:
     set<Edge> edges;
     float weight;
     Task(TaskType type, Vertex v, vector<Vertex> &sources, vector<Vertex> &dests, set<Edge> &edges, float weight):type(type), v(v), sources(sources),
-                                                                                                    dests(dests), edges(edges), weight(weight){}
+                                                                                                                  dests(dests), edges(edges), weight(weight){}
     ~Task(){
         sources.clear();
         dests.clear();
@@ -453,8 +560,8 @@ public:
     int QUANTA;
     PartialTask(std::atomic<int> *shared, vector<vector<double>> *dists, int offset, int QUANTA, Vertex v,
                 vector<Vertex> sources, vector<Vertex> dests, set<Edge> edges, int index):
-            Task(PartialProcess,v,sources, dests,edges,(float)sources.size()), dists(dists),
-            QUANTA(QUANTA), offset(offset), sharedCnt(shared), index(index){this->type=PartialProcess;}
+            Task(PartialProcess,v,sources, dests,edges,(float)sources.size()), sharedCnt(shared),
+            dists(dists), index(index), offset(offset), QUANTA(QUANTA){this->type=PartialProcess;}
 };
 
 class PartialCurvature: public Task{
@@ -465,9 +572,9 @@ public:
     int offset;
     int QUANTA;
     PartialCurvature(std::atomic<int> *shared, vector<vector<double>> *dists, int offset, int QUANTA, Vertex v,
-    vector<Vertex> sources, vector<Vertex> dests, set<Edge> edges, int index):
-    Task(PartialOT,v,sources, dests,edges, (float)sources.size()-0.1), dists(dists), offset(offset),
-    QUANTA(QUANTA), index(index), sharedCnt(shared){this->type=PartialOT;}
+                     vector<Vertex> sources, vector<Vertex> dests, set<Edge> edges, int index):
+            Task(PartialOT,v,sources, dests,edges, (float)sources.size()-0.1), sharedCnt(shared), dists(dists),
+            index(index), offset(offset), QUANTA(QUANTA){this->type=PartialOT;}
 
 };
 using TaskPriorityQueue = PriorityBlockingCollection<Task *, PriorityContainer<Task*, TaskPaircomp>>;
@@ -483,11 +590,14 @@ void copyTaskQueue(set<Task *, TaskPaircomp> &intaskPriorityQueue, TaskPriorityQ
 
 //template <class Graph> using TaskPriorityQueue = PriorityBlockingCollection<Task *, PriorityContainer<Task<Graph>*, TaskPaircomp<Graph>>>;
 
-std::atomic<long>  numProcessedVertex{0}, numProcessedEdge{0};
+atomic<long>  numProcessedVertex{0}, numProcessedEdge{0}, numProcessedPath{0};
+atomic<float> threshold{0.05};
+long numbOfShortPaths=0;
+
 constexpr double EPS=1e-3;
 
- void calcCurvature(double alpha, Vertex v, vector<vector<double>> &MatDist, set<Edge> &edges, vector<Vertex> sources,
-                    vector<Vertex> dests, Graph_t &g){
+void calcCurvature1(double alpha, Vertex v, vector<vector<double>> &MatDist, set<Edge> &edges, vector<Vertex> &sources,
+                   vector<Vertex> &dests, Graph_t &g){
 
     vector<double> distributionA;
     vector<double> distributionB;
@@ -501,22 +611,30 @@ constexpr double EPS=1e-3;
         for (; nB.first != nB.second; localDests.insert(*nB.first++));
         vector<vector<double>> vertDist(MatDist.size(), vector<double>(localDests.size(),
                                                                        std::numeric_limits<double>::infinity()));
+
+        // Remplissage de la matrice locale des plus court chemin
         int cntD = 0, destIndex = 0;
         for (Vertex dest: localDests) {
-            auto range = equal_range(dests.begin(), dests.end(), dest);
-            int indexj = range.first - dests.begin();
+            auto it=find(dests.begin(),dests.end(),dest);
+            if (it==dests.end()){
+                cout<<dest<<" ,PROBLEMM!!!"<<endl;
+                for(Vertex d:dests)
+                    cout<<d;
+                cout<<endl;
+            }
+            int indexj = std::distance(it,dests.begin());
             for (int j = 0; j < MatDist.size(); j++) {
                 vertDist[j][cntD] = MatDist[j][indexj];
-                if (MatDist[j][indexj]==std::numeric_limits<double>::infinity())
-                    int KKKK=0;
             }
+
             if (dest == neighbor)
                 destIndex = cntD;
             cntD++;
         }
 
+//
+/*
         int sA = vertDist.size(), sB = vertDist[0].size();
-        //if (sB > 1) {
 
         double uA = (double) (1 - alpha) / (sA - 1);
         double uB = (double) (1 - alpha) / (sB - 1);
@@ -530,13 +648,63 @@ constexpr double EPS=1e-3;
         distributionA[index] = alpha;
         distributionB[destIndex] = alpha;
 
+*/
+//
+
+///////////////////////////////////////////////
+
+        // X distribution vector
+        int sA = vertDist.size();
+        distributionA.resize(sA);
+
+        pair<AdjacencyIterator, AdjacencyIterator> nA = adjacent_vertices(src, g);
+        set<Vertex> Sources;
+        Sources.insert(src);
+        for (; nA.first != nA.second; Sources.insert(*nA.first++));
+        double sws = 0;
+        int cnt=0;
+        for (Vertex s: Sources) {
+            if (src == s){
+                distributionA[cnt] = 0;
+            }else {
+                auto e = edge(src, s, g);
+ //               cout << "distance= "<< g[e.first].distance << endl;
+                distributionA[cnt] = g[e.first].distance;
+                sws = sws + g[e.first].distance;
+            }
+            cnt++;
+        }
+
+        for(int i = 0; i<distributionA.size(); i++) {
+            distributionA[i] = distributionA[i]/sws;
+        }
+        // Y destribution vertor
+        int sB = vertDist[0].size();
+        distributionB.resize(sB);
+
+        double swd = 0;
+        cnt=0;
+        for (Vertex dest: localDests) {
+            if (dest == neighbor){
+                distributionB[cnt] = 0;
+            }else {
+                auto ed = edge(neighbor, dest, g);
+                distributionB[cnt] = g[ed.first].distance;
+                swd = swd + g[ed.first].distance;
+            }
+            cnt++;
+        }
+        for(int i = 0; i<distributionB.size(); i++) {
+            distributionB[i] = distributionB[i]/swd;
+        }
         wd = compute_EMD(distributionA, distributionB, vertDist);
+        g[e].oot =g[e].ot;
+        g[e].ocurv =g[e].curv;
         if (isnan(wd)) {
             g[e].ot = 9999.0;
             g[e].curv = 9999.0;
             cout<<"PROBLEM"<<endl;
         } else {
-            g[e].ot = wd;
             float tmpDist=g[e].distance;
             if (tmpDist < EPS) {
                 g[e].curv = g[graph_bundle].avgCurv;
@@ -546,33 +714,117 @@ constexpr double EPS=1e-3;
         }
         if (isinf(g[e].curv))
             cout<<"BUG"<<endl;
+
         distributionB.clear();
         distributionA.clear();
 
-       // } else {
-       //     g[e].curv = 0.0;
-       //     g[e].ot = 0.0;
-       //     g[e].distance = EPS / 2;
-       // }
+        // } else {
+        //     g[e].curv = 0.0;
+        //     g[e].ot = 0.0;
+        //     g[e].distance = EPS / 2;
+        // }
+        numProcessedEdge++;
+    }
+}
+
+void calcCurvature(double alpha, Vertex v, vector<vector<double>> &MatDist, set<Edge> &edges, vector<Vertex> &sources,
+                   vector<Vertex> &dests, Graph_t &g){
+
+    double wd;
+    for (Edge e: edges) {
+        Vertex src = source(e, g);
+        Vertex neighbor = target(e, g);
+
+        pair<AdjacencyIterator, AdjacencyIterator> nB = adjacent_vertices(neighbor, g);
+        set<Vertex> localDests;
+        localDests.insert(neighbor);
+        for (; nB.first != nB.second; localDests.insert(*nB.first++));
+        vector<vector<double>> vertDist(MatDist.size(), vector<double>(localDests.size(),
+                                                                       std::numeric_limits<double>::infinity()));
+        vector<vector<double>> optTransport(MatDist.size(), vector<double>(localDests.size(),
+                                                                       std::numeric_limits<double>::infinity()));
+
+        int cntD = 0, destIndex = 0;
+        for (Vertex dest: localDests) {
+            auto it=find(dests.begin(), dests.end(), dest);
+            int indexj = it - dests.begin();
+            for (int j = 0; j < MatDist.size(); j++) {
+                vertDist[j][cntD] = MatDist[j][indexj];
+            }
+            if (dest == neighbor)
+                destIndex = cntD;
+            cntD++;
+        }
+
+        int sA = vertDist.size(), sB = vertDist[0].size();
+        //if (sB > 1) {
+
+        double uA = (double) (1 - alpha) / (sA - 1);
+        double uB = (double) (1 - alpha) / (sB - 1);
+        vector<double> distributionA(sA,uA);
+        vector<double> distributionB(sB,uB);
+        auto wrapIter=find(sources.begin(), sources.end(), src);
+        long index;
+        if (wrapIter != sources.end()){
+            index= wrapIter - sources.begin();
+            distributionA[index] = alpha;
+        } else {
+            cout<<"BUG"<<endl;
+        }
+        distributionB[destIndex] = alpha;
+        double cost;
+
+        wd = compute_EMD(distributionA, distributionB, vertDist);
+        g[e].oot =g[e].ot;
+        g[e].ocurv =g[e].curv;
+        if (isnan(wd)) {
+            g[e].ot = 9999.0;
+            g[e].curv = 9999.0;
+            cout<<"PROBLEM"<<endl;
+        } else {
+            g[e].ot = wd;
+//            float tmpDist=g[e].distance;
+            g[e].curv = (1 - wd / g[e].distance)/(1-alpha);
+        }
+//        cout<<wd<<","<<(1 - wd / g[e].distance)<<","<<g[e].curv<<endl;
+//        uA = (double) 1 / (sA - 1);
+//        uB = (double) 1 / (sB - 1);
+//        fill_n(distributionA.begin(), sA, uA);
+//        fill_n(distributionB.begin(), sB, uB);
+//        distributionA[index] = 0.0;
+//        distributionB[destIndex] = 0.0;
+//        wd = compute_EMD(distributionA, distributionB, vertDist);
+//        cout <<(1-wd/g[e].distance)<<","<<g[e].curv<<endl;
+        distributionB.clear();
+        distributionA.clear();
+
+        // } else {
+        //     g[e].curv = 0.0;
+        //     g[e].ot = 0.0;
+        //     g[e].distance = EPS / 2;
+        // }
         numProcessedEdge++;
     }
 }
 
 auto t1=high_resolution_clock::now();
-void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache, TaskPriorityQueue *tasksToDo,
-             long numbOfShortPaths, atomic<int> *runningTaskCount) {
+void process(AlgoType algo, int  threadIndex, Graph_t *g, DistanceCache *distanceCache, TaskPriorityQueue *tasksToDo,
+              atomic<int> *runningTaskCount) {
     GraphNodeFactory graphNodeFact;
     Task *task;
     long totalTime1 = 0, totalTime2 = 0;
     int QUANTA=120;
-    long numberShortestPath=0;
+    long numberProcessedPath=0;
+    std::chrono::nanoseconds elapsed=t1-t1;
+    std::chrono::nanoseconds elapsed2=t1-t1;
     auto t2=t1;
+    auto t3=t1;
     do{
         while (tasksToDo->try_take(task,std::chrono::milliseconds(1000)) == BlockingCollectionStatus::Ok) {
             //        tasksToDo.try_take(task);
-            numberShortestPath=0;
+            numberProcessedPath=0;
             Vertex s = task->v;
-            Perf perf1, perf2;
+            Perf perf1;// perf2;
             bool done = false;
             vector<Vertex> sources(task->sources), dests(task->dests);
             set<Edge> edges(task->edges);
@@ -582,25 +834,41 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache, TaskPrio
             int ssize = sources.size(), dsize = dests.size(), allsize=ssize*dsize;
             switch (task->type) {
                 case FullProcess: {
-                    FullTask *fullTask = (FullTask *) task;
+                    auto *fullTask = (FullTask *) task;
                     (*runningTaskCount)++;
                     MatDist1 = new vector<vector<double>>(ssize, vector<double>(dsize,
                                                                                 std::numeric_limits<double>::infinity()));
-                    //                MatDist2= new vector<vector<double>>(ssize, vector<double>(dsize,std::numeric_limits<double>::infinity()));
+//                    MatDist2= new vector<vector<double>>(ssize, vector<double>(dsize,std::numeric_limits<double>::infinity()));
                     if (ssize < QUANTA) {
-                        perf1 = multisource_uniform_cost_search_seq1(MatDist1, 0, sources.size(),sources, dests, *g, *distanceCache, graphNodeFact);
-                        std::atomic<int> *sharedCnt = new std::atomic<int>();
+                        switch(algo){
+                            case SSSD:
+                                perf1 = SSSD_search(MatDist1, 0, sources.size(), sources, dests, *g, *distanceCache,
+                                                graphNodeFact);
+                                break;
+                            case SSMD:
+                                perf1 = SSMD_search(MatDist1, 0, sources.size(), sources, dests, *g, *distanceCache,
+                                                    graphNodeFact);
+                                break;
+                            case MSMD:
+                                perf1 = MSMD_search(MatDist1, 0, sources.size(), sources, dests, *g, *distanceCache,
+                                            graphNodeFact);
+                                break;
+                            default:
+                                perf1 = MSMD_search(MatDist1, 0, sources.size(), sources, dests, *g, *distanceCache,
+                                                    graphNodeFact);
+                        }
+                        auto *sharedCnt = new std::atomic<int>();
                         *sharedCnt = 0;
-                        PartialCurvature *ptask = new PartialCurvature(sharedCnt, MatDist1, 0, edges.size(), fullTask->v, sources, dests, edges, 0);
+                        auto *ptask = new PartialCurvature(sharedCnt, MatDist1, 0, edges.size(), fullTask->v, sources, dests, edges, 0);
                         tasksToDo->try_add((Task *) ptask);
                         //                    delete MatDist2;
                     } else {
-                        std::atomic<int>  *sharedCnt = new std::atomic<int>();
+                        auto  *sharedCnt = new std::atomic<int>();
                         *sharedCnt =0;
                         int iterNum = sources.size() / QUANTA;
                         auto begin = sources.begin();
                         for (int i = 0; i < sources.size(); i = i + QUANTA) {
-                            PartialTask *ptask = new PartialTask(sharedCnt, MatDist1, i,std::min(QUANTA, (int)sources.size()-i),s,
+                            auto *ptask = new PartialTask(sharedCnt, MatDist1, i,std::min(QUANTA, (int)sources.size()-i),s,
                                                                  sources, dests, edges,*sharedCnt);
                             tasksToDo->try_add((Task *) ptask);
                             (*sharedCnt)++;
@@ -610,17 +878,35 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache, TaskPrio
                     break;
                 }
                 case PartialProcess:{
-                    PartialTask *partialTask = (PartialTask *) task;
+                    auto *partialTask = (PartialTask *) task;
                     //                t2 = high_resolution_clock::now();
 //                cout<<"Partial Task:"<<partialTask->v<<":"<<*(partialTask->sharedCnt)<<", thread#:"<<threadIndex<<endl;
-                    perf1 = multisource_uniform_cost_search_seq1(partialTask->dists, partialTask->offset, partialTask->QUANTA, sources, dests,
-                                                                 *g,*distanceCache, graphNodeFact);
+//                    perf1 = MSMD_search(partialTask->dists, partialTask->offset, partialTask->QUANTA, sources, dests,
+//                                        *g, *distanceCache, graphNodeFact);
+                    switch(algo){
+                        case SSSD:
+                            perf1 = SSSD_search(partialTask->dists, partialTask->offset, partialTask->QUANTA, sources, dests,
+                                                *g, *distanceCache, graphNodeFact);
+                            break;
+                        case SSMD:
+                            perf1 = SSMD_search(partialTask->dists, partialTask->offset, partialTask->QUANTA, sources, dests,
+                                                *g, *distanceCache, graphNodeFact);
+                            break;
+                        case MSMD:
+                            perf1 = MSMD_search(partialTask->dists, partialTask->offset, partialTask->QUANTA, sources, dests,
+                                                *g, *distanceCache, graphNodeFact);
+                            break;
+                        default:
+                            perf1 = MSMD_search(MatDist1, 0, sources.size(), sources, dests, *g, *distanceCache,
+                                                graphNodeFact);
+                    }
+
                     //                t3 = high_resolution_clock::now();
                     done = true;
                     (*(partialTask->sharedCnt))--;
                     if (*(partialTask->sharedCnt) == 0) {
                         delete partialTask->sharedCnt;
-                        std::atomic<int> *sharedCnt = new std::atomic<int>();
+                        auto *sharedCnt = new std::atomic<int>();
                         *sharedCnt = 0;
                         int iterNum = edges.size() / QUANTA;
                         auto begin = edges.begin();
@@ -628,7 +914,7 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache, TaskPrio
                         set<Edge> partialEdges;
                         for (Edge e:edges){
                             if (i==QUANTA){
-                                PartialCurvature *ptask = new PartialCurvature(sharedCnt, partialTask->dists,j ,QUANTA, s, sources, dests,
+                                auto *ptask = new PartialCurvature(sharedCnt, partialTask->dists,j ,QUANTA, s, sources, dests,
                                                                                partialEdges,*sharedCnt);
                                 tasksToDo->try_add((Task *) ptask);
                                 (*sharedCnt)++;
@@ -639,8 +925,8 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache, TaskPrio
                             partialEdges.insert(e);
                             i++;
                         }
-                        if (partialEdges.size()>0){
-                            PartialCurvature *ptask = new PartialCurvature(sharedCnt, partialTask->dists, j, partialEdges.size(), s, sources, dests,
+                        if (!partialEdges.empty()){
+                            auto *ptask = new PartialCurvature(sharedCnt, partialTask->dists, j, partialEdges.size(), s, sources, dests,
                                                                            partialEdges,*sharedCnt);
                             tasksToDo->try_add((Task *) ptask);
                             partialEdges.clear();
@@ -650,23 +936,39 @@ void process(int threadIndex, Graph_t *g, DistanceCache *distanceCache, TaskPrio
                     break;
                 }
                 case PartialOT:{
-                    PartialCurvature *partialOT = (PartialCurvature *) task;
-                    //                t2 = high_resolution_clock::now();
+                    auto *partialOT = (PartialCurvature *) task;
+                    t2 = high_resolution_clock::now();
                     calcCurvature(ALPHA,partialOT->v, *(partialOT->dists),partialOT->edges, sources,dests,*g);
+                    t3= high_resolution_clock::now();
                     done = true;
                     if (*(partialOT->sharedCnt) == 0) {
-                        numberShortestPath=sources.size()*dests.size();
+                        numberProcessedPath=sources.size()*dests.size();
+                        numProcessedPath+=numberProcessedPath;
                         numProcessedVertex++;
+                        numProcessedEdge +=partialOT->edges.size()+partialOT->offset;
                         done = true;
                         delete partialOT->dists;
                         delete partialOT->sharedCnt;
                         (*runningTaskCount)--;
+                        elapsed +=(t2 - t1);
+                        elapsed2+= (t3 - t2);
+
+//                        cout<<"#Vert:"<<numProcessedVertex<<" #Edg:"<<numProcessedEdge<<" %Pth:"<<numProcessedPath*1.0/numbOfShortPaths*100<<"% time:"<<duration_cast<microseconds>(
+//                                elapsed).count()<<endl;
+                        if (threshold * numbOfShortPaths < numProcessedPath){
+                            threshold= threshold +0.05;
+                            cout<<"Time passsed to execute :"<< numProcessedPath*1.0/  numbOfShortPaths<<"% is "<<duration_cast<microseconds>(
+                                    elapsed).count()<<" and "<<duration_cast<microseconds>(elapsed2).count()<<","<<duration_cast<microseconds>(
+                                    elapsed).count()*1.0/(duration_cast<microseconds>(elapsed2).count()+duration_cast<microseconds>(elapsed).count())<<endl;
+                        }
                     } else {
                         (*(partialOT->sharedCnt))--;
                     }
                     delete partialOT;
                     break;
                 }
+                case SuperProcess:
+                    break;
             }
         }
     } while(*runningTaskCount!=0);
@@ -683,13 +985,13 @@ struct vertexpaircomp {
     }
 };
 
+
 long generateTasks(Graph_t &g, TaskPriorityQueue &tasksToDo){
     set<long> edgeSet;
-    std::atomic<int> removed{0}, added{0};
+    int removed=0, added=0;
     AdjacencyIterator nfirst, nend;
     VertexIterator v,vend;
     set<pair<Vertex, int>, vertexpaircomp> degreeSorted;
-    long numbOfShortPaths=0;
     int numbOfEdges=0;
     for (tie(v, vend) = vertices(g); v != vend; v++) {
         degreeSorted.insert(make_pair(*v, -degree(*v, g)));
@@ -719,7 +1021,6 @@ long generateTasks(Graph_t &g, TaskPriorityQueue &tasksToDo){
                     tie(nfirst, nend) = adjacent_vertices(dest, g);
                     destsSet.insert(nfirst, nend);
                     edgesToProcess.insert(*ve.first);
-
                     added++;
                 } else {
                     removed++;
@@ -727,75 +1028,50 @@ long generateTasks(Graph_t &g, TaskPriorityQueue &tasksToDo){
             }
         }
         vector<Vertex> sources(sourcesSet.begin(), sourcesSet.end()), dests(destsSet.begin(), destsSet.end());
-        if (edgesToProcess.size() > 0) {
+        if (!edgesToProcess.empty()) {
             numbOfEdges +=edgesToProcess.size();
             numbOfShortPaths +=sources.size()*destsSet.size();
-            FullTask *task = new FullTask(src, sources, dests, edgesToProcess);
+            auto task = new FullTask(src, sources, dests, edgesToProcess);
             tasksToDo.try_add((Task *) task);
         }
         sourcesSet.clear();
         destsSet.clear();
         edgesToProcess.clear();
     }
+    if (edgeSet.size()!= 2*num_edges(g))
+        cout<<"Edge Number Mismatch !"<<endl;
     cout<<"Number of tasks:"<<tasksToDo.size()<<" ,numVertices="<<num_vertices(g)<<" ,numbOfEdges="<<numbOfEdges<<", numbOfShortPaths="<<numbOfShortPaths<<endl;
     return numbOfShortPaths;
 }
 
-long generateTasks1(Graph_t &g, set<Task *, TaskPaircomp> &tasksToDoSet) {
+long generateTasks1(Graph_t &g, TaskPriorityQueue &tasksToDo){
     set<long> edgeSet;
-    std::atomic<int> removed{0}, added{0};
+    int removed=0, added=0;
     AdjacencyIterator nfirst, nend;
     VertexIterator v,vend;
     set<pair<Vertex, int>, vertexpaircomp> degreeSorted;
-    long numbOfShortPaths=0;
     int numbOfEdges=0;
-    for (tie(v, vend) = vertices(g); v != vend; v++) {
-        degreeSorted.insert(make_pair(*v, -degree(*v, g)));
-    }
-    set<Vertex> sourcesSet, destsSet;
-    set<Task *, TaskPaircomp> taskSet;
-    set<Edge> edgesToProcess;
-    for (auto p: degreeSorted) {
-        Vertex src = p.first;
-        sourcesSet.insert(src);
-        for (auto ve = boost::out_edges(src, g); ve.first != ve.second; ++ve.first) {
-            bool found = true;
-            Vertex dest = target(*ve.first, g);
-            if (src!=dest){
-                destsSet.insert(dest);
-                sourcesSet.insert(dest);
-                long key = (src << 32) + dest;
-                if (edgeSet.insert(key).second) {
-                    found = false;
-                }
-                key = (dest << 32) + src;
-                if (edgeSet.insert(key).second) {
-                    found = false;
-                }
-                if (!found) {
-                    // the edge have not been processed
-                    tie(nfirst, nend) = adjacent_vertices(dest, g);
-                    destsSet.insert(nfirst, nend);
-                    edgesToProcess.insert(*ve.first);
+    for(auto ve = edges(g);ve.first!=ve.second;++ve.first){
+        vector<Vertex> sources,dests;
+        set<Edge> edgesToProcess;
+        Vertex src=source(*(ve.first), g);
+        Vertex dst=target(*(ve.first),g);
+        sources.push_back(src);
+        for(auto e= adjacent_vertices(src,g);e.first!=e.second;++e.first){
+            sources.push_back(*(e.first));
+        }
+        dests.push_back(dst);
+        for(auto e= adjacent_vertices(dst,g);e.first!=e.second;++e.first){
+            dests.push_back(*(e.first));
+        }
+        edgesToProcess.insert(*(ve.first));
+        numbOfEdges +=edgesToProcess.size();
+        numbOfShortPaths +=sources.size()*dests.size();
+        auto task = new FullTask(src, sources, dests, edgesToProcess);
+        tasksToDo.try_add((Task *) task);
 
-                    added++;
-                } else {
-                    removed++;
-                }
-            } else {}
-        }
-        vector<Vertex> sources(sourcesSet.begin(), sourcesSet.end()), dests(destsSet.begin(), destsSet.end());
-        if (edgesToProcess.size() > 0) {
-            numbOfEdges +=edgesToProcess.size();
-            numbOfShortPaths +=sources.size()*destsSet.size();
-            FullTask *task = new FullTask(src, sources, dests, edgesToProcess);
-            tasksToDoSet.insert((Task *) task);
-        }
-        sourcesSet.clear();
-        destsSet.clear();
-        edgesToProcess.clear();
     }
-    cout<<"Number of tasks:"<<tasksToDoSet.size()<<" ,numbOfEdges="<<numbOfEdges<<", numbOfShortPaths="<<numbOfShortPaths<<endl;
+    cout<<"Number of tasks:"<<tasksToDo.size()<<" ,numVertices="<<num_vertices(g)<<" ,numbOfEdges="<<numbOfEdges<<", numbOfShortPaths="<<numbOfShortPaths<<endl;
     return numbOfShortPaths;
 }
 
@@ -803,8 +1079,8 @@ struct Predicate {// both edge and vertex
     typedef typename graph_traits<Graph_t>::vertex_descriptor Vertex;
     typedef typename graph_traits<Graph_t>::edge_descriptor Edge;
 
-    Predicate(Graph_t *g): g(g){};
-    Predicate(){};
+    explicit Predicate(Graph_t *g): g(g){};
+    Predicate()= default;
     bool operator()(Edge e) const      {return (*g)[e].active;}
     bool operator()(Vertex vd) const { return (*g)[vd].active; }
     Graph_t *g;
@@ -815,7 +1091,7 @@ using Filtered_Graph_t = boost::filtered_graph<Graph_t, Predicate, Predicate>;
 void k_core2(Graph_t &gin, Graph_t &gout, unsigned int k){
     VertexIterator v,vend;
     EdgeIterator e,eend;
-    Graph_t *pgraph=new Graph_t();
+    auto *pgraph=new Graph_t();
     vector<unsigned long> degrees(num_vertices(gin));
     map<Edge,bool> allEdges;
     set<pair<Vertex, int>, vertexpaircomp> degreeSorted;
@@ -917,7 +1193,8 @@ bool updateDistances(Graph_t &g, double &oldrescaling) {
     float maxdist=0.0, mindist=99999.9, sumDist=0.0, sumCurv=0.0, sum2Dist=0.0, sum2Curv=0.0;
     Edge maxEdge;
     for (auto eit = es.first; eit != es.second; ++eit) {
-        g[*eit].distance = g[*eit].distance * (1 - g[*eit].curv);
+        g[*eit].odistance=g[*eit].distance;
+        g[*eit].distance = g[*eit].distance * (1 - g[*eit].curv/2);
         if (g[*eit].distance > maxdist) {
             maxdist =g[*eit].distance;
             maxEdge = *eit;
@@ -930,13 +1207,14 @@ bool updateDistances(Graph_t &g, double &oldrescaling) {
         sumCurv +=g[*eit].curv;
         sum2Curv +=g[*eit].curv*g[*eit].curv;
     }
-    g[graph_bundle].avgDist = sumDist / num_edges(g);
-    g[graph_bundle].stdDist = sqrt(sum2Dist / num_edges(g) - g[graph_bundle].avgDist * g[graph_bundle].avgDist);
+    g[graph_bundle].avgDist = sumDist*1.0/ num_edges(g);
+    g[graph_bundle].stdDist = sqrt(sum2Dist*1.0/ num_edges(g) - g[graph_bundle].avgDist * g[graph_bundle].avgDist);
     g[graph_bundle].rescaling= 1.0/g[graph_bundle].avgDist;
     g[graph_bundle].rstdDist= g[graph_bundle].stdDist*g[graph_bundle].rescaling;
-    g[graph_bundle].avgCurv = sumCurv / num_edges(g) ;
-    g[graph_bundle].stdCurv = sqrt(sum2Curv / num_edges(g) - g[graph_bundle].avgCurv * g[graph_bundle].avgCurv);
-    cout << "maxdist:" << maxdist << ",mindist:" << mindist << ", maxEdge curv " << g[maxEdge].curv << endl;
+    g[graph_bundle].avgCurv = sumCurv*1.0/ num_edges(g) ;
+    g[graph_bundle].stdCurv = sqrt(sum2Curv*1.0 / num_edges(g) - g[graph_bundle].avgCurv * g[graph_bundle].avgCurv);
+
+    cout << "maxdist:" << source(maxEdge,g)<<":"<<target(maxEdge,g)<<"="<<maxdist<<endl;
     cout << "avgCurv=" << g[graph_bundle].avgCurv << ", stdCurv=" << g[graph_bundle].stdCurv << endl;
     cout << "avgDist=" << g[graph_bundle].avgDist << ", stdDist=" << g[graph_bundle].stdDist << endl;
     cout << "rescaling=" << g[graph_bundle].rescaling<<", rstdDist="<<g[graph_bundle].rstdDist<<endl;
@@ -944,9 +1222,9 @@ bool updateDistances(Graph_t &g, double &oldrescaling) {
     for (auto eit = es.first; eit != es.second; ++eit) {
         g[*eit].distance= g[*eit].distance*g[graph_bundle].rescaling;
         //Check surgery type 1
-        if ((g[*eit].distance <= EPS) && (!g[*eit].surgery)) { //we need a surgery of type 1
+/*        if ((g[*eit].distance <= EPS) && (!g[*eit].surgery)) { //we need a surgery of type 1
             Vertex src = source(*eit, g), dst = target(*eit, g);
-            surgery = true;
+            surgery = false;
             g[*eit].surgery = true;
             g[*eit].distance = EPS;
             cout << "Surgery Type 1: " << src << ":" << dst << ", Curvature:" << g[*eit].curv<<endl;
@@ -955,14 +1233,14 @@ bool updateDistances(Graph_t &g, double &oldrescaling) {
         if ((g[*eit].distance >= 1+3*g[graph_bundle].rstdDist) && (!g[*eit].surgery)){
             Vertex src = source(*eit, g), dst = target(*eit, g);
             cout << "Surgery Type 2: " << src << ":" << dst << ", Curvature:" << g[*eit].curv <<
-            ", Dist;"<< g[*eit].distance<<endl;
- //           surgery=true;
+                 ", Dist;"<< g[*eit].distance<<endl;
+            //           surgery=true;
 //            g[*eit].surgery=true;
 //            g[*eit].active=false;
 //            cout<<g[src].country<<":"<<g[dst].country<<","<<g[src].asnumber<<":"<<g[dst].asnumber<<endl;
             cout<<g[src].name<<":"<<g[dst].name<<endl;
 
-        }
+        }*/
     }
     oldrescaling = g[graph_bundle].rescaling;
     return surgery;
@@ -981,7 +1259,7 @@ bool triangle_checker(Graph_t &g,int type){
     set<Vertex> intersect;
     for (tie(v, vend) = vertices(g); v != vend; v++){
         for (tie(vAdj, vAdjEnd) = adjacent_vertices(*v, g); vAdj != vAdjEnd; vAdj++) {
-            intersect.empty();
+            intersect.clear();
             if (*v < *vAdj){
                 set_intersection(A[*v].begin(), A[*v].end(), A[*vAdj].begin(), A[*vAdj].end(),
                                  inserter(intersect, intersect.begin()));
@@ -1016,7 +1294,8 @@ bool triangle_checker(Graph_t &g,int type){
     return status;
 }
 
-void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path) {
+
+void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, const string& path, AlgoType algo) {
     Graph_t *ginter;
     double oldRescaling = 1.0;
     DistanceCache distanceCache(num_vertices(*g));
@@ -1025,13 +1304,14 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path) {
     ofstream logFile;
     ofstream outFile;
     atomic<int> runningTasksCount{0};
-    auto t1 = high_resolution_clock::now(), t2 = t1;
+    auto tt1 = high_resolution_clock::now(), t2 = tt1;
     long numOfShortestPaths;
 //    long numbOfShortPaths=generateTasks(*g, tasksToDoSet);
     for (int index = iterationIndex; index < iterationIndex + numIteration; index++) {
-        t1 = high_resolution_clock::now();
+        tt1 = high_resolution_clock::now();
         TaskPriorityQueue tasksToDo;
         numOfShortestPaths = generateTasks(*g, tasksToDo);
+//      numOfShortestPaths = generateTasks1(*g, tasksToDo);
         string logFilename = path + "/processed/logFile." + to_string(index + 1) + ".log";
         logFile.open(logFilename.c_str(), ofstream::out);
         string outFilename = path + "/processed/processed." + to_string(index + 1) + ".graphml";
@@ -1039,14 +1319,14 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path) {
         cout << "Index:" << index << " ";
         numProcessedVertex = 0;
         numProcessedEdge = 0;
-        int num_core = std::thread::hardware_concurrency();
-//int        num_core=1;
+//    uint num_core = std::thread::hardware_concurrency();
+        uint        num_core=1;
         int offset = 0;
         int k = 0;
 //    num_core=1;
         vector<thread> threads(num_core);
         for (int i = 0; i < num_core; i++) {
-            threads[i] = std::thread(process, i, g, &distanceCache, &tasksToDo, numOfShortestPaths, &runningTasksCount);
+            threads[i] = std::thread(process, algo, i, g, &distanceCache, &tasksToDo, &runningTasksCount);
         }
         for (int i = 0; i < num_core; i++) {
             threads[i].join();
@@ -1058,29 +1338,7 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path) {
             Predicate predicate(g);
             Filtered_Graph_t fg(*g, predicate, predicate);
             copy_graph(fg, *ginter);
-            dpout.property("label", get(&VertexType::label, *ginter));
-            dpout.property("X", get(&VertexType::X, *ginter));
-            dpout.property("Y", get(&VertexType::Y, *ginter));
-            dpout.property("meta", get(&VertexType::name, *ginter));
-            dpout.property("lat", get(&VertexType::lat, *ginter));
-            dpout.property("long", get(&VertexType::longi, *ginter));
-            dpout.property("r", get(&VertexType::r, *ginter));
-            dpout.property("g", get(&VertexType::g, *ginter));
-            dpout.property("b", get(&VertexType::b, *ginter));
-            dpout.property("x", get(&VertexType::x, *ginter));
-            dpout.property("y", get(&VertexType::y, *ginter));
-            dpout.property("size", get(&VertexType::size, *ginter));
-            dpout.property("Degré", get(&VertexType::degree, *ginter));
-            dpout.property("Modularity Class", get(&VertexType::cluster, *ginter));
-            dpout.property("Eccentricity", get(&VertexType::eccentricity, *ginter));
-            dpout.property("Closeness Centrality", get(&VertexType::closnesscentrality, *ginter));
-            dpout.property("Harmonic Closeness Centrality", get(&VertexType::harmonicclosnesscentrality, *ginter));
-            dpout.property("Betweenness Centrality", get(&VertexType::betweenesscentrality, *ginter));
-            dpout.property("dist", get(&EdgeType::dist, *ginter));
-            dpout.property("weight", get(&EdgeType::weight, *ginter));
-            dpout.property("distance", get(&EdgeType::distance, *ginter));
-            dpout.property("ot", get(&EdgeType::ot, *ginter));
-            dpout.property("curv", get(&EdgeType::curv, *ginter));
+            dpout = gettingProperties<Graph_t,VertexType,EdgeType >(*ginter);
             write_graphml(outFile, *ginter, dpout, true);
             (g)->clear();
             copy_graph(*ginter, *g);
@@ -1088,40 +1346,15 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, string path) {
 //            delete g;
 //            g = ginter;
         } else {
-            dpout.property("label", get(&VertexType::label, *g));
-            dpout.property("X", get(&VertexType::X, *g));
-            dpout.property("Y", get(&VertexType::Y, *g));
-            dpout.property("meta", get(&VertexType::name, *g));
-            dpout.property("lat", get(&VertexType::lat, *g));
-            dpout.property("long", get(&VertexType::longi, *g));
-            dpout.property("r", get(&VertexType::r, *g));
-            dpout.property("g", get(&VertexType::g, *g));
-            dpout.property("b", get(&VertexType::b, *g));
-            dpout.property("x", get(&VertexType::x, *g));
-            dpout.property("y", get(&VertexType::y, *g));
-            dpout.property("size", get(&VertexType::size, *g));
-            dpout.property("Degré", get(&VertexType::degree, *g));
-            dpout.property("Modularity Class", get(&VertexType::cluster, *g));
-            dpout.property("Eccentricity", get(&VertexType::eccentricity, *g));
-            dpout.property("Closeness Centrality", get(&VertexType::closnesscentrality, *g));
-            dpout.property("Harmonic Closeness Centrality", get(&VertexType::harmonicclosnesscentrality, *g));
-            dpout.property("Betweenness Centrality", get(&VertexType::betweenesscentrality, *g));
-            dpout.property("dist", get(&EdgeType::dist, *g));
-            dpout.property("weight", get(&EdgeType::weight, *g));
-            dpout.property("distance", get(&EdgeType::distance, *g));
-            dpout.property("ot", get(&EdgeType::ot, *g));
-            dpout.property("curv", get(&EdgeType::curv, *g));
+            dpout = gettingProperties<Graph_t,VertexType,EdgeType>(*g);
             write_graphml(outFile, *g, dpout, true);
-
         }
 
 //        write_graphml(outFile, *g, dpout, true);
-
-
         logFile.close();
         outFile.close();
         t2 = high_resolution_clock::now();
-        auto executionTime = duration_cast<microseconds>(t2 - t1);
+        auto executionTime = duration_cast<microseconds>(t2 - tt1);
         cout << "Execution Time=" << executionTime.count() << ", avg per node="
              << executionTime.count() * 1.0 / num_vertices(*g) << endl;
         cout << "avg per link=" << executionTime.count() * 1.0 / num_edges(*g) << ", avg per path="

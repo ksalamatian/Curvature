@@ -5,194 +5,321 @@
 		<Option title="Curvature"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\usr\;CMake Files\..\..\usr\local\;CMake Files\..\..\usr\local\lib\;CMake Files\..\..\usr\local\lib\cmake\;CMake Files\..\..\usr\local\lib\cmake\Boost-1.83.0\;CMake Files\..\..\usr\local\lib\cmake\boost_headers-1.83.0\;CMake Files\..\..\usr\local\lib\cmake\boost_graph-1.83.0\;CMake Files\..\..\usr\local\lib\cmake\boost_regex-1.83.0\;CMake Files\..\..\usr\local\lib\cmake\boost_iostreams-1.83.0\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug"/>
+				<Option working_dir="/tmp/tmp.4Q7UBHjILf/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="rebuild_cache">
-				<Option working_dir="/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="Curvature">
-				<Option output="/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Curvature" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/usr/include/tbb"/>
-					<Add directory="/usr/include/c++/5"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
-					<Add directory="/usr/include/c++/5/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 Curvature"/>
-					<CompileFile command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="Curvature/fast">
-				<Option output="/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Curvature" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/usr/include/tbb"/>
-					<Add directory="/usr/include/c++/5"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
-					<Add directory="/usr/include/c++/5/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 Curvature/fast"/>
-					<CompileFile command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="test">
-				<Option output="/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/test" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/usr/include/tbb"/>
-					<Add directory="/usr/include/c++/5"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
-					<Add directory="/usr/include/c++/5/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 test"/>
-					<CompileFile command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="test/fast">
-				<Option output="/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/test" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/usr/include/tbb"/>
-					<Add directory="/usr/include/c++/5"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
-					<Add directory="/usr/include/c++/5/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 test/fast"/>
-					<CompileFile command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="correctFile">
-				<Option output="/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/correctFile" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/usr/include/tbb"/>
-					<Add directory="/usr/include/c++/5"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
-					<Add directory="/usr/include/c++/5/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 correctFile"/>
-					<CompileFile command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="correctFile/fast">
-				<Option output="/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/correctFile" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/usr/include/tbb"/>
-					<Add directory="/usr/include/c++/5"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
-					<Add directory="/usr/include/c++/5/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 correctFile/fast"/>
-					<CompileFile command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug"/>
+				<Option working_dir="/tmp/tmp.4Q7UBHjILf/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j48 -f &quot;/home/kave/tmp/tmp.tV16tJC8mX/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="test">
+				<Option output="/tmp/tmp.4Q7UBHjILf/cmake-build-debug/test" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.4Q7UBHjILf/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 test"/>
+					<CompileFile command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="test/fast">
+				<Option output="/tmp/tmp.4Q7UBHjILf/cmake-build-debug/test" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.4Q7UBHjILf/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 test/fast"/>
+					<CompileFile command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Regular">
+				<Option output="/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Regular" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.4Q7UBHjILf/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_GRAPH_NO_LIB"/>
+					<Add option="-DBOOST_GRAPH_DYN_LINK"/>
+					<Add option="-DBOOST_REGEX_NO_LIB"/>
+					<Add option="-DBOOST_REGEX_DYN_LINK"/>
+					<Add option="-DBOOST_IOSTREAMS_NO_LIB"/>
+					<Add option="-DBOOST_IOSTREAMS_DYN_LINK"/>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 Regular"/>
+					<CompileFile command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Regular/fast">
+				<Option output="/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Regular" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.4Q7UBHjILf/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_GRAPH_NO_LIB"/>
+					<Add option="-DBOOST_GRAPH_DYN_LINK"/>
+					<Add option="-DBOOST_REGEX_NO_LIB"/>
+					<Add option="-DBOOST_REGEX_DYN_LINK"/>
+					<Add option="-DBOOST_IOSTREAMS_NO_LIB"/>
+					<Add option="-DBOOST_IOSTREAMS_DYN_LINK"/>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 Regular/fast"/>
+					<CompileFile command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/tmp/tmp.4Q7UBHjILf/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Road">
+				<Option output="/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Road" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.4Q7UBHjILf/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_GRAPH_NO_LIB"/>
+					<Add option="-DBOOST_GRAPH_DYN_LINK"/>
+					<Add option="-DBOOST_REGEX_NO_LIB"/>
+					<Add option="-DBOOST_REGEX_DYN_LINK"/>
+					<Add option="-DBOOST_IOSTREAMS_NO_LIB"/>
+					<Add option="-DBOOST_IOSTREAMS_DYN_LINK"/>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 Road"/>
+					<CompileFile command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Road/fast">
+				<Option output="/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Road" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.4Q7UBHjILf/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_GRAPH_NO_LIB"/>
+					<Add option="-DBOOST_GRAPH_DYN_LINK"/>
+					<Add option="-DBOOST_REGEX_NO_LIB"/>
+					<Add option="-DBOOST_REGEX_DYN_LINK"/>
+					<Add option="-DBOOST_IOSTREAMS_NO_LIB"/>
+					<Add option="-DBOOST_IOSTREAMS_DYN_LINK"/>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 Road/fast"/>
+					<CompileFile command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Bgp">
+				<Option output="/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Bgp" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.4Q7UBHjILf/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_GRAPH_NO_LIB"/>
+					<Add option="-DBOOST_GRAPH_DYN_LINK"/>
+					<Add option="-DBOOST_REGEX_NO_LIB"/>
+					<Add option="-DBOOST_REGEX_DYN_LINK"/>
+					<Add option="-DBOOST_IOSTREAMS_NO_LIB"/>
+					<Add option="-DBOOST_IOSTREAMS_DYN_LINK"/>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 Bgp"/>
+					<CompileFile command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Bgp/fast">
+				<Option output="/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Bgp" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.4Q7UBHjILf/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_GRAPH_NO_LIB"/>
+					<Add option="-DBOOST_GRAPH_DYN_LINK"/>
+					<Add option="-DBOOST_REGEX_NO_LIB"/>
+					<Add option="-DBOOST_REGEX_DYN_LINK"/>
+					<Add option="-DBOOST_IOSTREAMS_NO_LIB"/>
+					<Add option="-DBOOST_IOSTREAMS_DYN_LINK"/>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 Bgp/fast"/>
+					<CompileFile command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j60 -f &quot;/tmp/tmp.4Q7UBHjILf/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/kave/tmp/tmp.tV16tJC8mX/correctFile.cpp">
-			<Option target="correctFile"/>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/bgp.cpp">
+			<Option target="Bgp"/>
 		</Unit>
-		<Unit filename="/home/kave/tmp/tmp.tV16tJC8mX/main.cpp">
-			<Option target="Curvature"/>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/curvatureHandler.h">
+			<Option target="Regular"/>
+			<Option target="Road"/>
+			<Option target="Bgp"/>
 		</Unit>
-		<Unit filename="/home/kave/tmp/tmp.tV16tJC8mX/test1.cpp">
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/regular.cpp">
+			<Option target="Regular"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/road.cpp">
+			<Option target="Road"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/test.cpp">
 			<Option target="test"/>
 		</Unit>
-		<Unit filename="/home/kave/tmp/tmp.tV16tJC8mX/CMakeLists.txt">
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/BoostDetectToolset-1.83.0.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/Boost-1.83.0/BoostConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\Boost-1.83.0\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/Boost-1.83.0/BoostConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\Boost-1.83.0\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/boost_headers-1.83.0/boost_headers-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\boost_headers-1.83.0\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/boost_headers-1.83.0/boost_headers-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\boost_headers-1.83.0\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/boost_graph-1.83.0/boost_graph-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\boost_graph-1.83.0\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/boost_graph-1.83.0/boost_graph-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\boost_graph-1.83.0\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/boost_graph-1.83.0/libboost_graph-variant-shared.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\boost_graph-1.83.0\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/boost_graph-1.83.0/libboost_graph-variant-static.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\boost_graph-1.83.0\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/boost_regex-1.83.0/boost_regex-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\boost_regex-1.83.0\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/boost_regex-1.83.0/boost_regex-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\boost_regex-1.83.0\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/boost_regex-1.83.0/libboost_regex-variant-shared.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\boost_regex-1.83.0\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/boost_regex-1.83.0/libboost_regex-variant-static.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\boost_regex-1.83.0\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/boost_iostreams-1.83.0/boost_iostreams-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\boost_iostreams-1.83.0\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/boost_iostreams-1.83.0/boost_iostreams-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\boost_iostreams-1.83.0\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/boost_iostreams-1.83.0/libboost_iostreams-variant-shared.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\boost_iostreams-1.83.0\"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.4Q7UBHjILf/../../usr/local/lib/cmake/boost_iostreams-1.83.0/libboost_iostreams-variant-static.cmake">
+			<Option virtualFolder="CMake Files\..\..\usr\local\lib\cmake\boost_iostreams-1.83.0\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>

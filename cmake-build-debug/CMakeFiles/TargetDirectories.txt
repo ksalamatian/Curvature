@@ -1,7 +1,0 @@
-/Users/ksalamatian/CLionProjects/NewCurvature/cmake-build-debug/CMakeFiles/Curvature.dir
-/Users/ksalamatian/CLionProjects/NewCurvature/cmake-build-debug/CMakeFiles/correctFile.dir
-/Users/ksalamatian/CLionProjects/NewCurvature/cmake-build-debug/CMakeFiles/test.dir
-/Users/ksalamatian/CLionProjects/NewCurvature/cmake-build-debug/CMakeFiles/regular.dir
-/Users/ksalamatian/CLionProjects/NewCurvature/cmake-build-debug/CMakeFiles/singleCurvature.dir
-/Users/ksalamatian/CLionProjects/NewCurvature/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/ksalamatian/CLionProjects/NewCurvature/cmake-build-debug/CMakeFiles/rebuild_cache.dir
