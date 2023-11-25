@@ -1,5 +1,0 @@
-/home/kave/tmp/tmp.0HGoF3We2e/cmake-build-remote-cmake/CMakeFiles/rebuild_cache.dir
-/home/kave/tmp/tmp.0HGoF3We2e/cmake-build-remote-cmake/CMakeFiles/Curvature.dir
-/home/kave/tmp/tmp.0HGoF3We2e/cmake-build-remote-cmake/CMakeFiles/test.dir
-/home/kave/tmp/tmp.0HGoF3We2e/cmake-build-remote-cmake/CMakeFiles/correctFile.dir
-/home/kave/tmp/tmp.0HGoF3We2e/cmake-build-remote-cmake/CMakeFiles/edit_cache.dir
