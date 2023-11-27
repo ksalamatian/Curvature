@@ -11,7 +11,7 @@ endif()
 #set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 FIND_PACKAGE( Boost COMPONENTS graph iostreams)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -pthread -g")
+set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra -pthread -g")
 #set(CMAKE_CXX_FLAGS "-Wall -Wextra -pthread -g")
 #INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Headers/ )
 
@@ -23,7 +23,7 @@ add_executable(Bgp bgp.cpp curvatureHandler.h)
 add_executable(Road road.cpp curvatureHandler.h)
 add_executable(Regular regular.cpp curvatureHandler.h)
 #add_executable(Python ricci.cpp ricci.h)
-add_executable(test test.cpp)
+#add_executable(test test.cpp)
 #add_executable(Prot prot.cpp curvatureHandler.h)
 
 #add_executable(regular regular.cpp curvatureHandler.h GraphSpecial.h)

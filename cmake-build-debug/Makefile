@@ -130,19 +130,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named test
-
-# Build rule for target.
-test: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test
-.PHONY : test
-
-# fast build rule for target.
-test/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/build
-.PHONY : test/fast
-
-#=============================================================================
 # Target rules for targets named Regular
 
 # Build rule for target.
@@ -169,17 +156,17 @@ Road/fast:
 .PHONY : Road/fast
 
 #=============================================================================
-# Target rules for targets named Bgp
+# Target rules for targets named BGP
 
 # Build rule for target.
-Bgp: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Bgp
-.PHONY : Bgp
+BGP: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 BGP
+.PHONY : BGP
 
 # fast build rule for target.
-Bgp/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Bgp.dir/build.make CMakeFiles/Bgp.dir/build
-.PHONY : Bgp/fast
+BGP/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BGP.dir/build.make CMakeFiles/BGP.dir/build
+.PHONY : BGP/fast
 
 bgp.o: bgp.cpp.o
 
@@ -187,7 +174,7 @@ bgp.o: bgp.cpp.o
 
 # target to build an object file
 bgp.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Bgp.dir/build.make CMakeFiles/Bgp.dir/bgp.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BGP.dir/build.make CMakeFiles/BGP.dir/bgp.cpp.o
 .PHONY : bgp.cpp.o
 
 bgp.i: bgp.cpp.i
@@ -196,7 +183,7 @@ bgp.i: bgp.cpp.i
 
 # target to preprocess a source file
 bgp.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Bgp.dir/build.make CMakeFiles/Bgp.dir/bgp.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BGP.dir/build.make CMakeFiles/BGP.dir/bgp.cpp.i
 .PHONY : bgp.cpp.i
 
 bgp.s: bgp.cpp.s
@@ -205,7 +192,7 @@ bgp.s: bgp.cpp.s
 
 # target to generate assembly for a file
 bgp.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Bgp.dir/build.make CMakeFiles/Bgp.dir/bgp.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BGP.dir/build.make CMakeFiles/BGP.dir/bgp.cpp.s
 .PHONY : bgp.cpp.s
 
 regular.o: regular.cpp.o
@@ -262,33 +249,6 @@ road.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Road.dir/build.make CMakeFiles/Road.dir/road.cpp.s
 .PHONY : road.cpp.s
 
-test.o: test.cpp.o
-
-.PHONY : test.o
-
-# target to build an object file
-test.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/test.cpp.o
-.PHONY : test.cpp.o
-
-test.i: test.cpp.i
-
-.PHONY : test.i
-
-# target to preprocess a source file
-test.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/test.cpp.i
-.PHONY : test.cpp.i
-
-test.s: test.cpp.s
-
-.PHONY : test.s
-
-# target to generate assembly for a file
-test.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/test.cpp.s
-.PHONY : test.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -297,10 +257,9 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... Bgp"
+	@echo "... BGP"
 	@echo "... Regular"
 	@echo "... Road"
-	@echo "... test"
 	@echo "... bgp.o"
 	@echo "... bgp.i"
 	@echo "... bgp.s"
@@ -310,9 +269,6 @@ help:
 	@echo "... road.o"
 	@echo "... road.i"
 	@echo "... road.s"
-	@echo "... test.o"
-	@echo "... test.i"
-	@echo "... test.s"
 .PHONY : help
 
 

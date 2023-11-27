@@ -131,7 +131,7 @@ public:
     uint *minSource;
     DistanceCache &distanceCache;
     GraphNodeArray(unsigned long graphSize, vector<Vertex> &sources, DistanceCache &distanceCache): graphSize(graphSize), sources(sources),
-                                                                                          distanceCache(distanceCache){
+                                                                                                    distanceCache(distanceCache){
         nodeArray = new double[graphSize*(sources.size()+1)];
         for (unsigned int i=0; graphSize * (sources.size() + 1) > i; nodeArray[i++]=std::numeric_limits<double>::infinity());
 //        minDist=&(nodeArray[graphSize*sources.size()]);
@@ -269,7 +269,7 @@ Perf SSSD_search(vector<vector<double>> *ddists, int offset, int QUANTA, vector<
             std::vector<double> d(num_vertices(g));
             try{
                 dijkstra_shortest_paths(g, src, weight_map(get(&EdgeType::distance, g)).distance_map(
-                                make_iterator_property_map(d.begin(), get(vertex_index, g))).visitor(vis));
+                        make_iterator_property_map(d.begin(), get(vertex_index, g))).visitor(vis));
             }
             catch (int exception) {
                 (*ddists)[i+offset][j]=d[dst];
@@ -284,8 +284,12 @@ class my_visitor : default_bfs_visitor {
 protected:
     set<Vertex> destSet;
 public:
-    my_visitor(set<Vertex> set)
-            : destSet(set) {};
+    my_visitor(set<Vertex> &inSet){
+
+        for (auto v:inSet) {
+            destSet.insert(v);
+        }
+    };
 
     void initialize_vertex(const Vertex &s, const Graph_t &g) const {}
 
@@ -309,23 +313,17 @@ public:
 
 Perf SSMD_search(vector<vector<double>> *ddists, int offset, int QUANTA, vector<Vertex> &ssources,
                  vector<Vertex> &dests, Graph_t &g, DistanceCache &distanceCache, GraphNodeFactory &graphNodeFact) {
-    vector<Vertex> sources(ssources.begin() + offset, ssources.begin() + offset + QUANTA);
     Perf perf;
-    perf.sourceSize = sources.size();
+    perf.sourceSize = QUANTA;
     perf.destSize = dests.size();
     int i=0,j=0;
-    std::vector<Vertex> p(num_vertices(g));
     std::vector<double> d(num_vertices(g));
-    set<Vertex> destsSet;
-    for( Vertex d:dests)
-        destsSet.insert(d);
-    for (Vertex src: sources) {
+    set<Vertex> destsSet(dests.begin(),dests.end());
+    for (int k=offset;k<offset+QUANTA;k++){
+        Vertex src=ssources[k];
         my_visitor vis(destsSet);
-        cout<<destsSet.size()<<endl;
-        fill(p.begin(),p.end(),0);
         fill(d.begin(),d.end(),std::numeric_limits<double>::infinity());
         try{
-            cout<<src<<endl;
 //            dijkstra_shortest_paths(g, src, weight_map(get(&EdgeType::distance, g)).distance_map(
 //                    make_iterator_property_map(d.begin(), get(vertex_index, g))).visitor(vis));
             dijkstra_shortest_paths(g, src, weight_map(get(&EdgeType::distance, g)).distance_map(
@@ -340,6 +338,7 @@ Perf SSMD_search(vector<vector<double>> *ddists, int offset, int QUANTA, vector<
         }
         i++;
     }
+    return perf;
 }
 
 
@@ -506,8 +505,6 @@ Perf MSMD_search(vector<vector<double>> *ddists, int offset, int QUANTA, vector<
             }
         }
     }
-    if (!costQueue->empty())
-        cout<<"BUG"<<endl;
     delete costQueue;
     return perf;
 }
@@ -597,7 +594,7 @@ long numbOfShortPaths=0;
 constexpr double EPS=1e-3;
 
 void calcCurvature1(double alpha, Vertex v, vector<vector<double>> &MatDist, set<Edge> &edges, vector<Vertex> &sources,
-                   vector<Vertex> &dests, Graph_t &g){
+                    vector<Vertex> &dests, Graph_t &g){
 
     vector<double> distributionA;
     vector<double> distributionB;
@@ -668,7 +665,7 @@ void calcCurvature1(double alpha, Vertex v, vector<vector<double>> &MatDist, set
                 distributionA[cnt] = 0;
             }else {
                 auto e = edge(src, s, g);
- //               cout << "distance= "<< g[e.first].distance << endl;
+                //               cout << "distance= "<< g[e.first].distance << endl;
                 distributionA[cnt] = g[e.first].distance;
                 sws = sws + g[e.first].distance;
             }
@@ -742,7 +739,7 @@ void calcCurvature(double alpha, Vertex v, vector<vector<double>> &MatDist, set<
         vector<vector<double>> vertDist(MatDist.size(), vector<double>(localDests.size(),
                                                                        std::numeric_limits<double>::infinity()));
         vector<vector<double>> optTransport(MatDist.size(), vector<double>(localDests.size(),
-                                                                       std::numeric_limits<double>::infinity()));
+                                                                           std::numeric_limits<double>::infinity()));
 
         int cntD = 0, destIndex = 0;
         for (Vertex dest: localDests) {
@@ -809,7 +806,7 @@ void calcCurvature(double alpha, Vertex v, vector<vector<double>> &MatDist, set<
 
 auto t1=high_resolution_clock::now();
 void process(AlgoType algo, int  threadIndex, Graph_t *g, DistanceCache *distanceCache, TaskPriorityQueue *tasksToDo,
-              atomic<int> *runningTaskCount) {
+             atomic<int> *runningTaskCount) {
     GraphNodeFactory graphNodeFact;
     Task *task;
     long totalTime1 = 0, totalTime2 = 0;
@@ -843,7 +840,7 @@ void process(AlgoType algo, int  threadIndex, Graph_t *g, DistanceCache *distanc
                         switch(algo){
                             case SSSD:
                                 perf1 = SSSD_search(MatDist1, 0, sources.size(), sources, dests, *g, *distanceCache,
-                                                graphNodeFact);
+                                                    graphNodeFact);
                                 break;
                             case SSMD:
                                 perf1 = SSMD_search(MatDist1, 0, sources.size(), sources, dests, *g, *distanceCache,
@@ -851,7 +848,7 @@ void process(AlgoType algo, int  threadIndex, Graph_t *g, DistanceCache *distanc
                                 break;
                             case MSMD:
                                 perf1 = MSMD_search(MatDist1, 0, sources.size(), sources, dests, *g, *distanceCache,
-                                            graphNodeFact);
+                                                    graphNodeFact);
                                 break;
                             default:
                                 perf1 = MSMD_search(MatDist1, 0, sources.size(), sources, dests, *g, *distanceCache,
@@ -869,7 +866,7 @@ void process(AlgoType algo, int  threadIndex, Graph_t *g, DistanceCache *distanc
                         auto begin = sources.begin();
                         for (int i = 0; i < sources.size(); i = i + QUANTA) {
                             auto *ptask = new PartialTask(sharedCnt, MatDist1, i,std::min(QUANTA, (int)sources.size()-i),s,
-                                                                 sources, dests, edges,*sharedCnt);
+                                                          sources, dests, edges,*sharedCnt);
                             tasksToDo->try_add((Task *) ptask);
                             (*sharedCnt)++;
                         }
@@ -915,7 +912,7 @@ void process(AlgoType algo, int  threadIndex, Graph_t *g, DistanceCache *distanc
                         for (Edge e:edges){
                             if (i==QUANTA){
                                 auto *ptask = new PartialCurvature(sharedCnt, partialTask->dists,j ,QUANTA, s, sources, dests,
-                                                                               partialEdges,*sharedCnt);
+                                                                   partialEdges,*sharedCnt);
                                 tasksToDo->try_add((Task *) ptask);
                                 (*sharedCnt)++;
                                 partialEdges.clear();
@@ -927,7 +924,7 @@ void process(AlgoType algo, int  threadIndex, Graph_t *g, DistanceCache *distanc
                         }
                         if (!partialEdges.empty()){
                             auto *ptask = new PartialCurvature(sharedCnt, partialTask->dists, j, partialEdges.size(), s, sources, dests,
-                                                                           partialEdges,*sharedCnt);
+                                                               partialEdges,*sharedCnt);
                             tasksToDo->try_add((Task *) ptask);
                             partialEdges.clear();
                         }
@@ -1038,8 +1035,6 @@ long generateTasks(Graph_t &g, TaskPriorityQueue &tasksToDo){
         destsSet.clear();
         edgesToProcess.clear();
     }
-    if (edgeSet.size()!= 2*num_edges(g))
-        cout<<"Edge Number Mismatch !"<<endl;
     cout<<"Number of tasks:"<<tasksToDo.size()<<" ,numVertices="<<num_vertices(g)<<" ,numbOfEdges="<<numbOfEdges<<", numbOfShortPaths="<<numbOfShortPaths<<endl;
     return numbOfShortPaths;
 }
@@ -1319,11 +1314,10 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, const string& 
         cout << "Index:" << index << " ";
         numProcessedVertex = 0;
         numProcessedEdge = 0;
-//    uint num_core = std::thread::hardware_concurrency();
-        uint        num_core=1;
+        uint num_core = std::thread::hardware_concurrency();
+//        uint        num_core=1;
         int offset = 0;
         int k = 0;
-//    num_core=1;
         vector<thread> threads(num_core);
         for (int i = 0; i < num_core; i++) {
             threads[i] = std::thread(process, algo, i, g, &distanceCache, &tasksToDo, &runningTasksCount);

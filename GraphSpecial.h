@@ -130,8 +130,6 @@ typedef Graph_Regular GraphSpecial;
 template <class myGraph, class myVertex, class myEdge>
 boost::dynamic_properties gettingProperties(myGraph& g) {
 
-    bool road = false;
-    bool bgp = true;
     boost::dynamic_properties dpout;
 
 /*    dpout.property("weight",get(&myEdge::lweight, g));

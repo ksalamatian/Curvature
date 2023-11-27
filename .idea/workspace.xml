@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
+  <component name="CMakeReloadState">
+    <option name="reloaded" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
     <generated>
-      <config projectName="Curvature" targetName="Validation" />
-      <config projectName="Curvature" targetName="Bgp" />
+      <config projectName="Curvature" targetName="Regular" />
+      <config projectName="Curvature" targetName="BGP" />
       <config projectName="Curvature" targetName="Road" />
     </generated>
   </component>
   <component name="CMakeSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" NO_GENERATOR="true" />
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4e2297f7-7f67-4d83-ad8f-333793188c14" name="Changes" comment="">
+    <list default="true" id="0c4846ac-9c66-4125-9739-77a61108c502" name="Changes" comment="New version">
+      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GraphSpecial.h" beforeDir="false" afterPath="$PROJECT_DIR$/GraphSpecial.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/directory-.-Debug-f5ebdc15457944623624.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Curvature.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Curvature.cbp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/curvatureHandler.h" beforeDir="false" afterPath="$PROJECT_DIR$/curvatureHandler.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/cylinder.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/cylinder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/processing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/regular.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/regular.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +39,7 @@
   </component>
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
+    <option name="clangWarnings" value="-Wno-unused-variable,-Wno-infinite-recursion,-Wno-array-bounds,-Werror=implicit-function-declaration,-Wshadow,-Wno-shadow-field-in-constructor-modified,-Wno-shadow-ivar,-Wuninitialized,-Wunused-label,-Wunused-lambda-capture,-Wno-sign-compare" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
@@ -51,46 +56,70 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2NGyRTeWS2jM0lbWKQHQgKB2jiy" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="cf.first.check.clang-format" value="false" />
-    <property name="cidr.known.project.marker" value="true" />
-    <property name="cmake.loaded.for.project" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="CPPToolchains" />
-  </component>
-  <component name="RunManager" selected="CMake Application.Validation">
-    <configuration name="Bgp" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="Bgp" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="Bgp">
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;SingleQueue&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/ksalamatian/CLionProjects/NewCurvature&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;CPPToolchains&quot;,
+    &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager" selected="CMake Application.Bgp">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BGP" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="BGP" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="BGP">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Road" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-P $PROJECT_DIR$/../Graphs/Regular -G $PROJECT_DIR$/../regular_3.00_10000.graphml -NI 30" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="Road" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="Road">
+    <configuration name="Bgp" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-P /home/ksalamatian -F graphdumps1554598943.1554599003.graphml -A SSMD -f filter" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="BGP" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="BGP">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Validation" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-P $PROJECT_DIR$/../Graphs/Regular -G $PROJECT_DIR$/../V2/SwissRoll_surgery1.graphml -NI 10" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="Validation" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="Validation">
+    <configuration name="Regular" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="Regular" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="Regular">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="Road" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-P $PROJECT_DIR$/../Graphs/Regular -G $PROJECT_DIR$/../regular_3.00_10000.graphml -NI 30" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="Road" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="Road">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Validation" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-P $PROJECT_DIR$/../Graphs/Regular -G $PROJECT_DIR$/../V2/SwissRoll_surgery1.graphml -NI 10" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="Validation" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="Validation">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <list>
       <item itemvalue="CMake Application.Bgp" />
+      <item itemvalue="CMake Application.BGP" />
+      <item itemvalue="CMake Application.Regular" />
       <item itemvalue="CMake Application.Road" />
       <item itemvalue="CMake Application.Validation" />
     </list>
@@ -98,29 +127,259 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="4e2297f7-7f67-4d83-ad8f-333793188c14" name="Changes" comment="" />
-      <created>1679304705057</created>
+      <changelist id="0c4846ac-9c66-4125-9739-77a61108c502" name="Changes" comment="" />
+      <created>1670620242127</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1679304705057</updated>
-      <workItem from="1679304706717" duration="1855000" />
-      <workItem from="1679402941926" duration="23021000" />
-      <workItem from="1679573329165" duration="7294000" />
-      <workItem from="1679657233633" duration="16161000" />
-      <workItem from="1680402809871" duration="3801000" />
-      <workItem from="1680407959898" duration="25351000" />
+      <updated>1670620242127</updated>
+      <workItem from="1670620243656" duration="9517000" />
+      <workItem from="1670958543338" duration="23015000" />
+      <workItem from="1671372534093" duration="11129000" />
+      <workItem from="1671487523145" duration="31362000" />
+      <workItem from="1672169907196" duration="4000" />
+      <workItem from="1672170205213" duration="10949000" />
+      <workItem from="1672763225075" duration="17000" />
+      <workItem from="1672763249102" duration="4437000" />
+      <workItem from="1672788202046" duration="56241000" />
+      <workItem from="1673876000094" duration="7911000" />
+      <workItem from="1674595959427" duration="22468000" />
+      <workItem from="1675443404306" duration="25235000" />
+      <workItem from="1675864525339" duration="23695000" />
+      <workItem from="1676099748038" duration="16802000" />
+      <workItem from="1676217799925" duration="1094000" />
+      <workItem from="1676373192341" duration="29872000" />
+      <workItem from="1676543455425" duration="20826000" />
+      <workItem from="1676674692547" duration="45957000" />
+      <workItem from="1676965882857" duration="13062000" />
+      <workItem from="1677054207081" duration="597000" />
+      <workItem from="1677279828937" duration="653000" />
+      <workItem from="1677596862560" duration="14569000" />
+      <workItem from="1678455074974" duration="27189000" />
+      <workItem from="1678611045828" duration="17109000" />
+      <workItem from="1678702033920" duration="103284000" />
+      <workItem from="1679497035146" duration="10959000" />
+      <workItem from="1679594344970" duration="37271000" />
+      <workItem from="1680479931059" duration="6575000" />
+      <workItem from="1680600088733" duration="6005000" />
+      <workItem from="1680813726837" duration="10003000" />
+      <workItem from="1680901791759" duration="5798000" />
+      <workItem from="1680907738309" duration="16949000" />
+      <workItem from="1681193516240" duration="2055000" />
+      <workItem from="1681307341211" duration="16998000" />
+      <workItem from="1681983543783" duration="31708000" />
+      <workItem from="1683562860992" duration="867000" />
+      <workItem from="1683564827359" duration="9863000" />
+      <workItem from="1683897730926" duration="10910000" />
+      <workItem from="1684220432888" duration="645000" />
+      <workItem from="1684221086202" duration="437000" />
+      <workItem from="1684221560829" duration="337000" />
+      <workItem from="1684222047357" duration="14925000" />
+      <workItem from="1684297891481" duration="5397000" />
+      <workItem from="1685441797894" duration="1854000" />
+      <workItem from="1685871721387" duration="167000" />
+      <workItem from="1687524513332" duration="607000" />
+      <workItem from="1689320024898" duration="5787000" />
+      <workItem from="1689780043898" duration="1133000" />
+      <workItem from="1690226520531" duration="596000" />
+      <workItem from="1691851523119" duration="53391000" />
+      <workItem from="1693381715743" duration="4951000" />
+      <workItem from="1696059012287" duration="2608000" />
+      <workItem from="1696781510802" duration="38000" />
+      <workItem from="1698174633915" duration="2036000" />
+      <workItem from="1698273571932" duration="588000" />
+      <workItem from="1698302079076" duration="11063000" />
+      <workItem from="1699179720388" duration="18541000" />
+      <workItem from="1699735275028" duration="4675000" />
+      <workItem from="1699744861789" duration="20595000" />
+      <workItem from="1700778491022" duration="18334000" />
+      <workItem from="1701080205732" duration="5263000" />
+      <workItem from="1701098283288" duration="115000" />
+      <workItem from="1701098411909" duration="870000" />
     </task>
+    <task id="LOCAL-00001" summary="New version">
+      <created>1672608636699</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1672608636699</updated>
+    </task>
+    <task id="LOCAL-00002" summary="New version">
+      <created>1672632594113</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1672632594113</updated>
+    </task>
+    <task id="LOCAL-00003" summary="New version">
+      <created>1672788408785</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1672788408785</updated>
+    </task>
+    <task id="LOCAL-00004" summary="New version">
+      <created>1673876076379</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1673876076379</updated>
+    </task>
+    <task id="LOCAL-00005" summary="New version">
+      <created>1673877201743</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1673877201743</updated>
+    </task>
+    <task id="LOCAL-00006" summary="New version">
+      <created>1674669421166</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1674669421166</updated>
+    </task>
+    <task id="LOCAL-00007" summary="New version">
+      <created>1675864604778</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1675864604778</updated>
+    </task>
+    <task id="LOCAL-00008" summary="New version">
+      <created>1675940837823</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1675940837823</updated>
+    </task>
+    <task id="LOCAL-00009" summary="New version">
+      <created>1676649350661</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1676649350661</updated>
+    </task>
+    <task id="LOCAL-00010" summary="New version">
+      <created>1676829414694</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1676829414694</updated>
+    </task>
+    <task id="LOCAL-00011" summary="New version">
+      <created>1676829662636</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1676829662636</updated>
+    </task>
+    <task id="LOCAL-00012" summary="New version">
+      <created>1676991582337</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1676991582337</updated>
+    </task>
+    <task id="LOCAL-00013" summary="New version">
+      <created>1677279862487</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1677279862487</updated>
+    </task>
+    <task id="LOCAL-00014" summary="New version">
+      <created>1677600185753</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1677600185753</updated>
+    </task>
+    <task id="LOCAL-00015" summary="New version">
+      <created>1678226732625</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1678226732625</updated>
+    </task>
+    <task id="LOCAL-00016" summary="New version">
+      <created>1678228615784</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1678228615784</updated>
+    </task>
+    <task id="LOCAL-00017" summary="New version">
+      <created>1678883737929</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1678883737929</updated>
+    </task>
+    <task id="LOCAL-00018" summary="New version">
+      <created>1679012050516</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1679012050516</updated>
+    </task>
+    <task id="LOCAL-00019" summary="New version">
+      <created>1679042130217</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1679042130217</updated>
+    </task>
+    <task id="LOCAL-00020" summary="New version">
+      <created>1679303392134</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1679303392134</updated>
+    </task>
+    <task id="LOCAL-00021" summary="New version">
+      <option name="closed" value="true" />
+      <created>1700866274858</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1700866274858</updated>
+    </task>
+    <task id="LOCAL-00022" summary="New version">
+      <option name="closed" value="true" />
+      <created>1700899474517</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1700899474517</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VCPKGProject">
+    <isAutomaticEditVcpkgJson value="false" />
+    <isAutomaticCheckingOnLaunch value="false" />
+    <isAutomaticFoundErrors value="true" />
+    <isAutomaticFoundErrors value="true" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="New version" />
+    <option name="LAST_COMMIT_MESSAGE" value="New version" />
+  </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <default-breakpoints>
-        <breakpoint enabled="true" type="CidrExceptionBreakpoint" />
-      </default-breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="CMakeRunConfiguration">
         <watch expression="gin-&gt;m_edges[0].m_property.dist" />
