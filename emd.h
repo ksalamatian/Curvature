@@ -42,8 +42,8 @@ int EMD_wrap(vector<double> &X, vector<double> &Y, vector<std::vector<double>> &
              vector<double> &alpha, vector<double> &beta, double &cost, int maxIter){
     using namespace lemon;
     uint64_t n, m, cur;
-    int n1=X.size();
-    int n2=Y.size();
+    uint64_t n1=X.size();
+    uint64_t n2=Y.size();
 
     typedef FullBipartiteDigraph Digraph;
     DIGRAPH_TYPEDEFS(Digraph);

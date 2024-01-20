@@ -49,8 +49,8 @@ struct Graph_Regular{
 struct Vertex_info_road {
     double X=0;
     double Y=0;
-    double x=0;
-    double y=0;
+    float x=0;
+    float y=0;
     std::string name;
     double lat=0;
     double longi=0;
@@ -155,7 +155,7 @@ boost::dynamic_properties gettingProperties(myGraph& g) {
 
 
 
-    /*dpout.property("label", get(&myVertex::label, g));
+/*    dpout.property("label", get(&myVertex::label, g));
     dpout.property("country", get(&myVertex::country, g));
     dpout.property("X", get(&myVertex::X, g));
     dpout.property("Y", get(&myVertex::Y, g));

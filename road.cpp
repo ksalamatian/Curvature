@@ -45,6 +45,7 @@ void readGraphMLFile (Graph_t& designG, std::string &fileName ) {
     inFile.close();
 }
 
+
 int main(int argc, char **argv)  {
     Graph_t *g=new Graph_t, *gin=new Graph_t, *ginter;
     string filename, path;
@@ -72,7 +73,9 @@ int main(int argc, char **argv)  {
 
     string pfilename=path+"/"+filename;
     readGraphMLFile(*gin,pfilename );
-    int numIteration=20;
+    int numIteration=500;
+    vector<Graph_t *> vect;
+//    preProcess(gin, vect);
     k_core2(*gin,*g, 2);
 
     double oldRescaling=1.0;

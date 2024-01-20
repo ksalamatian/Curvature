@@ -67,7 +67,7 @@ using CableFiltered_Graph_t = boost::filtered_graph<Graph_t, CablePredicate, Cab
 
 
 int main(int argc, char **argv)  {
-    Graph_t *g=new Graph_t, *gin=new Graph_t, *ginter,g2;
+    Graph_t *g=new Graph_t, *gin=new Graph_t, *ginter, *g2=new Graph_t;
     string filename, path,filter;
     int iterationIndex=0;
     AlgoType algo;
@@ -99,15 +99,15 @@ int main(int argc, char **argv)  {
     k_core2(*gin,*g, 2);
     CablePredicate predicate(g,filter);
     CableFiltered_Graph_t fg(*g, predicate, predicate);
-    copy_graph(fg,g2);
-    int negin=num_edges(*g), necable=num_edges(g2);
+    copy_graph(fg,*g2);
+    int negin=num_edges(*g), necable=num_edges(*g2);
     cout<<negin<<","<<necable<<endl;
 
 
     double oldRescaling=1.0;
-    int numIteration=10;
+    int numIteration=20;
 //    ricci_flow(g, numIteration, iterationIndex,path, algo);
-    ricci_flow(&g2, numIteration,iterationIndex,path,algo);
+    ricci_flow(g2, numIteration,iterationIndex,path,algo);
 
     return 0;
 

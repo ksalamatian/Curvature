@@ -11,8 +11,8 @@ endif()
 #set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 FIND_PACKAGE( Boost COMPONENTS graph iostreams)
-set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra -pthread -g")
-#set(CMAKE_CXX_FLAGS "-Wall -Wextra -pthread -g")
+#set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra -pthread -g")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -pthread -g")
 #INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Headers/ )
 
 #LINK_DIRECTORIES(/opt/homebrew/Cellar/boost/1.81.0_1/lib /opt/homebrew/Cellar/graph-tool/2.53/lib/python3.11/site-packages/graph_tool)

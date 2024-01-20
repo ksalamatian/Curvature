@@ -18,7 +18,7 @@
 #include "BlockingCollection.h"
 #include "emd.h"
 #include "GraphSpecial.h"
-#define ALPHA 0.98
+#define ALPHA 0.999
 using namespace boost;
 using namespace code_machina;
 using namespace std;
@@ -123,7 +123,7 @@ public:
 
 class GraphNodeArray{
 public:
-    unsigned long graphSize;
+    unsigned int graphSize;
     vector<Vertex> &sources;
     double *nodeArray;
 //    double *minDist;
@@ -137,7 +137,7 @@ public:
 //        minDist=&(nodeArray[graphSize*sources.size()]);
         minSource= new unsigned int[graphSize];
         settledCount=new uint[graphSize];
-        for (int i=0;i<graphSize;settledCount[i++]=0);
+        for (uint i=0;i<graphSize;settledCount[i++]=0);
     };
 
     ~GraphNodeArray(){
@@ -184,7 +184,6 @@ class GraphNodeFactory{
 public:
     GraphNodeFactory()= default;
     ~GraphNodeFactory(){
-        GraphNode *elem;
         while (!graphNodeQueue.empty()){
             delete graphNodeQueue.front();
             graphNodeQueue.pop();
@@ -229,62 +228,36 @@ struct myComp {
         return a->dist > b->dist;
     }
 };
+class SingleDest_visitor : default_bfs_visitor {
+protected:
+    Vertex dest;
+public:
+    SingleDest_visitor(Vertex dest)
+    : dest(dest) {};
 
-Perf SSSD_search(vector<vector<double>> *ddists, int offset, int QUANTA, vector<Vertex> &ssources,
-                 vector<Vertex> &dests, Graph_t &g, DistanceCache &distanceCache, GraphNodeFactory &graphNodeFact) {
-    vector<Vertex> sources(ssources.begin() + offset, ssources.begin() + offset + QUANTA);
-    Perf perf;
-    perf.sourceSize = sources.size();
-    perf.destSize = dests.size();
-    class my_visitor : default_bfs_visitor {
-    protected:
-        Vertex dest;
-    public:
-        my_visitor(Vertex dest)
-                : dest(dest) {};
+    void initialize_vertex(const Vertex &s, const Graph_t &g) const {}
 
-        void initialize_vertex(const Vertex &s, const Graph_t &g) const {}
+    void discover_vertex(const Vertex &s, const Graph_t &g) const {}
 
-        void discover_vertex(const Vertex &s, const Graph_t &g) const {}
+    void examine_vertex(const Vertex &s, const Graph_t &g) const {}
 
-        void examine_vertex(const Vertex &s, const Graph_t &g) const {}
+    void examine_edge(const Edge &e, const Graph_t &g) const {}
 
-        void examine_edge(const Edge &e, const Graph_t &g) const {}
+    void edge_relaxed(const Edge &e, const Graph_t &g) const {}
 
-        void edge_relaxed(const Edge &e, const Graph_t &g) const {}
+    void edge_not_relaxed(const Edge &e, const Graph_t &g) const {}
 
-        void edge_not_relaxed(const Edge &e, const Graph_t &g) const {}
-
-        void finish_vertex(const Vertex &s, const Graph_t &g) const {
-            if (dest == s)
-                throw (2);
-        }
-    };
-    int i=0,j=0;
-    for (Vertex src: sources) {
-        j=0;
-        for (Vertex dst: dests) {
-            my_visitor vis(dst);
-            std::vector<Vertex> p(num_vertices(g));
-            std::vector<double> d(num_vertices(g));
-            try{
-                dijkstra_shortest_paths(g, src, weight_map(get(&EdgeType::distance, g)).distance_map(
-                        make_iterator_property_map(d.begin(), get(vertex_index, g))).visitor(vis));
-            }
-            catch (int exception) {
-                (*ddists)[i+offset][j]=d[dst];
-            }
-            j++;
-        }
-        i++;
+    void finish_vertex(const Vertex &s, const Graph_t &g) const {
+        if (dest == s)
+            throw (2);
     }
-}
+};
 
-class my_visitor : default_bfs_visitor {
+class MultDest_visitor : default_bfs_visitor {
 protected:
     set<Vertex> destSet;
 public:
-    my_visitor(set<Vertex> &inSet){
+    MultDest_visitor(set<Vertex> &inSet){
 
         for (auto v:inSet) {
             destSet.insert(v);
@@ -311,6 +284,36 @@ public:
 };
 
 
+Perf SSSD_search(vector<vector<double>> *ddists, int offset, int QUANTA, vector<Vertex> &ssources,
+                 vector<Vertex> &dests, Graph_t &g, DistanceCache &distanceCache, GraphNodeFactory &graphNodeFact) {
+    vector<Vertex> sources(ssources.begin() + offset, ssources.begin() + offset + QUANTA);
+    Perf perf;
+    perf.sourceSize = sources.size();
+    perf.destSize = dests.size();
+
+    int i=0,j=0;
+    for (Vertex src: sources) {
+        j=0;
+        for (Vertex dst: dests) {
+      SingleDest_visitor vis(dst);
+            std::vector<Vertex> p(num_vertices(g));
+            std::vector<double> d(num_vertices(g));
+            try{
+                dijkstra_shortest_paths(g, src, weight_map(get(&EdgeType::distance, g)).distance_map(
+                        make_iterator_property_map(d.begin(), get(vertex_index, g))).visitor(vis));
+            }
+            catch (int exception) {
+                (*ddists)[i+offset][j]=d[dst];
+            }
+            j++;
+        }
+        i++;
+    }
+}
+
+
+
+
 Perf SSMD_search(vector<vector<double>> *ddists, int offset, int QUANTA, vector<Vertex> &ssources,
                  vector<Vertex> &dests, Graph_t &g, DistanceCache &distanceCache, GraphNodeFactory &graphNodeFact) {
     Perf perf;
@@ -321,7 +324,7 @@ Perf SSMD_search(vector<vector<double>> *ddists, int offset, int QUANTA, vector<
     set<Vertex> destsSet(dests.begin(),dests.end());
     for (int k=offset;k<offset+QUANTA;k++){
         Vertex src=ssources[k];
-        my_visitor vis(destsSet);
+        MultDest_visitor vis(destsSet);
         fill(d.begin(),d.end(),std::numeric_limits<double>::infinity());
         try{
 //            dijkstra_shortest_paths(g, src, weight_map(get(&EdgeType::distance, g)).distance_map(
@@ -782,6 +785,10 @@ void calcCurvature(double alpha, Vertex v, vector<vector<double>> &MatDist, set<
             g[e].ot = wd;
 //            float tmpDist=g[e].distance;
             g[e].curv = (1 - wd / g[e].distance)/(1-alpha);
+            if (g[e].curv >2.0){
+                cout<<"Issue:"<<source(e,g)<<","<< target(e,g)<<","<< g[e].distance<<","<<g[e].curv <<","<<wd<<endl;
+                g[e].curv=2.0;
+            }
         }
 //        cout<<wd<<","<<(1 - wd / g[e].distance)<<","<<g[e].curv<<endl;
 //        uA = (double) 1 / (sA - 1);
@@ -812,6 +819,8 @@ void process(AlgoType algo, int  threadIndex, Graph_t *g, DistanceCache *distanc
     long totalTime1 = 0, totalTime2 = 0;
     int QUANTA=120;
     long numberProcessedPath=0;
+    numProcessedPath=0;
+    threshold=0.05;
     std::chrono::nanoseconds elapsed=t1-t1;
     std::chrono::nanoseconds elapsed2=t1-t1;
     auto t2=t1;
@@ -954,9 +963,8 @@ void process(AlgoType algo, int  threadIndex, Graph_t *g, DistanceCache *distanc
 //                                elapsed).count()<<endl;
                         if (threshold * numbOfShortPaths < numProcessedPath){
                             threshold= threshold +0.05;
-                            cout<<"Time passsed to execute :"<< numProcessedPath*1.0/  numbOfShortPaths<<"% is "<<duration_cast<microseconds>(
-                                    elapsed).count()<<" and "<<duration_cast<microseconds>(elapsed2).count()<<","<<duration_cast<microseconds>(
-                                    elapsed).count()*1.0/(duration_cast<microseconds>(elapsed2).count()+duration_cast<microseconds>(elapsed).count())<<endl;
+//                            cout<<"Time passsed to execute :"<< numProcessedPath*100.0/  numbOfShortPaths<<"% is "<<duration_cast<microseconds>(
+//                                    elapsed).count()<<endl;
                         }
                     } else {
                         (*(partialOT->sharedCnt))--;
@@ -986,6 +994,7 @@ struct vertexpaircomp {
 long generateTasks(Graph_t &g, TaskPriorityQueue &tasksToDo){
     set<long> edgeSet;
     int removed=0, added=0;
+    numbOfShortPaths=0;
     AdjacencyIterator nfirst, nend;
     VertexIterator v,vend;
     set<pair<Vertex, int>, vertexpaircomp> degreeSorted;
@@ -1081,7 +1090,22 @@ struct Predicate {// both edge and vertex
     Graph_t *g;
 };
 
-using Filtered_Graph_t = boost::filtered_graph<Graph_t, Predicate, Predicate>;
+struct CompPredicate {// both edge and vertex
+    typedef typename graph_traits<Graph_t>::vertex_descriptor Vertex;
+    typedef typename graph_traits<Graph_t>::edge_descriptor Edge;
+
+    explicit CompPredicate(Graph_t *g, int comp, vector<int> &components): g(g), comp(comp), components(components){};
+    CompPredicate()= default;
+    bool operator()(Edge e) const      {
+        return ((components[source(e,*g)]==comp) && (components[target(e,*g)]==comp));}
+    bool operator()(Vertex vd) const { return components[vd]==comp;}
+    Graph_t *g;
+    int comp;
+    vector<int> components;
+};
+
+using Filtered_Graph_t = filtered_graph<Graph_t, Predicate, Predicate>;
+using CompFiltered_Graph_t = filtered_graph<Graph_t, CompPredicate, CompPredicate>;
 
 void k_core2(Graph_t &gin, Graph_t &gout, unsigned int k){
     VertexIterator v,vend;
@@ -1135,6 +1159,21 @@ void k_core2(Graph_t &gin, Graph_t &gout, unsigned int k){
     delete pgraph;
 }
 
+void preProcess(Graph_t *g, vector<Graph_t *> &vect){
+    vector<int> components(num_vertices(*g));
+    Graph_t G;
+    int num = connected_components(*g, &components[0]);
+    vect.resize(num);
+    for (int i=0;i<num;i++) {
+        Graph_t *gin=new Graph_t;
+        CompPredicate predicate(g, i, components);
+        CompFiltered_Graph_t fg(*g, predicate, predicate);
+        copy_graph(fg, *gin);
+        k_core2(*gin,G,2);
+    }
+}
+
+
 
 void calcStats(Graph_t &g, int componentNum, vector<int> &components) {
     double mindist = 999999.0;
@@ -1179,6 +1218,29 @@ void calcStats(Graph_t &g, int componentNum, vector<int> &components) {
     }
 }
 
+void mergeVertex(Vertex u, Vertex v, Graph_t &g){
+    Vertex uu,vv;
+    if (degree(u,g)>degree(v,g)){
+        uu=u;
+        vv=v;
+    } else {
+        uu=v;
+        vv=u;
+    }
+    g[uu].active=false;
+    typename graph_traits<Graph_t >::out_edge_iterator eit, eend;
+    property_map<Graph_t, edge_bundle_t>::type epmap = get(boost::edge_bundle, g);
+    for (tie(eit, eend)=out_edges(uu,g); eit != eend; ++eit) {
+        Vertex src = source(*eit, g);
+        Vertex tgt = target(*eit, g);
+//        g[*eit].active = false;
+        if ((!edge(vv, tgt, g).second) && (vv!=tgt)){
+            auto ee = add_edge(vv, tgt, g);
+            epmap[ee.first] = g[*eit];
+        }
+    }
+}
+
 bool updateDistances(Graph_t &g, double &oldrescaling) {
     auto es = edges(g);
     double delta = 0.1;
@@ -1186,16 +1248,27 @@ bool updateDistances(Graph_t &g, double &oldrescaling) {
     int numEdgesUnfiltered = 0;
     bool surgery = false;
     float maxdist=0.0, mindist=99999.9, sumDist=0.0, sumCurv=0.0, sum2Dist=0.0, sum2Curv=0.0;
-    Edge maxEdge;
+    float maxCurv=-10.0, minCurv=3.0;
+    Edge maxEdge, curvEdge,maxcurvEdge;
     for (auto eit = es.first; eit != es.second; ++eit) {
         g[*eit].odistance=g[*eit].distance;
         g[*eit].distance = g[*eit].distance * (1 - g[*eit].curv/2);
+        if (g[*eit].distance<=0.0)
+            cout<<"Issue:"<<source(*eit,g)<<","<< target(*eit,g)<<","<< g[*eit].distance<<","<<g[*eit].curv <<endl;
         if (g[*eit].distance > maxdist) {
             maxdist =g[*eit].distance;
             maxEdge = *eit;
         }
         if (g[*eit].distance < mindist) {
             mindist = g[*eit].distance;
+        }
+        if (g[*eit].curv < minCurv) {
+            minCurv = g[*eit].curv;
+            curvEdge=*eit;
+        }
+        if (g[*eit].curv > maxCurv) {
+            maxCurv = g[*eit].curv;
+            maxcurvEdge=*eit;
         }
         sumDist += g[*eit].distance;
         sum2Dist += g[*eit].distance * g[*eit].distance;
@@ -1210,6 +1283,8 @@ bool updateDistances(Graph_t &g, double &oldrescaling) {
     g[graph_bundle].stdCurv = sqrt(sum2Curv*1.0 / num_edges(g) - g[graph_bundle].avgCurv * g[graph_bundle].avgCurv);
 
     cout << "maxdist:" << source(maxEdge,g)<<":"<<target(maxEdge,g)<<"="<<maxdist<<endl;
+    cout << "maxCurv:" << source(maxcurvEdge,g)<<":"<<target(maxcurvEdge,g)<<"="<<maxCurv<<endl;
+    cout << "minCurv:" << source(curvEdge,g)<<":"<<target(curvEdge,g)<<"="<<minCurv<<endl;
     cout << "avgCurv=" << g[graph_bundle].avgCurv << ", stdCurv=" << g[graph_bundle].stdCurv << endl;
     cout << "avgDist=" << g[graph_bundle].avgDist << ", stdDist=" << g[graph_bundle].stdDist << endl;
     cout << "rescaling=" << g[graph_bundle].rescaling<<", rstdDist="<<g[graph_bundle].rstdDist<<endl;
@@ -1217,14 +1292,14 @@ bool updateDistances(Graph_t &g, double &oldrescaling) {
     for (auto eit = es.first; eit != es.second; ++eit) {
         g[*eit].distance= g[*eit].distance*g[graph_bundle].rescaling;
         //Check surgery type 1
-/*        if ((g[*eit].distance <= EPS) && (!g[*eit].surgery)) { //we need a surgery of type 1
+        if ((g[*eit].distance <= EPS) && (!g[*eit].surgery)) { //we need a surgery of type 1
             Vertex src = source(*eit, g), dst = target(*eit, g);
-            surgery = false;
+            surgery = true;
             g[*eit].surgery = true;
-            g[*eit].distance = EPS;
             cout << "Surgery Type 1: " << src << ":" << dst << ", Curvature:" << g[*eit].curv<<endl;
             cout<<g[src].name<<":"<<g[dst].name<<endl;
-        }
+            mergeVertex(src,dst,g);
+        }/*
         if ((g[*eit].distance >= 1+3*g[graph_bundle].rstdDist) && (!g[*eit].surgery)){
             Vertex src = source(*eit, g), dst = target(*eit, g);
             cout << "Surgery Type 2: " << src << ":" << dst << ", Curvature:" << g[*eit].curv <<
@@ -1305,8 +1380,7 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, const string& 
     for (int index = iterationIndex; index < iterationIndex + numIteration; index++) {
         tt1 = high_resolution_clock::now();
         TaskPriorityQueue tasksToDo;
-        numOfShortestPaths = generateTasks(*g, tasksToDo);
-//      numOfShortestPaths = generateTasks1(*g, tasksToDo);
+        numOfShortestPaths = generateTasks(*g, tasksToDo);//      numOfShortestPaths = generateTasks1(*g, tasksToDo);
         string logFilename = path + "/processed/logFile." + to_string(index + 1) + ".log";
         logFile.open(logFilename.c_str(), ofstream::out);
         string outFilename = path + "/processed/processed." + to_string(index + 1) + ".graphml";
@@ -1334,16 +1408,16 @@ void ricci_flow(Graph_t *g, int numIteration, int iterationIndex, const string& 
             copy_graph(fg, *ginter);
             dpout = gettingProperties<Graph_t,VertexType,EdgeType >(*ginter);
             write_graphml(outFile, *ginter, dpout, true);
-            (g)->clear();
-            copy_graph(*ginter, *g);
-//            g->clear();
-//            delete g;
-//            g = ginter;
+//            (g)->clear();
+//            copy_graph(*ginter, *g);
+            g->clear();
+            delete g;
+            g = ginter;
         } else {
             dpout = gettingProperties<Graph_t,VertexType,EdgeType>(*g);
             write_graphml(outFile, *g, dpout, true);
         }
-
+//        triangle_checker(*g,0);
 //        write_graphml(outFile, *g, dpout, true);
         logFile.close();
         outFile.close();
