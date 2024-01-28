@@ -71,7 +71,7 @@ int main(int argc, char **argv)  {
 
     string pfilename=path+"/"+filename;
     readGraphMLFile(*gin,pfilename );
-    int numIteration=100;
+    int numIteration=1000;
     k_core2(*gin,*g, 2);
 
 

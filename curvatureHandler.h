@@ -2,15 +2,12 @@
 #define CURVATURE_CURVATUREHANDLER_H
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_traits.hpp>
-#include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graphml.hpp>
 #include <boost/graph/filtered_graph.hpp>
 #include <boost/graph/connected_components.hpp>
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/copy.hpp>
 #include <boost/multi_index/composite_key.hpp>
-#include <boost/multi_index/member.hpp>
-#include <boost/multi_index/mem_fun.hpp>
 #include <atomic>
 #include <queue>
 #include <thread>
@@ -18,7 +15,7 @@
 #include "BlockingCollection.h"
 #include "emd.h"
 #include "GraphSpecial.h"
-#define ALPHA 0.999
+#define ALPHA 0.99999
 using namespace boost;
 using namespace code_machina;
 using namespace std;
@@ -27,7 +24,7 @@ using std::chrono::duration_cast;
 using std::chrono::duration;
 using std::chrono::milliseconds;
 using std::chrono::microseconds;
-
+#include <algorithm>
 
 class DistanceCache{
 private:
@@ -38,8 +35,7 @@ public:
 //        distanceMat=(float *)calloc(size, sizeof(float));
     }
     ~DistanceCache(){
-        if (distanceMat != nullptr)
-            delete distanceMat;
+        delete distanceMat;
     }
 
 };
@@ -58,7 +54,7 @@ public:
 
 class EdgeType:public EdgeSpecial {
 public:
-    double dist=1.0;
+    float dist=1.0;
     int weight= 1;
     double distance=1.0;
     float edist=1.0;
@@ -133,7 +129,7 @@ public:
     GraphNodeArray(unsigned long graphSize, vector<Vertex> &sources, DistanceCache &distanceCache): graphSize(graphSize), sources(sources),
                                                                                                     distanceCache(distanceCache){
         nodeArray = new double[graphSize*(sources.size()+1)];
-        for (unsigned int i=0; graphSize * (sources.size() + 1) > i; nodeArray[i++]=std::numeric_limits<double>::infinity());
+        fill_n(nodeArray,graphSize*(sources.size()+1),numeric_limits<double>::infinity());
 //        minDist=&(nodeArray[graphSize*sources.size()]);
         minSource= new unsigned int[graphSize];
         settledCount=new uint[graphSize];
@@ -594,7 +590,7 @@ atomic<long>  numProcessedVertex{0}, numProcessedEdge{0}, numProcessedPath{0};
 atomic<float> threshold{0.05};
 long numbOfShortPaths=0;
 
-constexpr double EPS=1e-3;
+constexpr double EPS=1e-4;
 
 void calcCurvature1(double alpha, Vertex v, vector<vector<double>> &MatDist, set<Edge> &edges, vector<Vertex> &sources,
                     vector<Vertex> &dests, Graph_t &g){
@@ -705,12 +701,13 @@ void calcCurvature1(double alpha, Vertex v, vector<vector<double>> &MatDist, set
             g[e].curv = 9999.0;
             cout<<"PROBLEM"<<endl;
         } else {
-            float tmpDist=g[e].distance;
+/*            float tmpDist=g[e].distance;
             if (tmpDist < EPS) {
                 g[e].curv = g[graph_bundle].avgCurv;
-            } else {
+            } else {*
                 g[e].curv = 1 - wd / g[e].distance;
-            }
+            }*/
+            g[e].curv = 1 - wd / g[e].distance;
         }
         if (isinf(g[e].curv))
             cout<<"BUG"<<endl;
@@ -758,20 +755,20 @@ void calcCurvature(double alpha, Vertex v, vector<vector<double>> &MatDist, set<
 
         int sA = vertDist.size(), sB = vertDist[0].size();
         //if (sB > 1) {
-
-        double uA = (double) (1 - alpha) / (sA - 1);
-        double uB = (double) (1 - alpha) / (sB - 1);
+        double effectiveAlpha=max(alpha,1-g[e].distance/10);
+        double uA = (double) (1 - effectiveAlpha) / (sA - 1);
+        double uB = (double) (1 - effectiveAlpha) / (sB - 1);
         vector<double> distributionA(sA,uA);
         vector<double> distributionB(sB,uB);
         auto wrapIter=find(sources.begin(), sources.end(), src);
         long index;
         if (wrapIter != sources.end()){
             index= wrapIter - sources.begin();
-            distributionA[index] = alpha;
+            distributionA[index] = effectiveAlpha;
         } else {
             cout<<"BUG"<<endl;
         }
-        distributionB[destIndex] = alpha;
+        distributionB[destIndex] = effectiveAlpha;
         double cost;
 
         wd = compute_EMD(distributionA, distributionB, vertDist);
@@ -784,10 +781,10 @@ void calcCurvature(double alpha, Vertex v, vector<vector<double>> &MatDist, set<
         } else {
             g[e].ot = wd;
 //            float tmpDist=g[e].distance;
-            g[e].curv = (1 - wd / g[e].distance)/(1-alpha);
+            g[e].curv = (1 - wd /g[e].distance)/(1-effectiveAlpha);
             if (g[e].curv >2.0){
                 cout<<"Issue:"<<source(e,g)<<","<< target(e,g)<<","<< g[e].distance<<","<<g[e].curv <<","<<wd<<endl;
-                g[e].curv=2.0;
+                g[e].curv=1.99;
             }
         }
 //        cout<<wd<<","<<(1 - wd / g[e].distance)<<","<<g[e].curv<<endl;
@@ -1299,7 +1296,8 @@ bool updateDistances(Graph_t &g, double &oldrescaling) {
             cout << "Surgery Type 1: " << src << ":" << dst << ", Curvature:" << g[*eit].curv<<endl;
             cout<<g[src].name<<":"<<g[dst].name<<endl;
             mergeVertex(src,dst,g);
-        }/*
+        }
+        /*
         if ((g[*eit].distance >= 1+3*g[graph_bundle].rstdDist) && (!g[*eit].surgery)){
             Vertex src = source(*eit, g), dst = target(*eit, g);
             cout << "Surgery Type 2: " << src << ":" << dst << ", Curvature:" << g[*eit].curv <<

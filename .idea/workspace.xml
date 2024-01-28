@@ -12,7 +12,7 @@
   <component name="CMakeRunConfigurationManager">
     <generated>
       <config projectName="Curvature" targetName="Regular" />
-      <config projectName="Curvature" targetName="BGP" />
+      <config projectName="Curvature" targetName="Bgp" />
       <config projectName="Curvature" targetName="Road" />
     </generated>
   </component>
@@ -25,12 +25,31 @@
     <list default="true" id="0c4846ac-9c66-4125-9739-77a61108c502" name="Changes" comment="New version">
       <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GraphSpecial.h" beforeDir="false" afterPath="$PROJECT_DIR$/GraphSpecial.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/directory-.-Debug-f5ebdc15457944623624.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Curvature.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Curvature.cbp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/curvatureHandler.h" beforeDir="false" afterPath="$PROJECT_DIR$/curvatureHandler.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.10.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.10.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.11.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.11.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.12.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.12.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.13.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.13.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.14.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.14.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.15.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.15.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.16.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.16.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.17.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.17.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.18.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.18.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.19.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.19.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.2.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.2.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.20.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.20.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.3.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.3.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.4.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.4.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.5.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.5.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.6.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.6.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.7.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.7.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.8.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.8.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processed/processed.9.graphml" beforeDir="false" afterPath="$PROJECT_DIR$/processed/processed.9.graphml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/regular.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/regular.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +72,14 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/GraphSpecial.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/bgp.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/curvatureHandler.h" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="qj650erp" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -67,46 +94,47 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;CMake Application.Bgp.executor&quot;: &quot;Debug&quot;,
+    &quot;CMake Application.Regular.executor&quot;: &quot;Debug&quot;,
+    &quot;CMake Application.Road.executor&quot;: &quot;Debug&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;SingleQueue&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/ksalamatian/CLionProjects/NewCurvature&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/kave/CLionProjects/NewCurvature&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;CPPToolchains&quot;,
     &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="CMake Application.Bgp">
+  <component name="RunManager" selected="CMake Application.Regular">
     <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="CLION.EXTERNAL.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BGP" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="BGP" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="BGP">
+    <configuration name="Bgp" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-P $USER_HOME$/Downloads/jigsaw -F graphdumps1199167200.1199170800.graphml -A SSMD -f filter" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="Bgp" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="Bgp">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Bgp" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-P /home/ksalamatian -F graphdumps1554598943.1554599003.graphml -A SSMD -f filter" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="BGP" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="BGP">
+    <configuration name="Regular" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-P $USER_HOME$/Downloads -F args.type_3_10000.graphml -A SSMD -f filter" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="Regular" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="Regular">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Regular" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="Regular" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="Regular">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Road" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-P $PROJECT_DIR$/../Graphs/Regular -G $PROJECT_DIR$/../regular_3.00_10000.graphml -NI 30" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="Road" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="Road">
+    <configuration name="Road" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-P $PROJECT_DIR$ -F roadnetwork7.graphml -A SSMD -NI 30" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Curvature" TARGET_NAME="Road" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Curvature" RUN_TARGET_NAME="Road">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -118,7 +146,6 @@
     </configuration>
     <list>
       <item itemvalue="CMake Application.Bgp" />
-      <item itemvalue="CMake Application.BGP" />
       <item itemvalue="CMake Application.Regular" />
       <item itemvalue="CMake Application.Road" />
       <item itemvalue="CMake Application.Validation" />
@@ -194,7 +221,18 @@
       <workItem from="1700778491022" duration="18334000" />
       <workItem from="1701080205732" duration="5263000" />
       <workItem from="1701098283288" duration="115000" />
-      <workItem from="1701098411909" duration="870000" />
+      <workItem from="1701098411909" duration="9815000" />
+      <workItem from="1701263492493" duration="8361000" />
+      <workItem from="1701558713354" duration="14729000" />
+      <workItem from="1702498083898" duration="585000" />
+      <workItem from="1703198707770" duration="15771000" />
+      <workItem from="1703777810702" duration="39000" />
+      <workItem from="1704043501337" duration="34609000" />
+      <workItem from="1705271352258" duration="6879000" />
+      <workItem from="1705619403226" duration="596000" />
+      <workItem from="1705662222973" duration="2803000" />
+      <workItem from="1705778980933" duration="2905000" />
+      <workItem from="1706011851145" duration="18792000" />
     </task>
     <task id="LOCAL-00001" summary="New version">
       <created>1672608636699</created>
@@ -352,17 +390,24 @@
       <option name="project" value="LOCAL" />
       <updated>1700899474517</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="New version">
+      <option name="closed" value="true" />
+      <created>1701099287713</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1701099287713</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VCPKGProject">
-    <isAutomaticEditVcpkgJson value="false" />
     <isAutomaticCheckingOnLaunch value="false" />
     <isAutomaticFoundErrors value="true" />
-    <isAutomaticFoundErrors value="true" />
+    <isAutomaticReloadCMake value="true" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -380,6 +425,33 @@
     <option name="LAST_COMMIT_MESSAGE" value="New version" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/GraphSpecial.h</url>
+          <line>128</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/curvatureHandler.h</url>
+          <line>701</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/curvatureHandler.h</url>
+          <line>1343</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/curvatureHandler.h</url>
+          <line>1350</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="CMakeExceptionBreakpoint" />
+      </default-breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="CMakeRunConfiguration">
         <watch expression="gin-&gt;m_edges[0].m_property.dist" />

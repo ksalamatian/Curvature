@@ -31,6 +31,15 @@ public:
 };
 
 class Edge_Regular {
+public:
+    double oot=0.0;
+    double ot=0.0;
+    double ocurv=0.0;
+    double curv=0.0;
+   float  dist=1.0;
+    double edist=1.0;
+    double odistance=1.0;
+    double distance=1.0;
 };
 
 struct Graph_Regular{
@@ -117,10 +126,10 @@ struct Edge_info_BGP {
     long weight=1;
 };
 
-typedef Vertex_info_BGP VertexSpecial;
-typedef Edge_info_BGP EdgeSpecial;
-//typedef Vertex_Regular VertexSpecial;
-//typedef Edge_Regular EdgeSpecial;
+//ypedef Vertex_info_BGP VertexSpecial;
+//typedef Edge_info_BGP EdgeSpecial;
+typedef Vertex_Regular VertexSpecial;
+typedef Edge_Regular EdgeSpecial;
 
 //typedef Vertex_info_road VertexSpecial;
 //typedef Edge_info_road  EdgeSpecial;
@@ -142,16 +151,12 @@ boost::dynamic_properties gettingProperties(myGraph& g) {
 */
 
 
-/*
-    dpout.property("distance", get(&myEdge::distance, g));
-    dpout.property("ot", get(&myEdge::ot, g));
-    dpout.property("curv", get(&myEdge::curv, g));
     dpout.property("dist",get(&myEdge::dist, g));
     dpout.property("edist",get(&myEdge::edist, g));
     dpout.property("x",get(&myVertex::x, g));
     dpout.property("y",get(&myVertex::y, g));
     dpout.property("z",get(&myVertex::z, g));
-    dpout.property("block",get(&myVertex::block, g));*/
+    dpout.property("block",get(&myVertex::block, g));
 
 
 
@@ -186,7 +191,7 @@ boost::dynamic_properties gettingProperties(myGraph& g) {
 
 
 
-    dpout.property("asNumber", get(&myVertex::asNumber, g));
+ /*   dpout.property("asNumber", get(&myVertex::asNumber, g));
     dpout.property("pathNum", get(&myVertex::pathNum, g));
     dpout.property("Country", get(&myVertex::Country, g));
     dpout.property("Name", get(&myVertex::name, g));
@@ -203,10 +208,11 @@ boost::dynamic_properties gettingProperties(myGraph& g) {
     dpout.property("prefCount", get(&myEdge::prefcount, g));
     dpout.property("count", get(&myEdge::count, g));
     dpout.property("distance", get(&myEdge::distance, g));
-    dpout.property("ot", get(&myEdge::ot, g));
     dpout.property("cable",get(&myEdge::cableName,g));
-    dpout.property("id",get(&myEdge::id,g));
+    dpout.property("id",get(&myEdge::id,g));*/
 
+    dpout.property("ot", get(&myEdge::ot, g));
+    dpout.property("distance", get(&myEdge::distance, g));
     dpout.property("curv", get(&myEdge::curv, g));
     dpout.property("oot",get(&myEdge::oot,g));
     dpout.property("ocurv",get(&myEdge::ocurv,g));
